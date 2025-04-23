@@ -477,6 +477,7 @@ concourse/concourse/fly
 connectrpc/connect-go/protoc-gen-connect-go
 container-tools/spectrum
 containerd/containerd
+containerd/containerd/static
 containerd/fuse-overlayfs-snapshotter
 containerd/nerdctl
 containers/crun
