@@ -66,7 +66,7 @@ fetch() {
 
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk -v group="$group" '{if (NR % 4 == group) print $1}')"
-echo "$tools" | env_parallel -j4 --env fetch fetch {} || true
+echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {} || true
 
 git clone https://github.com/aquaproj/aqua-registry --depth 1
 fd . -tf -E registry.yaml aqua-registry -X rm
