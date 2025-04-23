@@ -3,10 +3,10 @@
 source env_parallel.bash
 set -euxo pipefail
 
-schedule="${1:-0 2 * * *}"
+schedule="${1:-0 0 * * *}"
 group="${schedule#* }"
 group="${group%% *}"
-group="$((group / 2))"
+group="$((group / 4))"
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
 export MISE_LIST_ALL_VERSIONS=1
