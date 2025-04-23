@@ -518,6 +518,7 @@ cross-rs/cross
 crossplane/crossplane
 cswank/kcli
 ctron/oidc-cli
+cubefs/cubefs
 cubicdaiya/nginx-build
 cue-lang/cue
 cyberark/kubeletctl
@@ -1896,6 +1897,7 @@ ziglang/zig
 zigtools/zls
 zitadel/zitadel
 zix99/rare
+zmap/zlint
 zmwangx/ets
 zoncoen/scenarigo
 zquestz/s
