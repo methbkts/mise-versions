@@ -916,6 +916,7 @@ int128/kubelogin
 int128/yamlpatch
 interlynk-io/sbomqs
 iovisor/kubectl-trace
+ip7z/7zip
 ipfs/go-ipfs
 ipfs/kubo
 ipinfo/cli
@@ -1374,6 +1375,7 @@ operator-framework/operator-registry
 operator-framework/operator-sdk
 oppiliappan/dijo
 optiv/Mangle
+oracle/truffleruby/community-native
 oracle/truffleruby/oracle-native
 orangekame3/stree
 orangekame3/viff
@@ -1435,6 +1437,7 @@ pressly/goose
 printfn/fend
 profclems/glab
 project-copacetic/copacetic
+project-zot/zot
 projectcalico/calico/calicoctl
 projectdiscovery/httpx
 projectdiscovery/naabu
