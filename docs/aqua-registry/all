@@ -107,6 +107,8 @@ Myriad-Dreamin/tinymist
 NathanBaulch/rainbow-roads
 NetApp/trident/tridentctl
 NimbleArchitect/kubectl-ice
+Nukesor/pueue/pueue
+Nukesor/pueue/pueued
 Orange-OpenSource/hurl
 Owloops/updo
 PaddiM8/kalker
@@ -1441,6 +1443,7 @@ project-copacetic/copacetic
 project-zot/zot
 projectcalico/calico/calicoctl
 projectdiscovery/httpx
+projectdiscovery/katana
 projectdiscovery/naabu
 projectdiscovery/nuclei
 projectdiscovery/pdtm
@@ -1658,6 +1661,7 @@ stefanprodan/timoni
 stepchowfun/docuum
 stern/stern
 stoplightio/spectral
+str4d/rage
 streamdal/plumber
 stripe/stripe-cli
 stunnel/static-curl
@@ -1715,6 +1719,7 @@ sylwit/terraform-cleaner
 syncthing/syncthing
 synfinatic/aws-sso-cli
 sysdiglabs/kube-psp-advisor
+syumai/sbx
 t-kikuc/ecstop
 tailor-platform/tailorctl
 tailscale/tailscale
