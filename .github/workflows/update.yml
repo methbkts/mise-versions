@@ -30,13 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: Swatinem/rust-cache@v2
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: sd
-      - uses: taiki-e/install-action@v2
-        with:
-          tool: fd-find
       - if: github.event.schedule == '0 0 * * *'
         run: |
           cp docs/python-precompiled python-precompiled

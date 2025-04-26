@@ -11,3 +11,7 @@ tasks.gen.run = [
 [tasks.deploy]
 depends = ["build"]
 run = "bunx wrangler deploy"
+
+[tools]
+"aqua:chmln/sd" = "latest"
+fd = "latest"
