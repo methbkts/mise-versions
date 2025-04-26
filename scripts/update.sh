@@ -10,6 +10,7 @@ group="$((group / 4))"
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
 export MISE_LIST_ALL_VERSIONS=1
+export MISE_LOG_HTTP=1
 
 if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
@@ -28,7 +29,7 @@ fetch() {
 		;;
 	esac
 	echo "Fetching $1"
-	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
+	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1"; then
 		echo "Failed to fetch versions for $1"
 		rm -f "docs/$1"
