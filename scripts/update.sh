@@ -11,7 +11,7 @@ export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
 export MISE_LIST_ALL_VERSIONS=1
 
-if [ "$DRY_RUN" == 0 ]; then
+if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
 	git config --local user.name "mise-en-versions"
 fi
@@ -69,7 +69,7 @@ fetch() {
 	fi
 }
 
-if [ "$DRY_RUN" == 0 ] && ! git diff-index --cached --quiet HEAD; then
+if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "python-precompiled"
 	git push
@@ -78,7 +78,7 @@ fi
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk -v group="$group" '{if (NR % 4 == group) print $1}')"
 echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {} || true
-if [ "$DRY_RUN" == 0 ] && ! git diff-index --cached --quiet HEAD; then
+if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
 	git push
@@ -98,7 +98,7 @@ done
 echo "$(cd docs/aqua-registry && fd --format '{//}' registry.yaml | sort -u)" >docs/aqua-registry/all
 git add docs/aqua-registry
 
-if [ "$DRY_RUN" == 0 ] && ! git diff-index --cached --quiet HEAD; then
+if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "aqua-registry"
 	git push
