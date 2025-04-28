@@ -478,6 +478,7 @@ concourse/concourse/concourse
 concourse/concourse/fly
 connectrpc/connect-go/protoc-gen-connect-go
 container-tools/spectrum
+container2wasm/container2wasm
 containerd/containerd
 containerd/containerd/static
 containerd/fuse-overlayfs-snapshotter
@@ -1829,6 +1830,7 @@ vektra/mockery
 version-fox/vfox
 vi/websocat
 viaduct-ai/kustomize-sops
+victoriametrics/victoriametrics/vmutils
 vishaltelangre/ff
 vishnubob/wait-for-it
 visma-prodsec/confused
