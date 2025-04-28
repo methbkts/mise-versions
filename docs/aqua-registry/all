@@ -482,6 +482,7 @@ containerd/containerd
 containerd/containerd/static
 containerd/fuse-overlayfs-snapshotter
 containerd/nerdctl
+containers/conmon
 containers/crun
 containers/fuse-overlayfs
 containers/gvisor-tap-vsock/gvproxy
@@ -1035,6 +1036,7 @@ k1LoW/tbls-ask
 k1LoW/tbls-driver-tailordb
 k1LoW/tmpmod
 k3d-io/k3d
+k3s-io/k3s
 kahing/goofys
 kamadorueda/alejandra
 kanisterio/kanister
@@ -1173,6 +1175,8 @@ lindell/multi-gitter
 linkerd/linkerd2
 lintnet/lintnet
 linuxkit/linuxkit
+liquidmetal-dev/flintlock/flintlock-metrics
+liquidmetal-dev/flintlock/flintlockd
 livebud/bud
 livesense-inc/go-aws-s3get
 livesense-inc/go-simple-http-redirector
