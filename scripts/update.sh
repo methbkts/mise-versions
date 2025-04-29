@@ -28,6 +28,7 @@ fetch() {
 		return
 		;;
 	esac
+ 	mise x wait-for-gh-rate-limit -- wait-for-gh-rate-limit
 	echo "Fetching $1"
 	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1"; then
