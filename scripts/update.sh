@@ -28,18 +28,14 @@ fetch() {
 		return
 		;;
 	esac
+ 	mise x wait-for-gh-rate-limit -- wait-for-gh-rate-limit
 	echo "Fetching $1"
 	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
-		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2>"logs/$1.log"; then
+		jdxcode/mise -y ls-remote "$1" >"docs/$1"; then
 		echo "Failed to fetch versions for $1"
-		cat "logs/$1.log" >&2
-		if grep -q '403 Forbidden' "logs/$1.log"; then
-	        exit 0
-		fi
 		rm -f "docs/$1"
 		return
 	fi
-	cat "logs/$1.log" >&2
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then
 		echo "No versions for $1" >/dev/null
@@ -81,6 +77,15 @@ if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git push
 fi
 
+docker run jdxcode/mise -v
+tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk -v group="$group" '{if (NR % 4 == group) print $1}')"
+echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {} || true
+if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
+	git diff --compact-summary --cached
+	git commit -m "versions"
+	git push
+fi
+
 git clone https://github.com/aquaproj/aqua-registry --depth 1
 fd . -tf -E registry.yaml aqua-registry -X rm
 rm -rf docs/aqua-registry
@@ -94,20 +99,9 @@ for f in $(cd docs/aqua-registry && fd registry.yaml); do
 done
 echo "$(cd docs/aqua-registry && fd --format '{//}' registry.yaml | sort -u)" >docs/aqua-registry/all
 git add docs/aqua-registry
+
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "aqua-registry"
-	git push
-fi
-
-docker run jdxcode/mise -v
-mkdir -p logs
-tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk -v group="$group" '{if (NR % 4 == group) print $1}' | sort -R)"
-for tool in $tools; do
-	fetch "$tool" || true
-done
-if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
-	git diff --compact-summary --cached
-	git commit -m "versions"
 	git push
 fi
