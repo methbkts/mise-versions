@@ -67,6 +67,7 @@ GoodwayGroup/gwvault
 GoogleCloudPlatform/alloydb-auth-proxy
 GoogleCloudPlatform/berglas
 GoogleCloudPlatform/cloud-sql-proxy
+GoogleCloudPlatform/kubectl-ai
 GoogleCloudPlatform/terraformer
 GoogleCloudPlatform/terraformer/aws
 GoogleContainerTools/container-diff
@@ -483,6 +484,7 @@ containerd/containerd
 containerd/containerd/static
 containerd/fuse-overlayfs-snapshotter
 containerd/nerdctl
+containerd/stargz-snapshotter
 containers/conmon
 containers/crun
 containers/fuse-overlayfs
@@ -1131,8 +1133,10 @@ kubernetes/kubeadm
 kubernetes/kubectl
 kubernetes/kubectl-convert
 kubernetes/kubernetes/apiextensions-apiserver
+kubernetes/kubernetes/kubectl
 kubernetes/kubernetes/kubelet
 kubernetes/minikube
+kubernetes/node-problem-detector
 kubescape/kubescape
 kubeshark/kubeshark
 kubesphere/kubeeye
@@ -1195,6 +1199,7 @@ loov/goda
 lotabout/rargs
 lotabout/skim
 lsd-rs/lsd
+luau-lang/luau
 lusingander/ddv
 lusingander/serie
 lusingander/stu
