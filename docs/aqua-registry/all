@@ -1021,6 +1021,7 @@ k0kubun/xremap/x11
 k0sproject/k0s
 k0sproject/k0sctl
 k1LoW/awsdo
+k1LoW/coglet
 k1LoW/cuestr
 k1LoW/gh-do
 k1LoW/gh-setup
@@ -1129,6 +1130,8 @@ kubernetes/kops
 kubernetes/kubeadm
 kubernetes/kubectl
 kubernetes/kubectl-convert
+kubernetes/kubernetes/apiextensions-apiserver
+kubernetes/kubernetes/kubelet
 kubernetes/minikube
 kubescape/kubescape
 kubeshark/kubeshark
