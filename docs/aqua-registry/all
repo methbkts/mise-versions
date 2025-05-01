@@ -1133,6 +1133,12 @@ kubernetes/kubeadm
 kubernetes/kubectl
 kubernetes/kubectl-convert
 kubernetes/kubernetes/apiextensions-apiserver
+kubernetes/kubernetes/kube-aggregator
+kubernetes/kubernetes/kube-apiserver
+kubernetes/kubernetes/kube-controller-manager
+kubernetes/kubernetes/kube-log-runner
+kubernetes/kubernetes/kube-proxy
+kubernetes/kubernetes/kube-scheduler
 kubernetes/kubernetes/kubeadm
 kubernetes/kubernetes/kubectl
 kubernetes/kubernetes/kubectl-convert
