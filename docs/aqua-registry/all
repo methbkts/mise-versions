@@ -1133,7 +1133,9 @@ kubernetes/kubeadm
 kubernetes/kubectl
 kubernetes/kubectl-convert
 kubernetes/kubernetes/apiextensions-apiserver
+kubernetes/kubernetes/kubeadm
 kubernetes/kubernetes/kubectl
+kubernetes/kubernetes/kubectl-convert
 kubernetes/kubernetes/kubelet
 kubernetes/minikube
 kubernetes/node-problem-detector
