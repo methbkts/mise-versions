@@ -125,6 +125,7 @@ mruby-3.0.0
 mruby-3.1.0
 mruby-3.2.0
 mruby-3.3.0
+mruby-3.4.0
 picoruby-3.0.0
 rbx-2.2.2
 rbx-2.2.3
@@ -336,6 +337,7 @@ truffleruby-24.1.0
 truffleruby-24.1.1
 truffleruby-24.1.2
 truffleruby-24.2.0
+truffleruby-24.2.1
 truffleruby+graalvm-dev
 truffleruby+graalvm-20.1.0
 truffleruby+graalvm-20.2.0
@@ -361,6 +363,7 @@ truffleruby+graalvm-24.1.0
 truffleruby+graalvm-24.1.1
 truffleruby+graalvm-24.1.2
 truffleruby+graalvm-24.2.0
+truffleruby+graalvm-24.2.1
 1.8.5-p52
 1.8.5-p113
 1.8.5-p114
