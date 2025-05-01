@@ -128,6 +128,7 @@ Scalingo/cli
 Schniz/fnm
 Shopify/ejson
 Shopify/kubeaudit
+Shopify/shadowenv
 Shopify/toxiproxy
 SimonTheLeg/konf-go
 Songmu/ecschedule
