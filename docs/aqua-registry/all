@@ -1392,6 +1392,7 @@ openclarity/kubeclarity
 openclarity/vmclarity
 opencontainers/runc
 openfaas/faas-cli
+openfga/cli
 openshift-online/ocm-cli
 openshift/osdctl
 opentofu/opentofu
@@ -1514,6 +1515,7 @@ regclient/regclient/regsync
 replicatedhq/kots
 replicatedhq/outdated
 reproducible-containers/diffoci
+reproio/terraform-j2md
 rest-sh/restish
 restechnica/semverbot
 restic/restic
@@ -1545,6 +1547,7 @@ runmedev/runme
 rust-cross/cargo-zigbuild
 rust-lang/mdBook
 rust-lang/rust-analyzer
+rust-lang/rustup/rustup-init
 rustic-rs/rustic
 rustsec/rustsec/cargo-audit
 rustwasm/wasm-pack
