@@ -1547,6 +1547,7 @@ runmedev/runme
 rust-cross/cargo-zigbuild
 rust-lang/mdBook
 rust-lang/rust-analyzer
+rust-lang/rustup
 rust-lang/rustup/rustup-init
 rustic-rs/rustic
 rustsec/rustsec/cargo-audit
