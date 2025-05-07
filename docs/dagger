@@ -590,3 +590,10 @@ sdk/python/v0.18.5
 sdk/rust/v0.18.5
 sdk/typescript/v0.18.5
 0.18.5
+helm/chart/v0.18.6
+sdk/go/v0.18.6
+sdk/php/v0.18.6
+sdk/python/v0.18.6
+sdk/rust/v0.18.6
+sdk/typescript/v0.18.6
+0.18.6
