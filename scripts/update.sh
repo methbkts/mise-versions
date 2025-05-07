@@ -3,10 +3,10 @@
 source env_parallel.bash
 set -euxo pipefail
 
-schedule="${1:-0 0 * * *}"
-group="${schedule#* }"
-group="${group%% *}"
-group="$((group / 4))"
+#schedule="${1:-0 0 * * *}"
+#group="${schedule#* }"
+#group="${group%% *}"
+#group="$((group / 4))"
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
 export MISE_LIST_ALL_VERSIONS=1
@@ -78,13 +78,14 @@ if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 fi
 
 docker run jdxcode/mise -v
-tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk -v group="$group" '{if (NR % 4 == group) print $1}')"
-echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {} || true
+tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
+echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {}
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
 	git push
 fi
+exit 0
 
 git clone https://github.com/aquaproj/aqua-registry --depth 1
 fd . -tf -E registry.yaml aqua-registry -X rm
