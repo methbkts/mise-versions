@@ -3328,6 +3328,7 @@ zulu-17.52.19
 zulu-17.54.21
 zulu-17.56.15
 zulu-17.58.21
+zulu-17.58.25
 zulu-18.28.13
 zulu-18.30.11
 zulu-18.32.11
@@ -3351,6 +3352,7 @@ zulu-21.36.19
 zulu-21.38.21
 zulu-21.40.17
 zulu-21.42.19
+zulu-21.42.21
 zulu-22.28.91
 zulu-22.28.93
 zulu-22.30.13
@@ -3364,6 +3366,7 @@ zulu-24.28.83
 zulu-24.28.85
 zulu-24.28.87
 zulu-24.30.11
+zulu-24.30.15
 zulu-javafx-8.33.0.1
 zulu-javafx-8.36.0.1
 zulu-javafx-8.38.0.13
@@ -3618,6 +3621,7 @@ zulu-jre-17.52.19
 zulu-jre-17.54.21
 zulu-jre-17.56.15
 zulu-jre-17.58.21
+zulu-jre-17.58.25
 zulu-jre-18.28.13
 zulu-jre-18.30.11
 zulu-jre-18.32.11
@@ -3642,6 +3646,7 @@ zulu-jre-21.36.19
 zulu-jre-21.38.21
 zulu-jre-21.40.17
 zulu-jre-21.42.19
+zulu-jre-21.42.21
 zulu-jre-22.28.91
 zulu-jre-22.28.93
 zulu-jre-22.30.13
@@ -3656,6 +3661,7 @@ zulu-jre-24.28.83
 zulu-jre-24.28.85
 zulu-jre-24.28.87
 zulu-jre-24.30.11
+zulu-jre-24.30.15
 zulu-jre-javafx-8.38.0.13
 zulu-jre-javafx-8.40.0.25
 zulu-jre-javafx-8.42.0.23
@@ -3901,6 +3907,7 @@ zulu-jre-musl-17.52.19
 zulu-jre-musl-17.54.21
 zulu-jre-musl-17.56.15
 zulu-jre-musl-17.58.21
+zulu-jre-musl-17.58.25
 zulu-jre-musl-18.28.13
 zulu-jre-musl-18.30.11
 zulu-jre-musl-18.32.11
@@ -3922,6 +3929,7 @@ zulu-jre-musl-21.36.19
 zulu-jre-musl-21.38.21
 zulu-jre-musl-21.40.17
 zulu-jre-musl-21.42.19
+zulu-jre-musl-21.42.21
 zulu-jre-musl-22.28.91
 zulu-jre-musl-22.30.13
 zulu-jre-musl-22.30.15
@@ -3935,6 +3943,7 @@ zulu-jre-musl-24.28.83
 zulu-jre-musl-24.28.85
 zulu-jre-musl-24.28.87
 zulu-jre-musl-24.30.11
+zulu-jre-musl-24.30.15
 zulu-musl-8.33.0.1
 zulu-musl-8.34.0.1
 zulu-musl-8.36.0.1
@@ -4066,6 +4075,7 @@ zulu-musl-17.52.19
 zulu-musl-17.54.21
 zulu-musl-17.56.15
 zulu-musl-17.58.21
+zulu-musl-17.58.25
 zulu-musl-18.28.13
 zulu-musl-18.30.11
 zulu-musl-18.32.11
@@ -4086,6 +4096,7 @@ zulu-musl-21.36.19
 zulu-musl-21.38.21
 zulu-musl-21.40.17
 zulu-musl-21.42.19
+zulu-musl-21.42.21
 zulu-musl-22.28.91
 zulu-musl-22.28.93
 zulu-musl-22.30.13
@@ -4099,3 +4110,4 @@ zulu-musl-24.28.83
 zulu-musl-24.28.85
 zulu-musl-24.28.87
 zulu-musl-24.30.11
+zulu-musl-24.30.15
