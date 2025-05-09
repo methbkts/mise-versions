@@ -128,6 +128,7 @@ beta-20170420
 @cockroachlabs/cluster-ui@24.1.3
 @cockroachlabs/cluster-ui@24.1.4
 @cockroachlabs/cluster-ui@24.1.5
+@cockroachlabs/cluster-ui@24.1.6
 @cockroachlabs/cluster-ui@24.2.0
 @cockroachlabs/cluster-ui@24.2.1
 @cockroachlabs/cluster-ui@24.2.2
@@ -143,11 +144,14 @@ beta-20170420
 @cockroachlabs/cluster-ui@24.3.5
 @cockroachlabs/cluster-ui@24.3.6
 @cockroachlabs/cluster-ui@24.3.7
+@cockroachlabs/cluster-ui@24.3.8
 @cockroachlabs/cluster-ui@25.1.0-prerelease.0
 @cockroachlabs/cluster-ui@25.1.0-prerelease.1
 @cockroachlabs/cluster-ui@25.1.1
+@cockroachlabs/cluster-ui@25.1.2
 @cockroachlabs/cluster-ui@25.2.0-prerelease.0
 @cockroachlabs/cluster-ui@25.2.1
+@cockroachlabs/cluster-ui@25.2.2
 @cockroachlabs/clusterui@20.2.1
 @cockroacklabs/cluster-ui@21.2.2
 @cockroacklabs/cluster-ui@21.2.3
@@ -712,6 +716,7 @@ staging-202011251758-v20.2.3
 23.2.22
 23.2.23
 23.2.24
+23.2.25
 24.1.0-alpha.1
 24.1.0-alpha.2
 24.1.0-alpha.3
@@ -740,6 +745,7 @@ staging-202011251758-v20.2.3
 24.1.15
 24.1.16
 24.1.17
+24.1.18
 24.2.0-alpha.1
 24.2.0-alpha.2
 24.2.0-beta.1
@@ -775,6 +781,7 @@ staging-202011251758-v20.2.3
 24.3.9
 24.3.10
 24.3.11
+24.3.12
 25.1.0-alpha.1
 25.1.0-alpha.2
 25.1.0-alpha.3
