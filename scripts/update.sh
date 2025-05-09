@@ -79,7 +79,7 @@ fi
 
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
-echo "$tools" | sort -R | env_parallel -j4 --env fetch fetch {}
+echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} || true
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
