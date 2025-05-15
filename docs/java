@@ -1022,6 +1022,8 @@ jetbrains-21.0.6b895.91
 jetbrains-21.0.6b895.97
 jetbrains-21.0.6b895.105
 jetbrains-21.0.6b895.109
+jetbrains-21.0.7b509.40
+jetbrains-21.0.7b895.130
 jetbrains-21.0.7b968.13
 jetbrains-jre-11.0.16b2043.64
 jetbrains-jre-17.0.4.1b646.8
@@ -1125,6 +1127,8 @@ jetbrains-jre-21.0.6b895.91
 jetbrains-jre-21.0.6b895.97
 jetbrains-jre-21.0.6b895.105
 jetbrains-jre-21.0.6b895.109
+jetbrains-jre-21.0.7b509.40
+jetbrains-jre-21.0.7b895.130
 jetbrains-jre-21.0.7b968.13
 jetbrains-jre-musl-17.0.9b1087.7
 jetbrains-jre-musl-17.0.9b1087.9
@@ -1187,6 +1191,8 @@ jetbrains-jre-musl-21.0.6b895.91
 jetbrains-jre-musl-21.0.6b895.97
 jetbrains-jre-musl-21.0.6b895.105
 jetbrains-jre-musl-21.0.6b895.109
+jetbrains-jre-musl-21.0.7b509.40
+jetbrains-jre-musl-21.0.7b895.130
 jetbrains-jre-musl-21.0.7b968.13
 jetbrains-musl-17.0.9b1087.7
 jetbrains-musl-17.0.9b1087.9
@@ -1249,6 +1255,8 @@ jetbrains-musl-21.0.6b895.91
 jetbrains-musl-21.0.6b895.97
 jetbrains-musl-21.0.6b895.105
 jetbrains-musl-21.0.6b895.109
+jetbrains-musl-21.0.7b509.40
+jetbrains-musl-21.0.7b895.130
 jetbrains-musl-21.0.7b968.13
 kona-8.0.0-232
 kona-8.0.1-242
