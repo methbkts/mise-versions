@@ -46,13 +46,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - if: github.event.schedule == '0 0 * * *'
-        run: |
-          cp docs/python-precompiled python-precompiled
-          rm -rf docs
-          mkdir -p docs
-          mv python-precompiled docs/python-precompiled
-          ./scripts/python-precompiled.sh 1
       - run: docker run jdxcode/mise --version
       - run: ./scripts/update.sh "${{ github.event.schedule }}"
       - run: git checkout docs && git clean -df

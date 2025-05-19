@@ -71,38 +71,11 @@ fetch() {
 	fi
 }
 
-if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
-	git diff --compact-summary --cached
-	git commit -m "python-precompiled"
-	git push
-fi
-
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
 echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} || true
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
-	git push
-fi
-exit 0
-
-git clone https://github.com/aquaproj/aqua-registry --depth 1
-fd . -tf -E registry.yaml aqua-registry -X rm
-rm -rf docs/aqua-registry
-cp -r aqua-registry/pkgs/ docs/aqua-registry
-rm -rf aqua-registry
-for f in $(cd docs/aqua-registry && fd registry.yaml); do
-  for a in $(yq '.packages[].aliases[].name' "docs/aqua-registry/$f"); do
-    mkdir -p "docs/aqua-registry/$a"
-    cp "docs/aqua-registry/$f" "docs/aqua-registry/$a/registry.yaml"
-  done
-done
-echo "$(cd docs/aqua-registry && fd --format '{//}' registry.yaml | sort -u)" >docs/aqua-registry/all
-git add docs/aqua-registry
-
-if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
-	git diff --compact-summary --cached
-	git commit -m "aqua-registry"
 	git push
 fi
