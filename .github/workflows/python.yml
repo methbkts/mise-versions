@@ -8,7 +8,7 @@ on:
     - cron: "0 5 * * *"
 
 concurrency:
-  group: update
+  group: python-precompiled
   cancel-in-progress: true
 
 permissions:
