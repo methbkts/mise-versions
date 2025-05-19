@@ -83,6 +83,7 @@ JohnnyMorganz/StyLua
 Julien-R44/fast-ssh
 Kampfkarren/selene
 Kampfkarren/selene/light
+KeisukeYamashita/commitlint-rs
 Kong/deck
 KusionStack/kusion
 LGUG2Z/komorebi
@@ -215,6 +216,7 @@ allero-io/allero
 allyring/pvw
 alpkeskin/mosint
 altsem/gitu
+alvinunreal/tmuxai
 amacneil/dbmate
 amalshaji/portr
 amber-lang/amber
@@ -235,6 +237,7 @@ apache/maven
 apache/maven-mvnd
 apache/pulsar
 apache/spark
+apache/tomcat
 aporia-ai/kubesurvival
 apple/pkl
 apple/pkl-go/pkl-gen-go
@@ -378,7 +381,10 @@ busser/murmur
 busser/tfautomv
 busser/tftree
 bvaisvil/zenith
+bytecodealliance/wasm-pkg-tools
+bytecodealliance/wasm-tools
 bytecodealliance/wasmtime
+bytecodealliance/wrpc/wit-bindgen-wrpc
 c-bata/kube-prompt
 c1982/bomberman
 caarlos0/fork-cleaner
@@ -896,6 +902,7 @@ houseabsolute/ubi
 howardjohn/kubeconfig-proxy
 hrmsk66/terraformify
 iamhsa/pkenv
+ianlewis/todos
 iann0036/iamlive
 iawia002/annie
 iawia002/lux
@@ -1304,6 +1311,7 @@ mongodb/mongodb-atlas-cli/mongocli
 mooltiverse/nyx
 moonrepo/moon
 moonrepo/proto
+mozilla/grcov
 mozilla/sccache
 mozilla/sops
 mpalmer/action-validator
@@ -1484,6 +1492,12 @@ prometheus/prometheus
 prometheus/promlens
 protocolbuffers/protobuf-go/protoc-gen-go
 protocolbuffers/protobuf/protoc
+psastras/sarif-rs/clang-tidy-sarif
+psastras/sarif-rs/clippy-sarif
+psastras/sarif-rs/hadolint-sarif
+psastras/sarif-rs/miri-sarif
+psastras/sarif-rs/sarif-fmt
+psastras/sarif-rs/shellcheck-sarif
 pseudomuto/protoc-gen-doc
 psf/black
 pulumi/kubespy
@@ -1494,6 +1508,7 @@ purton-tech/cloak
 pvolok/mprocs
 pyama86/pachanger
 qdrant/qdrant
+qnighy/clippy-reviewdog-filter
 quantumsheep/sshs
 quarkslab/kdigger
 quarylabs/sqruff
@@ -1752,6 +1767,7 @@ synfinatic/aws-sso-cli
 sysdiglabs/kube-psp-advisor
 syumai/sbx
 t-kikuc/ecstop
+taiki-e/cargo-llvm-cov
 tailor-platform/tailorctl
 tailscale/tailscale
 tailwindlabs/tailwindcss
@@ -1759,6 +1775,7 @@ takaishi/awscost
 takaishi/tfclean
 takumin/gjson
 takumin/gyaml
+takumin/zizmor-bin
 talos-systems/conform
 talos-systems/talos
 tamasfe/taplo
@@ -1808,6 +1825,7 @@ tmknom/actdocs
 tofuutils/tenv
 tofuutils/tofuenv
 tohjustin/kube-lineage
+tombi-toml/tombi
 tomnomnom/gron
 tomohiro/gyazo-cli
 topgrade-rs/topgrade
@@ -1877,6 +1895,7 @@ wader/fq
 wagoodman/dive
 wakatime/wakatime-cli
 wallix/awless
+wasmCloud/wasmCloud/wash
 wasmerio/wapm-cli
 wasmerio/wasmer
 watchexec/cargo-watch
@@ -1885,6 +1904,7 @@ weaveworks/eksctl
 weaveworks/tf-controller
 weaviate/weaviate
 webdevops/go-crond
+werf/nelm
 wfxr/csview
 whalebrew/whalebrew
 windvalley/gossh
