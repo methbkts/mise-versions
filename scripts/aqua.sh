@@ -25,5 +25,6 @@ git add docs/aqua-registry
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "aqua-registry"
+  git pull --rebase origin main
 	git push
 fi

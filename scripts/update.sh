@@ -77,5 +77,6 @@ echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} ||
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
+  git pull --rebase origin main
 	git push
 fi
