@@ -1,4 +1,4 @@
-name: Update version metadata
+name: python-precompiled
 on:
   workflow_dispatch:
   push:

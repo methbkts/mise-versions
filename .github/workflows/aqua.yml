@@ -1,4 +1,4 @@
-name: Update version metadata
+name: aqua
 on:
   workflow_dispatch:
   push:
