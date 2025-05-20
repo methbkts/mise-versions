@@ -27,15 +27,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
-      - run: |
-          cp docs/python-precompiled python-precompiled
-          rm -rf docs
-          mkdir -p docs
-          mv python-precompiled docs/python-precompiled
-          ./scripts/python-precompiled.sh 1
-          if ! git diff-index --cached --quiet HEAD; then
-          	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
-            git config --local user.name "mise-en-versions"
-            git add docs
-            git commit -m "python-precompiled"
-          fi
+      - run: ./scripts/python.sh
