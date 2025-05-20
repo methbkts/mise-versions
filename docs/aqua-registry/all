@@ -392,6 +392,7 @@ caarlos0/mdtree
 caarlos0/svu
 caddyserver/caddy
 cantino/mcfly
+carapace-sh/carapace-bin
 cargo-bins/cargo-binstall
 carvel-dev/imgpkg
 carvel-dev/kapp
@@ -714,6 +715,7 @@ fullstorydev/grpcui
 fullstorydev/grpcurl
 funbiscuit/spacedisplay-rs
 future-architect/tftarget
+fwdcloudsec/granted
 g-plane/pnpm-shell-completion
 gabeduke/kubectl-iexec
 gabrie30/ghorg
