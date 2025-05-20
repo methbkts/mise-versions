@@ -3,10 +3,6 @@
 source env_parallel.bash
 set -euxo pipefail
 
-#schedule="${1:-0 0 * * *}"
-#group="${schedule#* }"
-#group="${group%% *}"
-#group="$((group / 4))"
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
 export MISE_LIST_ALL_VERSIONS=1
@@ -34,7 +30,7 @@ fetch() {
 	mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
 	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
-		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" > /tmp/mise_403); then
+		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" >/tmp/mise_403); then
 		echo "Failed to fetch versions for $1"
 		rm -f "docs/$1"
 		return
