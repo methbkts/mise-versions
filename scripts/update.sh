@@ -31,7 +31,7 @@ fetch() {
 		return
 		;;
 	esac
- 	mise x -- wait-for-gh-rate-limit || true
+	mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
 	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" > /tmp/mise_403); then
@@ -82,6 +82,6 @@ echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} ||
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
-  git pull --autostash --rebase origin main
+	git pull --autostash --rebase origin main
 	git push
 fi
