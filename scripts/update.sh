@@ -18,6 +18,9 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 fi
 
 fetch() {
+	if [ -f /tmp/mise_403 ]; then
+		return
+	fi
 	case "$1" in
 	awscli-local) # TODO: remove this when it is working
 		echo "Skipping $1"
@@ -31,11 +34,12 @@ fetch() {
  	mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
 	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
-		jdxcode/mise -y ls-remote "$1" >"docs/$1"; then
+		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" > /tmp/mise_403); then
 		echo "Failed to fetch versions for $1"
 		rm -f "docs/$1"
 		return
 	fi
+
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then
 		echo "No versions for $1" >/dev/null
@@ -74,6 +78,7 @@ fetch() {
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
 echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} || true
+
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
 	git commit -m "versions"
