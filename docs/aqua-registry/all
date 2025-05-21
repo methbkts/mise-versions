@@ -74,6 +74,7 @@ GoogleContainerTools/container-diff
 GoogleContainerTools/container-structure-test
 GoogleContainerTools/kpt
 GoogleContainerTools/skaffold
+IBM-Cloud/redli
 IxDay/mruby
 JFryy/qq
 JanDeDobbeleer/oh-my-posh
@@ -1276,6 +1277,7 @@ mgdm/htmlq
 mgechev/revive
 mgunyho/tere
 michidk/vscli
+microsoft/edit
 microsoft/kiota
 microsoft/ripgrep-prebuilt
 mike-engel/jwt-cli
@@ -1461,6 +1463,7 @@ pipe-cd/pipecd/piped
 pivotal-cf/om
 pivotal-cf/pivnet-cli
 pkgxdev/pkgx
+pkolaczk/fclones
 planetscale/cli
 playwright-community/playwright-go
 plexsystems/sinker
