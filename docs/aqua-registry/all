@@ -1808,6 +1808,7 @@ terratags/terratags
 tfmigrator/cli
 tfutils/tfenv
 tgenv/tgenv
+thanos-io/thanos
 thazelart/terraform-validator
 theryangeary/choose
 theseus-rs/postgresql-binaries
