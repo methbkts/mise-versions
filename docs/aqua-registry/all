@@ -297,6 +297,7 @@ aws/eks-hybrid
 aws/session-manager-plugin
 awslabs/amazon-ecr-credential-helper
 awslabs/dynein
+awslabs/eks-auto-mode-ebs-migration-tool
 awslabs/eks-node-viewer
 awslabs/git-secrets
 awslabs/kubernetes-iteration-toolkit
@@ -1803,6 +1804,7 @@ terraform-linters/tflint
 terramate-io/terramate
 terrastruct/d2
 terrastruct/tala
+terratags/terratags
 tfmigrator/cli
 tfutils/tfenv
 tgenv/tgenv
