@@ -122,6 +122,7 @@ beta-20170420
 @cockroachlabs/cluster-ui@23.2.8
 @cockroachlabs/cluster-ui@23.2.9
 @cockroachlabs/cluster-ui@23.2.10
+@cockroachlabs/cluster-ui@23.2.11
 @cockroachlabs/cluster-ui@24.1.0-prerelease.0
 @cockroachlabs/cluster-ui@24.1.1
 @cockroachlabs/cluster-ui@24.1.2
@@ -129,6 +130,7 @@ beta-20170420
 @cockroachlabs/cluster-ui@24.1.4
 @cockroachlabs/cluster-ui@24.1.5
 @cockroachlabs/cluster-ui@24.1.6
+@cockroachlabs/cluster-ui@24.1.7
 @cockroachlabs/cluster-ui@24.2.0
 @cockroachlabs/cluster-ui@24.2.1
 @cockroachlabs/cluster-ui@24.2.2
@@ -145,13 +147,16 @@ beta-20170420
 @cockroachlabs/cluster-ui@24.3.6
 @cockroachlabs/cluster-ui@24.3.7
 @cockroachlabs/cluster-ui@24.3.8
+@cockroachlabs/cluster-ui@24.3.9
 @cockroachlabs/cluster-ui@25.1.0-prerelease.0
 @cockroachlabs/cluster-ui@25.1.0-prerelease.1
 @cockroachlabs/cluster-ui@25.1.1
 @cockroachlabs/cluster-ui@25.1.2
+@cockroachlabs/cluster-ui@25.1.3
 @cockroachlabs/cluster-ui@25.2.0-prerelease.0
 @cockroachlabs/cluster-ui@25.2.1
 @cockroachlabs/cluster-ui@25.2.2
+@cockroachlabs/cluster-ui@25.2.3
 @cockroachlabs/clusterui@20.2.1
 @cockroacklabs/cluster-ui@21.2.2
 @cockroacklabs/cluster-ui@21.2.3
