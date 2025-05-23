@@ -505,6 +505,7 @@ containrrr/shoutrrr
 context-labs/mactop
 controlplaneio/kubectl-kubesec
 controlplaneio/kubesec
+coreos/butane
 corneliusweig/ketall
 corneliusweig/rakkess
 corneliusweig/rakkess/access-matrix
@@ -590,6 +591,7 @@ dhall-lang/dhall-haskell
 dhth/bmm
 digitalocean/doctl
 dimo414/bkt
+dimonomid/nerdlog
 dineshba/tf-summarize
 direnv/direnv
 dispatchrun/wzprof
@@ -1861,6 +1863,7 @@ twpayne/chezmoi
 txn2/kubefwd
 typst/typst
 uber-go/mock
+ubicloud/cli
 umlx5h/gtrash
 undistro/marvin
 unfrl/dug
@@ -1882,6 +1885,7 @@ vektra/mockery
 version-fox/vfox
 vi/websocat
 viaduct-ai/kustomize-sops
+victoriametrics/victoriametrics/victoria-metrics
 victoriametrics/victoriametrics/vmutils
 vishaltelangre/ff
 vishnubob/wait-for-it
