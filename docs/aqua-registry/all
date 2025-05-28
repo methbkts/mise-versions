@@ -306,6 +306,7 @@ awslabs/soci-snapshotter
 awslabs/ssosync
 awslabs/yesiscan
 axllent/mailpit
+ayoisaiah/f2
 b3nj5m1n/xdg-ninja
 b4b4r07/afx
 b4b4r07/changed-objects
@@ -1363,6 +1364,7 @@ neilotoole/sq
 nektos/act
 neondatabase/neonctl
 neovim/neovim
+neovim/neovim-releases
 nerdypepper/dijo
 newrelic/newrelic-cli
 nextest-rs/nextest/cargo-nextest
@@ -1978,6 +1980,7 @@ ziglang/zig
 zigtools/zls
 zitadel/zitadel
 zix99/rare
+zk-org/zk
 zmap/zlint
 zmwangx/ets
 zoncoen/scenarigo
