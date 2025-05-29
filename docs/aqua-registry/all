@@ -353,6 +353,7 @@ bitnami-labs/charts-syncer
 bitnami-labs/sealed-secrets
 bitnami/charts-syncer
 bitwarden/clients
+bitwarden/sdk-sm
 bjesus/pipet
 blacknon/hwatch
 block/goose
