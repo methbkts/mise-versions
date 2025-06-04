@@ -1021,6 +1021,7 @@ jscaltreto/eks-auth
 jsonnet-bundler/jsonnet-bundler
 jtyr/gbt
 juan-leon/lowcharts
+juanfont/headscale
 jubako/arx
 juicedata/juicefs
 juliosueiras/terraform-lsp
@@ -1683,6 +1684,7 @@ slsa-framework/slsa-verifier
 smallstep/certificates
 smallstep/cli
 smartxworks/knest
+smtg-ai/claude-squad
 snaplet/cli
 snyk/cli
 snyk/driftctl
