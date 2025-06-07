@@ -1403,6 +1403,7 @@ odanado/git-pr-release-go
 ogen-go/ogen
 ogham/dog
 ogham/exa
+oknozor/toml-bombadil
 okta/okta-aws-cli
 okteto/okteto
 oligot/go-mod-upgrade
@@ -1447,6 +1448,7 @@ ovh/venom
 owenrumney/squealer
 owenthereal/upterm
 oxc-project/oxc/oxlint
+oxipng/oxipng
 ozankasikci/dockerfile-generator
 pacedotdev/oto
 pachyderm/pachyderm
@@ -1975,6 +1977,7 @@ ysugimoto/gcsdeploy
 ysugimoto/vintage
 yudai/gotty
 yujqiao/catp
+yujqiao/catproc
 yukiarrr/ecsk
 yumafuu/s1m
 yuyaban/gitlab-comment
