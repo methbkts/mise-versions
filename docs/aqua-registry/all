@@ -165,6 +165,8 @@ Trendyol/kink
 UpCloudLtd/upcloud-cli
 Versent/saml2aws
 ViRb3/wgcf
+VictoriaMetrics/VictoriaMetrics/victoria-metrics
+VictoriaMetrics/VictoriaMetrics/vmutils
 WebAssembly/binaryen
 WebAssembly/wabt
 Wilfred/difftastic
@@ -1898,8 +1900,6 @@ vektra/mockery
 version-fox/vfox
 vi/websocat
 viaduct-ai/kustomize-sops
-victoriametrics/victoriametrics/victoria-metrics
-victoriametrics/victoriametrics/vmutils
 vishaltelangre/ff
 vishnubob/wait-for-it
 visma-prodsec/confused
