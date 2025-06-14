@@ -1304,6 +1304,7 @@ minamijoyo/tfupdate
 minio/mc
 miniscruff/changie
 minishift/minishift
+mintoolkit/mint
 mislav/hub
 mistakenelf/fm
 mitchellh/golicense
@@ -1806,6 +1807,7 @@ talos-systems/talos
 tamasfe/taplo
 tamasfe/taplo/full
 taskctl/taskctl
+tattoy-org/tattoy
 tauri-apps/tauri/cargo-tauri
 tcnksm/ghr
 tdewolff/minify
