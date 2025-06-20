@@ -389,6 +389,7 @@
 8.6.9
 8.6.10-optimize
 8.6.10
+8.6.11-rc1-optimize
 8.6.11-rc1
 8.6.11-test-SNAPSHOT-1
 8.6.11-test-SNAPSHOT
@@ -406,6 +407,7 @@
 8.6.18
 8.6.19-rc1
 8.6.19-rc2
+8.6.19
 8.7.0-alpha1-optimize
 8.7.0-alpha1-rc1
 8.7.0-alpha1
@@ -444,6 +446,7 @@
 8.7.5
 8.7.6-rc1
 8.7.6-rc2
+8.7.6
 8.8.0-alpha1-rc1
 8.8.0-alpha1
 8.8.0-alpha2-rc1
