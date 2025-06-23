@@ -47,7 +47,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: jdx/mise-action@v2
       - run: docker run jdxcode/mise --version
-      - run: ./scripts/update.sh "${{ github.event.schedule }}"
+      #- run: ./scripts/update.sh "${{ github.event.schedule }}"
       - run: git checkout docs && git clean -df
       - uses: actions/configure-pages@v5
       - name: Upload static files as artifact
