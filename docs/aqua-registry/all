@@ -653,6 +653,7 @@ elijah-potter/harper/harper-ls
 elkowar/pipr
 elsesiy/kubectl-view-secret
 emirozer/kubectl-doctor
+encoredev/encore
 enokawa/taskdiff
 env0/terratag
 equinix-labs/otel-cli
@@ -1881,6 +1882,7 @@ twistedpair/google-cloud-sdk
 twpayne/chezmoi
 txn2/kubefwd
 typst/typst
+typstyle-rs/typstyle
 uber-go/mock
 ubicloud/cli
 umlx5h/gtrash
