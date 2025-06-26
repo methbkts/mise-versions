@@ -629,3 +629,11 @@ sdk/python/v0.18.10
 sdk/rust/v0.18.10
 sdk/typescript/v0.18.10
 0.18.10
+helm/chart/v0.18.11
+sdk/elixir/v0.18.11
+sdk/go/v0.18.11
+sdk/php/v0.18.11
+sdk/python/v0.18.11
+sdk/rust/v0.18.11
+sdk/typescript/v0.18.11
+0.18.11
