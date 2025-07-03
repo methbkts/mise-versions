@@ -1669,6 +1669,7 @@ sigstore/cosign
 sigstore/gitsign
 sigstore/rekor
 sigstore/sget
+siketyan/ghr
 simeji/jid
 simonwhitaker/gibo
 sinclairtarget/git-who
