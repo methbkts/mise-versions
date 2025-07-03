@@ -1640,6 +1640,7 @@ sharkdp/diskus
 sharkdp/fd
 sharkdp/hexyl
 sharkdp/hyperfine
+sharkdp/numbat
 sharkdp/pastel
 sharkdp/vivid
 sheepla/fzwiki
@@ -2000,6 +2001,7 @@ ziglang/zig
 zigtools/zls
 zitadel/zitadel
 zix99/rare
+zizmorcore/zizmor
 zk-org/zk
 zmap/zlint
 zmwangx/ets
