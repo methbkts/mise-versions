@@ -784,6 +784,7 @@ goccy/bigquery-emulator
 goccy/go-yaml/ycat
 goccy/kubetest
 gocruncher/jenkins-job-cli
+godotengine/godot
 gogs/gogs
 gohugoio/hugo
 gohugoio/hugo/hugo-extended
