@@ -333,6 +333,7 @@ banzaicloud/banzai-cli
 barnybug/cli53
 batchcorp/plumber
 bats-core/bats-core
+bazelbuild/bazel
 bazelbuild/bazel-watcher
 bazelbuild/bazelisk
 bazelbuild/buildtools/buildifier
