@@ -889,6 +889,7 @@ haskell/cabal/cabal-install
 haskell/ghcup-hs
 hasura/graphql-engine
 hatoo/oha
+hay-kot/scaffold
 heartbeatsjp/check-tls-cert
 helix-editor/helix
 hellux/jotdown
