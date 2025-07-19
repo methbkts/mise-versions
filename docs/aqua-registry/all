@@ -50,6 +50,7 @@ EdJoPaTo/mqttui
 EdenEast/repo
 EmbarkStudios/cargo-deny
 Enter-tainer/typstyle
+EnvCLI/EnvCLI
 FairwindsOps/gonogo
 FairwindsOps/nova
 FairwindsOps/pluto
@@ -87,6 +88,7 @@ Kampfkarren/selene/light
 KeisukeYamashita/commitlint-rs
 KhronosGroup/KTX-Software
 Kong/deck
+Kotlin/kotlin-interactive-shell
 KusionStack/kusion
 LGUG2Z/komorebi
 LGUG2Z/whkd
@@ -198,6 +200,7 @@ acorn-io/acorn
 acorn-io/runtime
 actions/go-versions
 adhocteam/ssm
+aduros/wasm4
 aelsabbahy/goss
 aelsabbahy/goss/dcgoss
 aelsabbahy/goss/dgoss
@@ -941,6 +944,7 @@ inlets/inlets-pro
 inlets/inletsctl
 inlets/mixctl
 innobead/huber
+inovex/CalendarSync
 instrumenta/kubeval
 int128/cronjob-runner
 int128/ghcp
@@ -988,6 +992,7 @@ jamietsao/random-winner
 jckuester/terradozer
 jdx/hk
 jdx/mise
+jdx/pitchfork
 jdx/rtx
 jdx/usage
 jdxcode/rtx
@@ -1332,6 +1337,7 @@ moncho/dry
 mongodb/mongocli
 mongodb/mongodb-atlas-cli/atlascli
 mongodb/mongodb-atlas-cli/mongocli
+mono0926/LicensePlist
 mooltiverse/nyx
 moonrepo/moon
 moonrepo/proto
@@ -1435,6 +1441,7 @@ openfga/cli
 openshift-online/ocm-cli
 openshift/osdctl
 opentofu/opentofu
+opentofu/tofu-ls
 openvex/vexctl
 openziti/zrok
 operator-framework/operator-registry
@@ -1955,6 +1962,7 @@ winebarrel/cronplan/cronmatch
 winebarrel/cronplan/cronplan
 winebarrel/cronplan/cronviz
 woodpecker-ci/woodpecker/woodpecker-cli
+wren-lang/wren-cli
 wtetsu/gaze
 wtfutil/wtf
 x-motemen/blogsync
