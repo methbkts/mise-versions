@@ -212,6 +212,7 @@ ahmetb/kubectx
 ahmetb/kubectx/kubens
 ahmetb/kubens
 air-verse/air
+airbytehq/abctl
 ajeetdsouza/zoxide
 alajmo/mani
 alcideio/rbac-tool
@@ -1725,6 +1726,7 @@ sonatype-nexus-community/nancy
 sorah/mairu
 sorenisanerd/gotty
 sourcegraph/src-cli
+sourcemeta/jsonschema
 soywod/himalaya
 spacelift-io/spacectl
 speakeasy-api/speakeasy
