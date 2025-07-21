@@ -336,6 +336,7 @@ babarot/vtest
 bahdotsh/wrkflw
 banzaicloud/banzai-cli
 barnybug/cli53
+barthr/redo
 batchcorp/plumber
 bats-core/bats-core
 bazelbuild/bazel
@@ -452,6 +453,7 @@ clog-tool/clog-cli
 clok/sm
 cloud-hypervisor/cloud-hypervisor
 cloud-hypervisor/cloud-hypervisor/ch-remote
+cloud66-oss/copper
 cloudentity/oauth2c
 cloudflare/cf-terraforming
 cloudflare/cfssl
@@ -545,6 +547,7 @@ crates.io/tfocus
 crates.io/zizmor
 crazy-max/diun
 crazy-max/ftpgrab
+crazywhalecc/static-php-cli
 create-go-app/cli
 cri-o/cri-o
 cross-rs/cross
@@ -1036,6 +1039,7 @@ jreleaser/jreleaser
 jreleaser/jreleaser/standalone
 jscaltreto/eks-auth
 jsonnet-bundler/jsonnet-bundler
+jstemmer/go-junit-report
 jtyr/gbt
 juan-leon/lowcharts
 juanfont/headscale
@@ -1423,6 +1427,7 @@ odanado/git-pr-release-go
 ogen-go/ogen
 ogham/dog
 ogham/exa
+ohkrab/krab
 oknozor/toml-bombadil
 okta/okta-aws-cli
 okteto/okteto
@@ -1540,6 +1545,7 @@ psastras/sarif-rs/sarif-fmt
 psastras/sarif-rs/shellcheck-sarif
 pseudomuto/protoc-gen-doc
 psf/black
+pulumi/esc
 pulumi/kubespy
 pulumi/pulumi
 pulumi/tf2pulumi
@@ -1706,6 +1712,7 @@ sl1pm4t/k2tf
 slack.com/slack-cli
 slackhq/nebula
 slimtoolkit/slim
+slok/agebox
 slok/sloth
 slsa-framework/slsa-github-generator/slsa-builder-go
 slsa-framework/slsa-verifier
