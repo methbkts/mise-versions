@@ -468,6 +468,7 @@ cloudflare/gokey
 cloudflare/pint
 cloudfoundry/bosh-cli
 cloudfoundry/credhub-cli
+cloudfoundry/uaa-cli
 cloudnative-pg/cloudnative-pg/kubectl-cnpg
 cloudposse/atmos
 cloudposse/github-commenter
