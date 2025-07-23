@@ -8,8 +8,8 @@ export MISE_LIST_ALL_VERSIONS=1
 export MISE_LOG_HTTP=1
 
 # GitHub Token Manager configuration
-export TOKEN_MANAGER_URL="${TOKEN_MANAGER_URL:-}"
-export TOKEN_MANAGER_SECRET="${TOKEN_MANAGER_SECRET:-}"
+export TOKEN_MANAGER_URL="$TOKEN_MANAGER_URL"
+export TOKEN_MANAGER_SECRET="$TOKEN_MANAGER_SECRET"
 
 # Statistics tracking variables
 export TOTAL_TOOLS_CHECKED=0
@@ -21,7 +21,8 @@ export TOTAL_TOKENS_USED=0
 export TOTAL_RATE_LIMITS_HIT=0
 export TOTAL_TOOLS_AVAILABLE=0
 export UPDATED_TOOLS_LIST=""
-export START_TIME=$(date +%s)
+START_TIME=$(date +%s)
+export START_TIME
 
 if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
@@ -60,6 +61,7 @@ generate_summary() {
 - **Tokens Used**: $TOTAL_TOKENS_USED
 - **Rate Limits Hit**: $TOTAL_RATE_LIMITS_HIT
 - **Duration**: ${duration_minutes}m ${duration_seconds}s
+- **Mise Version**: $CUR_MISE_VERSION
 
 ## 📈 Success Rate
 - **Success Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
@@ -301,7 +303,7 @@ setup_token_management() {
 				
 				if [ "$ACTIVE_TOKENS" -eq 0 ]; then
 					echo "❌ No active tokens available, stopping processing" >&2
-					exit 0
+					return 1
 				fi
 			fi
 		else
@@ -315,44 +317,42 @@ setup_token_management() {
 }
 
 # Setup token management before starting
-setup_token_management
+if setup_token_management; then
+	CUR_MISE_VERSION=$(docker run jdxcode/mise -v)
+	export CUR_MISE_VERSION
 
-docker run jdxcode/mise -v
-tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
-TOTAL_TOOLS_AVAILABLE=$(echo "$tools" | wc -w)
+	tools="$(docker run -e MISE_EXPERIMENTAL=1 -e MISE_VERSION="$CUR_MISE_VERSION" jdxcode/mise registry | awk '{print $1}')"
+	TOTAL_TOOLS_AVAILABLE=$(echo "$tools" | wc -w)
 
-# Check if tokens are available before starting processing
-echo "🔍 Checking token availability before starting..."
-if ! get_github_token >/dev/null; then
-	echo "🛑 No tokens available - stopping all processing"
-	exit 0
-fi
-
-# Enhanced parallel processing with better token distribution
-echo "🚀 Starting parallel fetch operations..."
-# Prevent broken pipe error by collecting tools first
-tools_limited=$(echo "$tools" | shuf -n 100)
-export -f fetch get_github_token mark_token_rate_limited
-export TOTAL_TOOLS_CHECKED TOTAL_TOOLS_UPDATED TOTAL_TOOLS_SKIPPED TOTAL_TOOLS_FAILED TOTAL_TOOLS_NO_VERSIONS TOTAL_TOKENS_USED TOTAL_RATE_LIMITS_HIT TOTAL_TOOLS_AVAILABLE UPDATED_TOOLS_LIST
-for tool in $tools_limited; do
-	if ! timeout 60s bash -c "fetch $tool"; then
-		echo "❌ Failed to fetch $tool, stopping processing"
-		break
+	# Check if tokens are available before starting processing
+	echo "🔍 Checking token availability before starting..."
+	if ! get_github_token >/dev/null; then
+		echo "🛑 No tokens available - stopping all processing"
+		exit 0
 	fi
-done
 
-if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
-	git diff --compact-summary --cached
-	git commit -m "versions"
-	git pull --autostash --rebase origin main
-	git push
+	# Enhanced parallel processing with better token distribution
+	echo "🚀 Starting parallel fetch operations..."
+	# Prevent broken pipe error by collecting tools first
+	tools_limited=$(echo "$tools" | shuf -n 100)
+	export -f fetch get_github_token mark_token_rate_limited
+	export TOTAL_TOOLS_CHECKED TOTAL_TOOLS_UPDATED TOTAL_TOOLS_SKIPPED TOTAL_TOOLS_FAILED TOTAL_TOOLS_NO_VERSIONS TOTAL_TOKENS_USED TOTAL_RATE_LIMITS_HIT TOTAL_TOOLS_AVAILABLE UPDATED_TOOLS_LIST
+	for tool in $tools_limited; do
+		if ! timeout 60s bash -c "fetch $tool"; then
+			echo "❌ Failed to fetch $tool, stopping processing"
+			break
+		fi
+	done
+
+	if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
+		git diff --compact-summary --cached
+		git commit -m "versions"
+		git pull --autostash --rebase origin main
+		git push
+	fi
 fi
 
 # Generate and display summary
-if [ "$TOTAL_TOOLS_CHECKED" -gt 0 ]; then
-	generate_summary
-else
-	echo "⚠️  No tools were processed, skipping summary generation"
-fi
+generate_summary
 
 echo "✅ Update complete!"
