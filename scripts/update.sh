@@ -11,19 +11,62 @@ export MISE_LOG_HTTP=1
 export TOKEN_MANAGER_URL="$TOKEN_MANAGER_URL"
 export TOKEN_MANAGER_SECRET="$TOKEN_MANAGER_SECRET"
 
-# Statistics tracking variables
-export TOTAL_TOOLS_CHECKED=0
-export TOTAL_TOOLS_UPDATED=0
-export TOTAL_TOOLS_SKIPPED=0
-export TOTAL_TOOLS_FAILED=0
-export TOTAL_TOOLS_NO_VERSIONS=0
-export TOTAL_TOKENS_USED=0
-export TOTAL_RATE_LIMITS_HIT=0
-export TOTAL_TOOLS_AVAILABLE=0
-export UPDATED_TOOLS_LIST=""
-export SUMMARY_GENERATED=false
+# Statistics tracking variables - now using files
+STATS_DIR="/tmp/mise_stats_$$"
+mkdir -p "$STATS_DIR"
+
+# Initialize statistics files
+echo "0" > "$STATS_DIR/total_tools_checked"
+echo "0" > "$STATS_DIR/total_tools_updated"
+echo "0" > "$STATS_DIR/total_tools_skipped"
+echo "0" > "$STATS_DIR/total_tools_failed"
+echo "0" > "$STATS_DIR/total_tools_no_versions"
+echo "0" > "$STATS_DIR/total_tokens_used"
+echo "0" > "$STATS_DIR/total_rate_limits_hit"
+echo "0" > "$STATS_DIR/total_tools_available"
+echo "" > "$STATS_DIR/updated_tools_list"
+echo "false" > "$STATS_DIR/summary_generated"
 START_TIME=$(date +%s)
-export START_TIME
+echo "$START_TIME" > "$STATS_DIR/start_time"
+
+# Helper functions for statistics
+increment_stat() {
+	local stat_file="$STATS_DIR/$1"
+	local current_value
+	current_value=$(cat "$stat_file" 2>/dev/null || echo "0")
+	echo $((current_value + 1)) > "$stat_file"
+}
+
+get_stat() {
+	local stat_file="$STATS_DIR/$1"
+	cat "$stat_file" 2>/dev/null || echo "0"
+}
+
+add_to_list() {
+	local list_file="$STATS_DIR/updated_tools_list"
+	local tool="$1"
+	local current_list
+	current_list=$(cat "$list_file" 2>/dev/null || echo "")
+	if [ -n "$current_list" ]; then
+		echo "$current_list $tool" > "$list_file"
+	else
+		echo "$tool" > "$list_file"
+	fi
+}
+
+set_stat() {
+	local stat_file="$STATS_DIR/$1"
+	local value="$2"
+	echo "$value" > "$stat_file"
+}
+
+# Cleanup function
+cleanup_stats() {
+	rm -rf "$STATS_DIR"
+}
+
+# Set trap to cleanup on exit
+trap cleanup_stats EXIT
 
 if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
@@ -33,7 +76,7 @@ fi
 # Function to generate GitHub Actions summary
 generate_summary() {
 	# Only generate summary once
-	if [ "$SUMMARY_GENERATED" = "true" ]; then
+	if [ "$(get_stat "summary_generated")" = "true" ]; then
 		return
 	fi
 	
@@ -51,56 +94,58 @@ generate_summary() {
 ## 📊 Quick Stats
 | Metric | Value |
 |--------|-------|
-| Tools Processed | $TOTAL_TOOLS_CHECKED |
-| Tools Updated | $TOTAL_TOOLS_UPDATED |
-| Success Rate | $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")% |
-| Tokens Used | $TOTAL_TOKENS_USED |
-| Rate Limits Hit | $TOTAL_RATE_LIMITS_HIT |
+| Tools Processed | $(get_stat "total_tools_checked") |
+| Tools Updated | $(get_stat "total_tools_updated") |
+| Success Rate | $([ "$(get_stat "total_tools_checked")" -gt 0 ] && echo "$(( ($(get_stat "total_tools_updated") * 100) / $(get_stat "total_tools_checked") ))" || echo "0")% |
+| Tokens Used | $(get_stat "total_tokens_used") |
+| Rate Limits Hit | $(get_stat "total_rate_limits_hit") |
 | Duration | ${duration_minutes}m ${duration_seconds}s |
 
 ## 🎯 Overview
-- **Total Tools Checked**: $TOTAL_TOOLS_CHECKED
-- **Tools Updated**: $TOTAL_TOOLS_UPDATED
-- **Tools Skipped**: $TOTAL_TOOLS_SKIPPED
-- **Tools Failed**: $TOTAL_TOOLS_FAILED
-- **Tools with No Versions**: $TOTAL_TOOLS_NO_VERSIONS
-- **Tokens Used**: $TOTAL_TOKENS_USED
-- **Rate Limits Hit**: $TOTAL_RATE_LIMITS_HIT
+- **Total Tools Checked**: $(get_stat "total_tools_checked")
+- **Tools Updated**: $(get_stat "total_tools_updated")
+- **Tools Skipped**: $(get_stat "total_tools_skipped")
+- **Tools Failed**: $(get_stat "total_tools_failed")
+- **Tools with No Versions**: $(get_stat "total_tools_no_versions")
+- **Tokens Used**: $(get_stat "total_tokens_used")
+- **Rate Limits Hit**: $(get_stat "total_rate_limits_hit")
 - **Duration**: ${duration_minutes}m ${duration_seconds}s
 - **Mise Version**: ${CUR_MISE_VERSION:-not set}
 
 ## 📈 Success Rate
-- **Success Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
-- **Update Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
-- **Coverage**: $([ "$TOTAL_TOOLS_AVAILABLE" -gt 0 ] && echo "$(( (TOTAL_TOOLS_CHECKED * 100) / TOTAL_TOOLS_AVAILABLE ))" || echo "0")%
+- **Success Rate**: $([ "$(get_stat "total_tools_checked")" -gt 0 ] && echo "$(( ($(get_stat "total_tools_updated") * 100) / $(get_stat "total_tools_checked") ))" || echo "0")%
+- **Update Rate**: $([ "$(get_stat "total_tools_checked")" -gt 0 ] && echo "$(( ($(get_stat "total_tools_updated") * 100) / $(get_stat "total_tools_checked") ))" || echo "0")%
+- **Coverage**: $([ "$(get_stat "total_tools_available")" -gt 0 ] && echo "$(( ($(get_stat "total_tools_checked") * 100) / $(get_stat "total_tools_available") ))" || echo "0")%
 
 ## 🔧 Token Management
-- **Tokens Consumed**: $TOTAL_TOKENS_USED
-- **Rate Limit Events**: $TOTAL_RATE_LIMITS_HIT
+- **Tokens Consumed**: $(get_stat "total_tokens_used")
+- **Rate Limit Events**: $(get_stat "total_rate_limits_hit")
 
 ## 📋 Details
-- **Tools Available**: $TOTAL_TOOLS_AVAILABLE
-- **Tools Processed**: $TOTAL_TOOLS_CHECKED
-- **Tools with Updates**: $TOTAL_TOOLS_UPDATED
-- **Tools Skipped**: $TOTAL_TOOLS_SKIPPED
-- **Tools Failed**: $TOTAL_TOOLS_FAILED
-- **Tools with No Versions**: $TOTAL_TOOLS_NO_VERSIONS
+- **Tools Available**: $(get_stat "total_tools_available")
+- **Tools Processed**: $(get_stat "total_tools_checked")
+- **Tools with Updates**: $(get_stat "total_tools_updated")
+- **Tools Skipped**: $(get_stat "total_tools_skipped")
+- **Tools Failed**: $(get_stat "total_tools_failed")
+- **Tools with No Versions**: $(get_stat "total_tools_no_versions")
 - **Total Duration**: ${duration_minutes}m ${duration_seconds}s
 
 ## 📊 Performance Metrics
-- **Processing Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / (duration / 60) ))" || echo "0") tools/minute
-- **Update Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( TOTAL_TOOLS_UPDATED / (duration / 60) ))" || echo "0") updates/minute
-- **Token Efficiency**: $([ "$TOTAL_TOKENS_USED" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / TOTAL_TOKENS_USED ))" || echo "0") tools per token
+- **Processing Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( $(get_stat "total_tools_checked") / (duration / 60) ))" || echo "0") tools/minute
+- **Update Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( $(get_stat "total_tools_updated") / (duration / 60) ))" || echo "0") updates/minute
+- **Token Efficiency**: $([ "$(get_stat "total_tokens_used")" -gt 0 ] && echo "$(( $(get_stat "total_tools_checked") / $(get_stat "total_tokens_used") ))" || echo "0") tools per token
 
-## 📦 Updated Tools ($TOTAL_TOOLS_UPDATED)
+## 📦 Updated Tools ($(get_stat "total_tools_updated"))
 SUMMARY_EOF
 
 	# Add updated tools list if any tools were updated
-	if [ -n "$UPDATED_TOOLS_LIST" ]; then
+	local updated_tools_list
+	updated_tools_list=$(cat "$STATS_DIR/updated_tools_list" 2>/dev/null || echo "")
+	if [ -n "$updated_tools_list" ]; then
 		echo "" >> summary.md
 		echo "The following tools were updated:" >> summary.md
 		echo "" >> summary.md
-		for tool in $UPDATED_TOOLS_LIST; do
+		for tool in $updated_tools_list; do
 			# Link to the local docs file
 			echo "- [$tool](docs/$tool)" >> summary.md
 		done
@@ -116,7 +161,7 @@ SUMMARY_EOF
 	
 	echo "📊 Summary generated:"
 	cat summary.md
-	export SUMMARY_GENERATED=true
+	set_stat "summary_generated" "true"
 }
 
 # Function to mark a token as rate-limited
@@ -129,7 +174,7 @@ mark_token_rate_limited() {
 	fi
 	
 	echo "🚫 Marking token $token_id as rate-limited" >&2
-	((TOTAL_RATE_LIMITS_HIT++))
+	increment_stat "total_rate_limits_hit"
 	
 	# Mark token as rate-limited asynchronously
 	{
@@ -149,7 +194,7 @@ get_github_token() {
 	fi
 
 	echo "🔄 Getting fresh GitHub token from token manager..." >&2
-	((TOTAL_TOKENS_USED++))
+	increment_stat "total_tokens_used"
 	
 	# Use the github-token.js script to get a token
 	# Capture both stdout (token) and stderr (includes token_id)
@@ -175,17 +220,17 @@ get_github_token() {
 
 
 fetch() {
-	((TOTAL_TOOLS_CHECKED++))
+	increment_stat "total_tools_checked"
 	
 	case "$1" in
 	awscli-local) # TODO: remove this when it is working
 		echo "Skipping $1"
-		((TOTAL_TOOLS_SKIPPED++))
+		increment_stat "total_tools_skipped"
 		return
 		;;
 	jfrog-cli | minio | tiny | teleport-ent | flyctl | flyway | vim | awscli | aws | aws-cli | checkov | snyk | chromedriver | sui | rebar)
 		echo "Skipping $1"
-		((TOTAL_TOOLS_SKIPPED++))
+		increment_stat "total_tools_skipped"
 		return
 		;;
 	esac
@@ -195,7 +240,7 @@ fetch() {
 	if ! token_info=$(get_github_token); then
 		# No tokens available, stop processing this tool gracefully
 		echo "🛑 No tokens available for $1, skipping..."
-		((TOTAL_TOOLS_FAILED++))
+		increment_stat "total_tools_failed"
 		return 1
 	fi
 	local token
@@ -208,7 +253,7 @@ fetch() {
 	else
 		# No valid token received, stop processing this tool
 		echo "❌ No valid token received for $1, skipping..."
-		((TOTAL_TOOLS_FAILED++))
+		increment_stat "total_tools_failed"
 		return 1
 	fi
 	
@@ -222,7 +267,7 @@ fetch() {
 	if ! docker run -e GITHUB_TOKEN="$token" -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2>"$stderr_file"; then
 		echo "Failed to fetch versions for $1"
-		((TOTAL_TOOLS_FAILED++))
+		increment_stat "total_tools_failed"
 		
 		# Check if this was a rate limit issue (403 Forbidden)
 		if grep -q "403 Forbidden" "$stderr_file"; then
@@ -251,11 +296,11 @@ fetch() {
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then
 		echo "No versions for $1" >/dev/null
-		((TOTAL_TOOLS_NO_VERSIONS++))
+		increment_stat "total_tools_no_versions"
 		rm -f "docs/$1"
 	else
-		((TOTAL_TOOLS_UPDATED++))
-		UPDATED_TOOLS_LIST="$UPDATED_TOOLS_LIST $1"
+		increment_stat "total_tools_updated"
+		add_to_list "$1"
 		case "$1" in
 		cargo-binstall)
 			mv docs/cargo-binstall{,.tmp}
@@ -323,7 +368,7 @@ if setup_token_management; then
 	export CUR_MISE_VERSION
 
 	tools="$(docker run -e MISE_EXPERIMENTAL=1 -e MISE_VERSION="$CUR_MISE_VERSION" jdxcode/mise registry | awk '{print $1}')"
-	TOTAL_TOOLS_AVAILABLE=$(echo "$tools" | wc -w)
+	set_stat "total_tools_available" "$(echo "$tools" | wc -w)"
 
 	# Check if tokens are available before starting processing
 	echo "🔍 Checking token availability before starting..."
@@ -337,8 +382,8 @@ if setup_token_management; then
 	echo "🚀 Starting parallel fetch operations..."
 	# Prevent broken pipe error by collecting tools first
 	tools_limited=$(echo "$tools" | shuf -n 100)
-	export -f fetch get_github_token mark_token_rate_limited
-	export TOTAL_TOOLS_CHECKED TOTAL_TOOLS_UPDATED TOTAL_TOOLS_SKIPPED TOTAL_TOOLS_FAILED TOTAL_TOOLS_NO_VERSIONS TOTAL_TOKENS_USED TOTAL_RATE_LIMITS_HIT TOTAL_TOOLS_AVAILABLE UPDATED_TOOLS_LIST
+	export -f fetch get_github_token mark_token_rate_limited increment_stat get_stat add_to_list set_stat
+	export STATS_DIR
 	for tool in $tools_limited; do
 		if ! timeout 60s bash -c "fetch $tool"; then
 			echo "❌ Failed to fetch $tool, stopping processing"
