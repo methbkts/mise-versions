@@ -92,11 +92,6 @@ generate_summary() {
 - **Update Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( TOTAL_TOOLS_UPDATED / (duration / 60) ))" || echo "0") updates/minute
 - **Token Efficiency**: $([ "$TOTAL_TOKENS_USED" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / TOTAL_TOKENS_USED ))" || echo "0") tools per token
 
-## 🚀 Next Steps
-- Monitor token usage patterns
-- Review failed tools for potential fixes
-- Consider token pool expansion if rate limits are frequent
-
 ## 📦 Updated Tools ($TOTAL_TOOLS_UPDATED)
 SUMMARY_EOF
 
