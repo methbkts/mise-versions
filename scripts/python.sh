@@ -15,7 +15,18 @@ mv python-precompiled docs/python-precompiled
 
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
-	git commit -m "python-precompiled"
+	
+	# Count the python-precompiled files for a more descriptive commit message
+	precompiled_files=$(find docs -name "python-precompiled*" -type f | wc -l)
+	platform_count=$(find docs -name "python-precompiled-*" -not -name "*.gz" -type f | wc -l)
+	
+	if [ "$platform_count" -gt 0 ]; then
+		commit_msg="python-precompiled: update $platform_count platforms ($precompiled_files total files)"
+	else
+		commit_msg="python-precompiled"
+	fi
+	
+	git commit -m "$commit_msg"
 	git pull --autostash --rebase origin main
 	git push
 fi 

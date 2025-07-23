@@ -393,7 +393,26 @@ if setup_token_management; then
 
 	if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 		git diff --compact-summary --cached
-		git commit -m "versions"
+		
+		# Get the list of updated tools for the commit message
+		updated_tools_list=$(cat "$STATS_DIR/updated_tools_list" 2>/dev/null || echo "")
+		tools_updated_count=$(get_stat "total_tools_updated")
+		
+		if [ -n "$updated_tools_list" ] && [ "$tools_updated_count" -gt 0 ]; then
+			# Create a more descriptive commit message with updated tools
+			if [ "$tools_updated_count" -le 10 ]; then
+				# If 10 or fewer tools, list them all
+				commit_msg="versions: update $tools_updated_count tools ($updated_tools_list)"
+			else
+				# If more than 10 tools, just show the count
+				commit_msg="versions: update $tools_updated_count tools"
+			fi
+		else
+			# Fallback to original message
+			commit_msg="versions"
+		fi
+		
+		git commit -m "$commit_msg"
 		git pull --autostash --rebase origin main
 		git push
 	fi

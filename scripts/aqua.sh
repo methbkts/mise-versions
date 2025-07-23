@@ -23,7 +23,17 @@ git add docs/aqua-registry
 
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
-	git commit -m "aqua-registry"
+	
+	# Count the number of tools in aqua-registry for a more descriptive commit message
+	tools_count=$(wc -l < docs/aqua-registry/all 2>/dev/null || echo "0")
+	
+	if [ "$tools_count" -gt 0 ]; then
+		commit_msg="aqua-registry: update registry with $tools_count tools"
+	else
+		commit_msg="aqua-registry"
+	fi
+	
+	git commit -m "$commit_msg"
   git pull --autostash --rebase origin main
 	git push
 fi
