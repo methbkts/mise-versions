@@ -243,7 +243,7 @@ echo "🚀 Starting parallel fetch operations..."
 tools_limited=$(echo "$tools" | shuf -n 100)
 export -f fetch
 for tool in $tools_limited; do
-	timeout 60s fetch "$tool" || true
+	timeout 60s bash -c "fetch $tool" || true
 done
 
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
