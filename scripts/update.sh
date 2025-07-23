@@ -241,6 +241,7 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | shuf -n 100)
+export -f fetch
 for tool in $tools_limited; do
 	timeout 60s fetch "$tool" || true
 done
