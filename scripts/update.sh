@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 source env_parallel.bash
-set -euxo pipefail
+set -euo pipefail
 
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
@@ -18,7 +18,6 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 fi
 
 fetch() {
-	set -x
 	# Function to record token usage for monitoring
 	record_token_usage() {
 		local plugin_name="$1"
@@ -86,15 +85,12 @@ fetch() {
 	esac
 	
 	# Get a fresh token for this fetch operation
-	MISE_GITHUB_TOKEN=$(get_github_token)
-	export MISE_GITHUB_TOKEN
+	GITHUB_API_TOKEN=$(get_github_token)
+	export GITHUB_API_TOKEN
 	
-	# Mask token in GitHub Actions logs
-	echo "::add-mask::$MISE_GITHUB_TOKEN"
-	
-	GITHUB_TOKEN=$MISE_GITHUB_TOKEN mise x -- wait-for-gh-rate-limit || true
+	mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
-	if ! docker run -e MISE_GITHUB_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
+	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" >/tmp/mise_403); then
 		echo "Failed to fetch versions for $1"
 		rm -f "docs/$1"

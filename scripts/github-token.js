@@ -131,9 +131,6 @@ async function main() {
         
         // Mask the token in logs
         console.log(`::add-mask::${token}`);
-        console.log(`::set-output name=token::${token}`);
-        console.log(`::set-output name=installation_id::${installation_id}`);
-        console.log(`::set-output name=expires_at::${expires_at}`);
       }
       
       // Output just the token for shell script usage
