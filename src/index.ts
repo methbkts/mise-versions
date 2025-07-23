@@ -17,7 +17,7 @@ interface TokenResponse {
   token: string;
   installation_id: number;
   token_id: number;
-  expires_at: string;
+  expires_at: string | null;
 }
 
 // Singleton to ensure migrations run only once

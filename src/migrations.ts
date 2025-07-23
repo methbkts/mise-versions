@@ -79,6 +79,53 @@ export const migrations: Migration[] = [
       await db.run(sql`DROP TABLE IF EXISTS token_usage`);
     }
   },
+  {
+    id: 4,
+    name: 'allow_null_expires_at',
+    async up(db) {
+      console.log('Running migration 4: allow_null_expires_at');
+      
+      // SQLite doesn't support ALTER COLUMN to change NOT NULL constraint
+      // We need to recreate the table with the new schema
+      await db.run(sql`
+        CREATE TABLE tokens_new (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id TEXT,
+          user_name TEXT,
+          user_email TEXT,
+          token TEXT NOT NULL,
+          expires_at TEXT,
+          created_at TEXT NOT NULL,
+          last_used TEXT,
+          usage_count INTEGER NOT NULL DEFAULT 0,
+          is_active INTEGER NOT NULL DEFAULT 1,
+          refresh_token TEXT,
+          refresh_token_expires_at TEXT,
+          scopes TEXT,
+          last_validated TEXT,
+          rate_limited_at TEXT
+        )
+      `);
+      
+      // Copy data from old table to new table
+      await db.run(sql`
+        INSERT INTO tokens_new 
+        SELECT * FROM tokens
+      `);
+      
+      // Drop old table
+      await db.run(sql`DROP TABLE tokens`);
+      
+      // Rename new table to original name
+      await db.run(sql`ALTER TABLE tokens_new RENAME TO tokens`);
+      
+      // Recreate indices
+      await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_user_id ON tokens(user_id)`);
+      await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_active ON tokens(is_active)`);
+      await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_last_used ON tokens(last_used)`);
+      await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_rate_limited ON tokens(rate_limited_at)`);
+    }
+  },
 ];
 
 export async function runMigrations(db: ReturnType<typeof drizzle>) {
