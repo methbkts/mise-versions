@@ -43,6 +43,7 @@ fetch() {
 	get_github_token() {
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
 			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN"
+			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
@@ -52,17 +53,20 @@ fetch() {
 		# Use the github-token.js script to get a token
 		if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
 			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
+			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
 		
 		# Extract token from the response (the script outputs it to stdout)
 		if [ -n "$GITHUB_ACTIONS" ]; then
-			# In GitHub Actions, the token is set as an output
+			# In GitHub Actions, mask the token and set as output
+			echo "::add-mask::$TOKEN_RESPONSE"
 			echo "✅ Token obtained from token manager"
 			echo "$TOKEN_RESPONSE"
 		else
 			# For local runs, parse from script output or use fallback
+			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 		fi
 	}
@@ -84,6 +88,9 @@ fetch() {
 	# Get a fresh token for this fetch operation
 	MISE_GITHUB_TOKEN=$(get_github_token)
 	export MISE_GITHUB_TOKEN
+	
+	# Mask token in GitHub Actions logs
+	echo "::add-mask::$MISE_GITHUB_TOKEN"
 	
 	GITHUB_TOKEN=$MISE_GITHUB_TOKEN mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
@@ -136,6 +143,10 @@ fetch() {
 setup_token_management() {
 	echo "🔧 Setting up token management..."
 	
+	# Mask sensitive values in GitHub Actions
+	echo "::add-mask::$TOKEN_MANAGER_SECRET"
+	echo "::add-mask::$GITHUB_API_TOKEN"
+	
 	if [ -n "$TOKEN_MANAGER_URL" ] && [ -n "$TOKEN_MANAGER_SECRET" ]; then
 		echo "✅ Using GitHub Token Manager at $TOKEN_MANAGER_URL"
 		
@@ -169,7 +180,7 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 # Enhanced parallel processing with better token distribution
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
-tools_limited=$(echo "$tools" | sort -R | head -n 100)
+tools_limited=$(echo "$tools" | shuf -n 100)
 echo "$tools_limited" | env_parallel -j4 fetch {} || true
 
 # Clean up any background processes
