@@ -15,6 +15,7 @@ run = "bunx wrangler deploy"
 [tools]
 "aqua:chmln/sd" = "latest"
 fd = "latest"
+uv = "latest"
 wait-for-gh-rate-limit = "latest"
 
 [env]

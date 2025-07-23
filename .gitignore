@@ -176,3 +176,5 @@ dist
 
 .wrangler
 .dev.vars
+
+.venv/
