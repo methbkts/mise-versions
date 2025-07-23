@@ -3273,6 +3273,7 @@ temurin-jre-musl-8.0.422+5
 temurin-jre-musl-8.0.432+6
 temurin-jre-musl-8.0.442+6
 temurin-jre-musl-8.0.452+9
+temurin-jre-musl-8.0.462+8
 temurin-jre-musl-11.0.13+8
 temurin-jre-musl-11.0.14+9
 temurin-jre-musl-11.0.14+101
@@ -3291,6 +3292,7 @@ temurin-jre-musl-11.0.24+8
 temurin-jre-musl-11.0.25+9
 temurin-jre-musl-11.0.26+4
 temurin-jre-musl-11.0.27+6
+temurin-jre-musl-11.0.28+6
 temurin-jre-musl-17.0.1+12
 temurin-jre-musl-17.0.2+8
 temurin-jre-musl-17.0.3+7
@@ -3351,6 +3353,7 @@ temurin-musl-8.0.422+5
 temurin-musl-8.0.432+6
 temurin-musl-8.0.442+6
 temurin-musl-8.0.452+9
+temurin-musl-8.0.462+8
 temurin-musl-11.0.13+8
 temurin-musl-11.0.14+9
 temurin-musl-11.0.14+101
@@ -3369,6 +3372,7 @@ temurin-musl-11.0.24+8
 temurin-musl-11.0.25+9
 temurin-musl-11.0.26+4
 temurin-musl-11.0.27+6
+temurin-musl-11.0.28+6
 temurin-musl-16.0.2+7
 temurin-musl-17.0.0+35
 temurin-musl-17.0.1+12
