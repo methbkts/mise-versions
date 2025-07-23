@@ -147,21 +147,12 @@ async function main() {
       
       // Set GitHub Actions outputs
       if (process.env.GITHUB_ACTIONS === 'true') {
-        const outputFile = process.env.GITHUB_OUTPUT;
-        if (outputFile) {
-          fs.appendFileSync(outputFile, `token=${token}\n`);
-          fs.appendFileSync(outputFile, `token_id=${token_id || installation_id}\n`);
-          fs.appendFileSync(outputFile, `installation_id=${installation_id}\n`);
-          fs.appendFileSync(outputFile, `expires_at=${expires_at}\n`);
-        }
-        
         // Mask the token in logs
         console.error(`::add-mask::${token}`);
       }
       
-      // Output token and token_id for shell script usage (token_id on stderr, token on stdout)
-      console.error(`TOKEN_ID:${token_id || installation_id}`);
-      console.log(token);
+      // Return token and token_id
+      console.log(`${token} ${token_id || installation_id}`);
       
     } else if (action === 'record-usage') {
       const tokenId = process.argv[3];

@@ -77,7 +77,7 @@ get_github_token() {
 	# Use the github-token.js script to get a token
 	# Capture both stdout (token) and stderr (includes token_id)
 	local token_output
-	if ! token_output=$(node scripts/github-token.js get-token 2>&1); then
+	if ! token_output=$(node scripts/github-token.js get-token); then
 		echo "❌ Failed to get token from token manager - no more tokens available" >&2
 		echo "🛑 Stopping processing as no tokens are available" >&2
 		return 1
@@ -87,17 +87,12 @@ get_github_token() {
 	local token
 	local token_id
 	
-	token=$(echo "$token_output" | tail -1)
-	token_id=$(echo "$token_output" | grep "TOKEN_ID:" | cut -d: -f2 || echo "unknown")
+	token=$(echo "$token_output" | cut -d' ' -f1)
+	token_id=$(echo "$token_output" | cut -d' ' -f2)
 	
-	if [ -n "$GITHUB_ACTIONS" ]; then
-		# In GitHub Actions, just return the token response
-		echo "✅ Token obtained from token manager (ID: $token_id)" >&2
-		echo "$token $token_id"
-	else
-		# For local runs, return token and token_id
-		echo "$token $token_id"
-	fi
+	echo "✅ Token obtained from token manager (ID: $token_id)" >&2
+	echo "$token $token_id"
+	
 	return 0
 }
 
