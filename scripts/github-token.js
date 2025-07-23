@@ -101,7 +101,7 @@ async function main() {
 
   try {
     if (action === 'get-token') {
-      console.log('🔄 Fetching GitHub token...');
+      console.error('🔄 Fetching GitHub token...');
       
       const response = await makeRequest(`${baseUrl}/api/token`, {
         headers: {
@@ -116,9 +116,9 @@ async function main() {
       
       const { token, installation_id, expires_at } = response.data;
       
-      console.log('✅ Token fetched successfully');
-      console.log(`📊 Installation ID: ${installation_id}`);
-      console.log(`⏰ Expires at: ${expires_at}`);
+      console.error('✅ Token fetched successfully');
+      console.error(`📊 Installation ID: ${installation_id}`);
+      console.error(`⏰ Expires at: ${expires_at}`);
       
       // Set GitHub Actions outputs
       if (process.env.GITHUB_ACTIONS === 'true') {
@@ -130,7 +130,7 @@ async function main() {
         }
         
         // Mask the token in logs
-        console.log(`::add-mask::${token}`);
+        console.error(`::add-mask::${token}`);
       }
       
       // Output just the token for shell script usage
@@ -147,7 +147,7 @@ async function main() {
         process.exit(1);
       }
       
-      console.log(`📝 Recording usage for token ${tokenId} on ${endpoint}...`);
+      console.error(`📝 Recording usage for token ${tokenId} on ${endpoint}...`);
       
       const rateLimitInfo = remaining ? {
         remaining: parseInt(remaining),
@@ -161,10 +161,10 @@ async function main() {
         process.exit(1);
       }
       
-      console.log('✅ Usage recorded successfully');
+      console.error('✅ Usage recorded successfully');
       
     } else if (action === 'stats') {
-      console.log('📊 Fetching token statistics...');
+      console.error('📊 Fetching token statistics...');
       
       const response = await makeRequest(`${baseUrl}/api/stats`, {
         headers: {
@@ -177,9 +177,9 @@ async function main() {
         process.exit(1);
       }
       
-      console.log('📈 Token Statistics:');
-      console.log(`   Active tokens: ${response.data.active}`);
-      console.log(`   Total tokens: ${response.data.total}`);
+      console.error('📈 Token Statistics:');
+      console.error(`   Active tokens: ${response.data.active}`);
+      console.error(`   Total tokens: ${response.data.total}`);
       
     } else {
       console.error('❌ Unknown action. Available actions: get-token, record-usage, stats');
