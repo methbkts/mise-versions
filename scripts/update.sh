@@ -241,7 +241,7 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 
 # Check if tokens are available before starting processing
 echo "🔍 Checking token availability before starting..."
-if ! get_github_token >/dev/null 2>&1; then
+if ! get_github_token >/dev/null; then
 	echo "🛑 No tokens available - stopping all processing"
 	exit 0
 fi
