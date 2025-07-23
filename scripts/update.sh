@@ -43,7 +43,7 @@ generate_summary() {
 	local duration_seconds=$((duration % 60))
 	
 	# Create summary file
-	cat > summary.md << 'SUMMARY_EOF'
+	cat > summary.md << SUMMARY_EOF
 # 📊 Mise Versions Update Summary
 
 **Generated**: $(date '+%Y-%m-%d %H:%M:%S UTC')
