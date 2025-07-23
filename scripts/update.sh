@@ -21,7 +21,9 @@ fetch() {
 	# Function to record token usage for monitoring
 	record_token_usage() {
 		local plugin_name="$1"
-		local token_id="${2:-unknown}"
+		local token_id="$2"
+		local remaining="${3:-}"
+		local reset_time="${4:-}"
 		
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
 			return
@@ -29,12 +31,40 @@ fetch() {
 		
 		# Record usage asynchronously to not slow down the main process
 		{
-			node scripts/github-token.js record-usage \
-				"$token_id" \
-				"/repos/*/$plugin_name" \
-				4800 \
-				"$(date -d '+1 hour' +%s)" \
-				|| true
+			if [ -n "$remaining" ] && [ -n "$reset_time" ]; then
+				node scripts/github-token.js record-usage \
+					"$token_id" \
+					"/repos/*/$plugin_name" \
+					"$remaining" \
+					"$reset_time" \
+					|| true
+			else
+				node scripts/github-token.js record-usage \
+					"$token_id" \
+					"/repos/*/$plugin_name" \
+					|| true
+			fi
+		} &
+	}
+
+	# Function to mark a token as rate-limited
+	mark_token_rate_limited() {
+		local token_id="$1"
+		local reset_time="${2:-}"
+		
+		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+			return
+		fi
+		
+		echo "🚫 Marking token $token_id as rate-limited" >&2
+		
+		# Mark token as rate-limited asynchronously
+		{
+			if [ -n "$reset_time" ]; then
+				node scripts/github-token.js mark-rate-limited "$token_id" "$reset_time" || true
+			else
+				node scripts/github-token.js mark-rate-limited "$token_id" || true
+			fi
 		} &
 	}
 
@@ -42,33 +72,38 @@ fetch() {
 	get_github_token() {
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
 			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN" >&2
-			echo "$GITHUB_API_TOKEN"
+			echo "GITHUB_API_TOKEN"
 			return
 		fi
 
 		echo "🔄 Getting fresh GitHub token from token manager..." >&2
 		
 		# Use the github-token.js script to get a token
-		if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
+		# Capture both stdout (token) and stderr (includes token_id)
+		local token_output
+		if ! token_output=$(node scripts/github-token.js get-token 2>&1); then
 			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN" >&2
-			echo "$GITHUB_API_TOKEN"
+			echo "GITHUB_API_TOKEN"
 			return
 		fi
 		
-		# Extract token from the response (the script outputs it to stdout)
+		# Extract token (last line of output) and token_id (from stderr)
+		local token
+		local token_id
+		
+		token=$(echo "$token_output" | tail -1)
+		token_id=$(echo "$token_output" | grep "TOKEN_ID:" | cut -d: -f2 || echo "unknown")
+		
 		if [ -n "$GITHUB_ACTIONS" ]; then
-			# In GitHub Actions, mask the token and set as output
-			echo "✅ Token obtained from token manager" >&2
-			echo "$TOKEN_RESPONSE"
+			# In GitHub Actions, just return the token response
+			echo "✅ Token obtained from token manager (ID: $token_id)" >&2
+			echo "$token $token_id"
 		else
-			# For local runs, parse from script output or use fallback
-			echo "$GITHUB_API_TOKEN"
+			# For local runs, return token and token_id
+			echo "$token $token_id"
 		fi
 	}
 
-	if [ -f /tmp/mise_403 ]; then
-		return
-	fi
 	case "$1" in
 	awscli-local) # TODO: remove this when it is working
 		echo "Skipping $1"
@@ -81,19 +116,58 @@ fetch() {
 	esac
 	
 	# Get a fresh token for this fetch operation
-	token=$(get_github_token)
+	local token_info
+	token_info=$(get_github_token)
+	local token
+	local token_id
+	
+	# Parse token and token_id from the response
+	if [[ "$token_info" == *" "* ]]; then
+		token=$(echo "$token_info" | cut -d' ' -f1)
+		token_id=$(echo "$token_info" | cut -d' ' -f2)
+	else
+		# Fallback for GITHUB_API_TOKEN
+		token="$token_info"
+		token_id="fallback"
+	fi
 	
 	GITHUB_TOKEN="$token" mise x -- wait-for-gh-rate-limit || true
-	echo "Fetching $1"
+	echo "Fetching $1 (using token ID: $token_id)"
+	
+	# Create a temporary file to capture stderr and check for rate limiting
+	local stderr_file
+	stderr_file=$(mktemp)
+	
 	if ! docker run -e GITHUB_TOKEN="$token" -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
-		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" >/tmp/mise_403); then
+		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2>"$stderr_file"; then
 		echo "Failed to fetch versions for $1"
-		rm -f "docs/$1"
+		
+		# Check if this was a rate limit issue (403 Forbidden)
+		if grep -q "403 Forbidden" "$stderr_file"; then
+			echo "⚠️  Rate limit hit for token $token_id on $1, marking token as rate-limited" >&2
+			
+			# Extract rate limit reset time from response headers if available
+			local reset_time
+			reset_time=$(grep -i "x-ratelimit-reset" "$stderr_file" | cut -d: -f2 | tr -d ' ' || echo "")
+			
+			# Mark this specific token as rate-limited
+			mark_token_rate_limited "$token_id" "$reset_time"
+			
+			echo "🔄 Will try with a different token next time" >&2
+		else
+			# Show the actual error for non-rate-limit failures
+			cat "$stderr_file" >&2
+		fi
+		
+		rm -f "$stderr_file" "docs/$1"
 		return
 	fi
+	
+	# Clean up stderr file
+	rm -f "$stderr_file"
 
-	# Record token usage for monitoring
-	record_token_usage "$1" "unknown"
+	# Record successful token usage
+	record_token_usage "$1" "$token_id"
 
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then

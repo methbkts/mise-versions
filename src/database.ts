@@ -18,6 +18,7 @@ export const tokens = sqliteTable('tokens', {
   refresh_token_expires_at: text('refresh_token_expires_at'), // Refresh token expiration
   scopes: text('scopes'), // JSON array of token scopes
   last_validated: text('last_validated'), // Last time token was validated
+  rate_limited_at: text('rate_limited_at'), // When token was rate limited (expires after 1 hour)
 });
 
 // Token usage tracking for rate limiting
@@ -36,48 +37,6 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async setup() {
       console.log('Initializing database tables...');
       
-      await db.run(sql`
-        CREATE TABLE IF NOT EXISTS tokens (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          user_id TEXT,
-          user_name TEXT,
-          user_email TEXT,
-          token TEXT NOT NULL,
-          expires_at TEXT NOT NULL,
-          created_at TEXT NOT NULL,
-          last_used TEXT,
-          usage_count INTEGER NOT NULL DEFAULT 0,
-          is_active INTEGER NOT NULL DEFAULT 1,
-          refresh_token TEXT,
-          refresh_token_expires_at TEXT,
-          scopes TEXT,
-          last_validated TEXT
-        )
-      `);
-
-      await db.run(sql`
-        CREATE TABLE IF NOT EXISTS token_usage (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          token_id INTEGER NOT NULL,
-          endpoint TEXT NOT NULL,
-          used_at TEXT NOT NULL,
-          remaining_requests INTEGER,
-          reset_at TEXT,
-          FOREIGN KEY (token_id) REFERENCES tokens (id)
-        )
-      `);
-
-      // Create indices for better performance (IF NOT EXISTS is implicit for indices)
-      try {
-        await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_user_id ON tokens(user_id)`);
-        await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_active ON tokens(is_active)`);
-        await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_last_used ON tokens(last_used)`);
-        await db.run(sql`CREATE INDEX IF NOT EXISTS idx_token_usage_token_id ON token_usage(token_id)`);
-      } catch (error) {
-        // Indices might already exist, that's fine
-        console.log('Some indices already exist, continuing...');
-      }
-      
       console.log('Database initialization complete');
     },
 
@@ -85,7 +44,11 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getNextToken() {
       const result = await db.select()
         .from(tokens)
-        .where(sql`is_active = 1 AND expires_at > datetime('now')`)
+        .where(sql`
+          is_active = 1 
+          AND expires_at > datetime('now')
+          AND (rate_limited_at IS NULL OR rate_limited_at <= datetime('now'))
+        `)
         .orderBy(sql`COALESCE(last_used, '1970-01-01') ASC, usage_count ASC`)
         .limit(1)
         .get();
@@ -102,6 +65,20 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
       }
       
       return result;
+    },
+
+    // Mark a token as rate-limited for 1 hour
+    async markTokenRateLimited(tokenId: number, resetAt?: string) {
+      const rateLimitedUntil = resetAt || new Date(Date.now() + 3600000).toISOString(); // Default to 1 hour from now
+      
+      await db.update(tokens)
+        .set({
+          rate_limited_at: rateLimitedUntil
+        })
+        .where(sql`id = ${tokenId}`)
+        .run();
+      
+      console.log(`Token ${tokenId} marked as rate-limited until ${rateLimitedUntil}`);
     },
 
     // Get all active tokens (all are user tokens now)

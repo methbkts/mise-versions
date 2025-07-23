@@ -33,7 +33,7 @@ async function makeRequest(url, options = {}) {
     const client = urlObj.protocol === 'https:' ? https : http;
     
     const req = client.request(url, {
-      method: 'GET',
+      method: options.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...options.headers
@@ -52,6 +52,11 @@ async function makeRequest(url, options = {}) {
     });
     
     req.on('error', reject);
+    
+    if (options.body) {
+      req.write(options.body);
+    }
+    
     req.end();
   });
 }
@@ -89,6 +94,25 @@ async function recordUsage(baseUrl, secret, tokenId, endpoint, rateLimitInfo) {
   });
 }
 
+async function markRateLimited(baseUrl, secret, tokenId, resetTime) {
+  const rateLimitUrl = `${baseUrl}/api/token/rate-limit`;
+  
+  const payload = JSON.stringify({
+    token_id: tokenId,
+    remaining_requests: 0,
+    reset_at: resetTime ? new Date(resetTime * 1000).toISOString() : new Date(Date.now() + 3600000).toISOString(), // Default to 1 hour from now
+  });
+  
+  return makeRequest(rateLimitUrl, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${secret}`,
+      'Content-Length': Buffer.byteLength(payload),
+    },
+    body: payload
+  });
+}
+
 async function main() {
   const baseUrl = process.env.TOKEN_MANAGER_URL;
   const secret = process.env.TOKEN_MANAGER_SECRET;
@@ -114,9 +138,10 @@ async function main() {
         process.exit(1);
       }
       
-      const { token, installation_id, expires_at } = response.data;
+      const { token, installation_id, expires_at, token_id } = response.data;
       
       console.error('✅ Token fetched successfully');
+      console.error(`📊 Token ID: ${token_id || installation_id}`);
       console.error(`📊 Installation ID: ${installation_id}`);
       console.error(`⏰ Expires at: ${expires_at}`);
       
@@ -125,6 +150,7 @@ async function main() {
         const outputFile = process.env.GITHUB_OUTPUT;
         if (outputFile) {
           fs.appendFileSync(outputFile, `token=${token}\n`);
+          fs.appendFileSync(outputFile, `token_id=${token_id || installation_id}\n`);
           fs.appendFileSync(outputFile, `installation_id=${installation_id}\n`);
           fs.appendFileSync(outputFile, `expires_at=${expires_at}\n`);
         }
@@ -133,7 +159,8 @@ async function main() {
         console.error(`::add-mask::${token}`);
       }
       
-      // Output just the token for shell script usage
+      // Output token and token_id for shell script usage (token_id on stderr, token on stdout)
+      console.error(`TOKEN_ID:${token_id || installation_id}`);
       console.log(token);
       
     } else if (action === 'record-usage') {
@@ -163,6 +190,26 @@ async function main() {
       
       console.error('✅ Usage recorded successfully');
       
+    } else if (action === 'mark-rate-limited') {
+      const tokenId = process.argv[3];
+      const resetTime = process.argv[4]; // Optional reset time (unix timestamp)
+      
+      if (!tokenId) {
+        console.error('❌ Usage: node github-token.js mark-rate-limited <token_id> [reset_time]');
+        process.exit(1);
+      }
+      
+      console.error(`🚫 Marking token ${tokenId} as rate-limited...`);
+      
+      const response = await markRateLimited(baseUrl, secret, parseInt(tokenId), resetTime ? parseInt(resetTime) : undefined);
+      
+      if (response.status !== 200) {
+        console.error(`❌ Failed to mark token as rate-limited: ${response.status} ${response.data}`);
+        process.exit(1);
+      }
+      
+      console.error('✅ Token marked as rate-limited successfully');
+      
     } else if (action === 'stats') {
       console.error('📊 Fetching token statistics...');
       
@@ -182,7 +229,7 @@ async function main() {
       console.error(`   Total tokens: ${response.data.total}`);
       
     } else {
-      console.error('❌ Unknown action. Available actions: get-token, record-usage, stats');
+      console.error('❌ Unknown action. Available actions: get-token, record-usage, mark-rate-limited, stats');
       process.exit(1);
     }
     
@@ -197,4 +244,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-export { makeRequest, recordUsage }; 
+export { makeRequest, recordUsage, markRateLimited }; 

@@ -1,22 +1,35 @@
 import { drizzle } from 'drizzle-orm/d1';
+import { GitHubAppManager, GitHubAppConfig } from './github.js';
 import { setupDatabase } from './database.js';
-import { 
-  GitHubAppManager, 
-  GitHubAppConfig,
-  extractRateLimitInfo 
-} from './github.js';
+import { getMigrationStatus, runMigrations } from './migrations.js';
 
 export interface Env {
   DB: D1Database;
+  GITHUB_APP_ID: string;
+  GITHUB_PRIVATE_KEY: string;
   GITHUB_CLIENT_ID: string;
   GITHUB_CLIENT_SECRET: string;
-  API_SECRET: string; // Secret for GitHub Actions to authenticate
+  GITHUB_WEBHOOK_SECRET: string;
+  API_SECRET: string;
 }
 
 interface TokenResponse {
   token: string;
   installation_id: number;
+  token_id: number;
   expires_at: string;
+}
+
+// Singleton to ensure migrations run only once
+let migrationsCompleted = false;
+
+async function ensureMigrationsCompleted(db: ReturnType<typeof drizzle>) {
+  if (!migrationsCompleted) {
+    console.log('🚀 Running database migrations on server start...');
+    await runMigrations(db);
+    migrationsCompleted = true;
+    console.log('✅ Migrations completed');
+  }
 }
 
 export default {
@@ -24,14 +37,8 @@ export default {
     const db = drizzle(env.DB);
     const database = setupDatabase(db);
     
-    // Auto-setup database on first access
-    try {
-      await database.setup();
-    } catch (error) {
-      // Database setup failed - this might be a real issue
-      console.error('Database setup error:', error);
-      // Continue anyway - tables might already exist
-    }
+    // Run migrations only once on server start
+    await ensureMigrationsCompleted(db);
     
     const url = new URL(request.url);
     const path = url.pathname;
@@ -180,6 +187,7 @@ export default {
         const response: TokenResponse = {
           token: token.token,
           installation_id: token.id, // Use token.id as a unique identifier
+          token_id: token.id, // Add explicit token_id for rate limiting
           expires_at: token.expires_at,
         };
 
@@ -226,6 +234,39 @@ export default {
         return new Response('Usage recorded', { headers: corsHeaders });
       }
 
+      // API endpoint to mark a token as rate-limited
+      if (path === '/api/token/rate-limit' && request.method === 'POST') {
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          return new Response('Missing or invalid authorization header', { 
+            status: 401, 
+            headers: corsHeaders 
+          });
+        }
+
+        const apiSecret = authHeader.slice(7);
+        if (apiSecret !== env.API_SECRET) {
+          return new Response('Invalid API secret', { 
+            status: 401, 
+            headers: corsHeaders 
+          });
+        }
+
+        const rateLimitData = await request.json() as {
+          token_id: number;
+          remaining_requests?: number;
+          reset_at?: string;
+        };
+
+        // Mark token as rate-limited for 1 hour (or until reset_at)
+        await database.markTokenRateLimited(
+          rateLimitData.token_id,
+          rateLimitData.reset_at
+        );
+
+        return new Response('Token marked as rate-limited', { headers: corsHeaders });
+      }
+
       // Token statistics endpoint
       if (path === '/api/stats' && request.method === 'GET') {
         const authHeader = request.headers.get('authorization');
@@ -246,6 +287,33 @@ export default {
 
         const stats = await database.getTokenStats();
         return new Response(JSON.stringify(stats), {
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+          },
+        });
+      }
+
+      // Migration status endpoint
+      if (path === '/api/migrations' && request.method === 'GET') {
+        const authHeader = request.headers.get('authorization');
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+          return new Response('Missing or invalid authorization header', { 
+            status: 401, 
+            headers: corsHeaders 
+          });
+        }
+
+        const apiSecret = authHeader.slice(7);
+        if (apiSecret !== env.API_SECRET) {
+          return new Response('Invalid API secret', { 
+            status: 401, 
+            headers: corsHeaders 
+          });
+        }
+
+        const migrationStatus = await getMigrationStatus(db);
+        return new Response(JSON.stringify(migrationStatus), {
           headers: { 
             ...corsHeaders,
             'Content-Type': 'application/json',
@@ -321,6 +389,7 @@ export default {
       if (path === '/health') {
         const stats = await database.getTokenStats();
         const expiringTokens = await database.getExpiringTokens();
+        const migrationStatus = await getMigrationStatus(db);
         
         return new Response(JSON.stringify({
           status: 'healthy',
@@ -331,6 +400,7 @@ export default {
             active: stats.active,
           },
           expiringTokens: expiringTokens.length,
+          migrations: migrationStatus,
         }), {
           headers: { 
             ...corsHeaders,
@@ -350,7 +420,9 @@ Endpoints:
 - POST /webhooks/github     - GitHub webhooks (optional)
 - GET  /api/token          - Get next available token (round-robin)
 - POST /api/token/usage    - Record token usage for monitoring
+- POST /api/token/rate-limit - Mark a token as rate-limited
 - GET  /api/stats          - Token statistics
+- GET  /api/migrations     - Database migration status
 - GET  /api/rate-limits    - Rate limit status across tokens
 
 Features:
@@ -358,6 +430,8 @@ Features:
 - Round-robin distribution  
 - Enhanced user information storage
 - Rate limit monitoring
+- Granular token rate limiting
+- Database migrations
 - Database auto-initialization
 
 Authentication: All API endpoints require Bearer token with API_SECRET.`, {
