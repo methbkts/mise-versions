@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 source env_parallel.bash
-set -euxo pipefail
+set -euo pipefail
 
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
@@ -167,7 +167,7 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 
 # Enhanced parallel processing with better token distribution
 echo "🚀 Starting parallel fetch operations..."
-echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch fetch {} || true
+echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch --env record_token_usage --env get_github_token fetch {} || true
 
 # Clean up any background processes
 wait
