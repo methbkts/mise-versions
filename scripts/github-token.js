@@ -23,8 +23,9 @@
  *     GITHUB_TOKEN: ${{ steps.github-token.outputs.token }}
  */
 
-const https = require('https');
-const http = require('http');
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
 
 async function makeRequest(url, options = {}) {
   return new Promise((resolve, reject) => {
@@ -121,7 +122,6 @@ async function main() {
       
       // Set GitHub Actions outputs
       if (process.env.GITHUB_ACTIONS === 'true') {
-        const fs = require('fs');
         const outputFile = process.env.GITHUB_OUTPUT;
         if (outputFile) {
           fs.appendFileSync(outputFile, `token=${token}\n`);
@@ -135,6 +135,9 @@ async function main() {
         console.log(`::set-output name=installation_id::${installation_id}`);
         console.log(`::set-output name=expires_at::${expires_at}`);
       }
+      
+      // Output just the token for shell script usage
+      console.log(token);
       
     } else if (action === 'record-usage') {
       const tokenId = process.argv[3];
@@ -192,8 +195,9 @@ async function main() {
   }
 }
 
-if (require.main === module) {
+// ES module equivalent of require.main === module
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-module.exports = { makeRequest, recordUsage }; 
+export { makeRequest, recordUsage }; 
