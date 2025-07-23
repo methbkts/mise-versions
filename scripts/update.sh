@@ -21,6 +21,7 @@ export TOTAL_TOKENS_USED=0
 export TOTAL_RATE_LIMITS_HIT=0
 export TOTAL_TOOLS_AVAILABLE=0
 export UPDATED_TOOLS_LIST=""
+export SUMMARY_GENERATED=false
 START_TIME=$(date +%s)
 export START_TIME
 
@@ -31,13 +32,18 @@ fi
 
 # Function to generate GitHub Actions summary
 generate_summary() {
+	# Only generate summary once
+	if [ "$SUMMARY_GENERATED" = "true" ]; then
+		return
+	fi
+	
 	local end_time=$(date +%s)
 	local duration=$((end_time - START_TIME))
 	local duration_minutes=$((duration / 60))
 	local duration_seconds=$((duration % 60))
 	
 	# Create summary file
-	cat > summary.md << EOF
+	cat > summary.md << 'SUMMARY_EOF'
 # 📊 Mise Versions Update Summary
 
 **Generated**: $(date '+%Y-%m-%d %H:%M:%S UTC')
@@ -82,8 +88,8 @@ generate_summary() {
 - **Total Duration**: ${duration_minutes}m ${duration_seconds}s
 
 ## 📊 Performance Metrics
-- **Processing Speed**: $([ "$duration" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / (duration / 60) ))" || echo "0") tools/minute
-- **Update Speed**: $([ "$duration" -gt 0 ] && echo "$(( TOTAL_TOOLS_UPDATED / (duration / 60) ))" || echo "0") updates/minute
+- **Processing Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / (duration / 60) ))" || echo "0") tools/minute
+- **Update Speed**: $([ "$duration" -gt 0 ] && [ "$((duration / 60))" -gt 0 ] && echo "$(( TOTAL_TOOLS_UPDATED / (duration / 60) ))" || echo "0") updates/minute
 - **Token Efficiency**: $([ "$TOTAL_TOKENS_USED" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / TOTAL_TOKENS_USED ))" || echo "0") tools per token
 
 ## 🚀 Next Steps
@@ -92,7 +98,7 @@ generate_summary() {
 - Consider token pool expansion if rate limits are frequent
 
 ## 📦 Updated Tools ($TOTAL_TOOLS_UPDATED)
-EOF
+SUMMARY_EOF
 
 	# Add updated tools list if any tools were updated
 	if [ -n "$UPDATED_TOOLS_LIST" ]; then
@@ -107,7 +113,6 @@ EOF
 		echo "" >> summary.md
 		echo "No tools were updated in this run." >> summary.md
 	fi
-EOF
 
 	# Output to GitHub Actions summary
 	if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
@@ -116,6 +121,7 @@ EOF
 	
 	echo "📊 Summary generated:"
 	cat summary.md
+	export SUMMARY_GENERATED=true
 }
 
 # Function to mark a token as rate-limited
@@ -328,6 +334,7 @@ if setup_token_management; then
 	echo "🔍 Checking token availability before starting..."
 	if ! get_github_token >/dev/null; then
 		echo "🛑 No tokens available - stopping all processing"
+		generate_summary
 		exit 0
 	fi
 
@@ -350,9 +357,13 @@ if setup_token_management; then
 		git pull --autostash --rebase origin main
 		git push
 	fi
+else
+	echo "❌ Token management setup failed"
+	generate_summary
+	exit 1
 fi
 
-# Generate and display summary
+# Always generate and display summary
 generate_summary
 
 echo "✅ Update complete!"
