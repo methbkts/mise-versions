@@ -384,7 +384,6 @@ Endpoints:
 - POST /auth/callback       - User authorization callback  
 - POST /webhooks/github     - GitHub webhooks (optional)
 - GET  /api/token          - Get next available token (round-robin)
-- POST /api/token/usage    - Record token usage for monitoring
 - POST /api/token/rate-limit - Mark a token as rate-limited
 - GET  /api/stats          - Token statistics
 - GET  /api/migrations     - Database migration status

@@ -85,7 +85,7 @@ fetch() {
 	if ! token_info=$(get_github_token); then
 		# No tokens available, stop processing this tool gracefully
 		echo "🛑 No tokens available for $1, skipping..."
-		return 0
+		return 1
 	fi
 	local token
 	local token_id
@@ -97,7 +97,7 @@ fetch() {
 	else
 		# No valid token received, stop processing this tool
 		echo "❌ No valid token received for $1, skipping..."
-		return 0
+		return 1
 	fi
 	
 	GITHUB_TOKEN="$token" mise x -- wait-for-gh-rate-limit || true
@@ -220,7 +220,10 @@ echo "🚀 Starting parallel fetch operations..."
 tools_limited=$(echo "$tools" | shuf -n 100)
 export -f fetch get_github_token mark_token_rate_limited
 for tool in $tools_limited; do
-	timeout 60s bash -c "fetch $tool" || true
+	if ! timeout 60s bash -c "fetch $tool"; then
+		echo "❌ Failed to fetch $tool, stopping processing"
+		break
+	fi
 done
 
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
