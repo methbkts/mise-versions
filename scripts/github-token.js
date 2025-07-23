@@ -154,33 +154,6 @@ async function main() {
       // Return token and token_id
       console.log(`${token} ${token_id || installation_id}`);
       
-    } else if (action === 'record-usage') {
-      const tokenId = process.argv[3];
-      const endpoint = process.argv[4];
-      const remaining = process.argv[5];
-      const reset = process.argv[6];
-      
-      if (!tokenId || !endpoint) {
-        console.error('❌ Usage: node github-token.js record-usage <token_id> <endpoint> [remaining] [reset]');
-        process.exit(1);
-      }
-      
-      console.error(`📝 Recording usage for token ${tokenId} on ${endpoint}...`);
-      
-      const rateLimitInfo = remaining ? {
-        remaining: parseInt(remaining),
-        reset: reset ? parseInt(reset) : undefined,
-      } : undefined;
-      
-      const response = await recordUsage(baseUrl, secret, parseInt(tokenId), endpoint, rateLimitInfo);
-      
-      if (response.status !== 200) {
-        console.error(`❌ Failed to record usage: ${response.status} ${response.data}`);
-        process.exit(1);
-      }
-      
-      console.error('✅ Usage recorded successfully');
-      
     } else if (action === 'mark-rate-limited') {
       const tokenId = process.argv[3];
       const resetTime = process.argv[4]; // Optional reset time (unix timestamp)

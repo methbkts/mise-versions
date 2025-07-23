@@ -199,41 +199,6 @@ export default {
         });
       }
 
-      // API endpoint to record token usage (for rate limit tracking)
-      if (path === '/api/token/usage' && request.method === 'POST') {
-        const authHeader = request.headers.get('authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-          return new Response('Missing or invalid authorization header', { 
-            status: 401, 
-            headers: corsHeaders 
-          });
-        }
-
-        const apiSecret = authHeader.slice(7);
-        if (apiSecret !== env.API_SECRET) {
-          return new Response('Invalid API secret', { 
-            status: 401, 
-            headers: corsHeaders 
-          });
-        }
-
-        const usage = await request.json() as {
-          token_id: number;
-          endpoint: string;
-          remaining_requests?: number;
-          reset_at?: string;
-        };
-
-        await database.recordTokenUsage(
-          usage.token_id,
-          usage.endpoint,
-          usage.remaining_requests,
-          usage.reset_at
-        );
-
-        return new Response('Usage recorded', { headers: corsHeaders });
-      }
-
       // API endpoint to mark a token as rate-limited
       if (path === '/api/token/rate-limit' && request.method === 'POST') {
         const authHeader = request.headers.get('authorization');

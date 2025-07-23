@@ -70,7 +70,15 @@ export const migrations: Migration[] = [
       // Create index for the new column
       await db.run(sql`CREATE INDEX IF NOT EXISTS idx_tokens_rate_limited ON tokens(rate_limited_at)`);
     }
-  }
+  },
+  {
+    id: 3,
+    name: 'drop_token_usage_table',
+    async up(db) {
+      console.log('Running migration 3: drop_token_usage_table');
+      await db.run(sql`DROP TABLE IF EXISTS token_usage`);
+    }
+  },
 ];
 
 export async function runMigrations(db: ReturnType<typeof drizzle>) {

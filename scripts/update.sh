@@ -15,35 +15,6 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.name "mise-en-versions"
 fi
 
-# Function to record token usage for monitoring
-record_token_usage() {
-	local plugin_name="$1"
-	local token_id="$2"
-	local remaining="${3:-}"
-	local reset_time="${4:-}"
-	
-	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-		return
-	fi
-	
-	# Record usage asynchronously to not slow down the main process
-	{
-		if [ -n "$remaining" ] && [ -n "$reset_time" ]; then
-			node scripts/github-token.js record-usage \
-				"$token_id" \
-				"/repos/*/$plugin_name" \
-				"$remaining" \
-				"$reset_time" \
-				|| true
-		else
-			node scripts/github-token.js record-usage \
-				"$token_id" \
-				"/repos/*/$plugin_name" \
-				|| true
-		fi
-	} &
-}
-
 # Function to mark a token as rate-limited
 mark_token_rate_limited() {
 	local token_id="$1"
@@ -164,9 +135,6 @@ fetch() {
 	# Clean up stderr file
 	rm -f "$stderr_file"
 
-	# Record successful token usage
-	record_token_usage "$1" "$token_id"
-
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then
 		echo "No versions for $1" >/dev/null
@@ -250,7 +218,7 @@ fi
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | shuf -n 100)
-export -f fetch get_github_token record_token_usage mark_token_rate_limited
+export -f fetch get_github_token mark_token_rate_limited
 for tool in $tools_limited; do
 	timeout 60s bash -c "fetch $tool" || true
 done

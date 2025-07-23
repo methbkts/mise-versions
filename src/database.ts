@@ -21,16 +21,6 @@ export const tokens = sqliteTable('tokens', {
   rate_limited_at: text('rate_limited_at'), // When token was rate limited (expires after 1 hour)
 });
 
-// Token usage tracking for rate limiting
-export const token_usage = sqliteTable('token_usage', {
-  id: integer('id').primaryKey({ autoIncrement: true }),
-  token_id: integer('token_id').notNull().references(() => tokens.id),
-  endpoint: text('endpoint').notNull(),
-  used_at: text('used_at').notNull(),
-  remaining_requests: integer('remaining_requests'),
-  reset_at: text('reset_at'),
-});
-
 export function setupDatabase(db: ReturnType<typeof drizzle>) {
   return {
     // Create all tables (idempotent - safe to run multiple times)
@@ -129,19 +119,6 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
           last_validated: new Date().toISOString() 
         })
         .where(sql`id = ${tokenId}`)
-        .run();
-    },
-
-    // Record token usage for rate limit tracking
-    async recordTokenUsage(tokenId: number, endpoint: string, remainingRequests?: number, resetAt?: string) {
-      return await db.insert(token_usage)
-        .values({
-          token_id: tokenId,
-          endpoint,
-          used_at: new Date().toISOString(),
-          remaining_requests: remainingRequests,
-          reset_at: resetAt,
-        })
         .run();
     },
 
