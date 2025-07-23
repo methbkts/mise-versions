@@ -314,11 +314,11 @@ setup_token_management() {
 			fi
 		else
 			echo "❌ Token manager health check failed, stopping processing" >&2
-			exit 1
+			return 1
 		fi
 	else
 		echo "❌ Token manager not configured, stopping processing" >&2
-		exit 1
+		return 1
 	fi
 }
 
@@ -360,7 +360,7 @@ if setup_token_management; then
 else
 	echo "❌ Token management setup failed"
 	generate_summary
-	exit 1
+	exit 0
 fi
 
 # Always generate and display summary
