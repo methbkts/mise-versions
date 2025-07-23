@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2129
 set -euo pipefail
 
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
@@ -10,10 +11,110 @@ export MISE_LOG_HTTP=1
 export TOKEN_MANAGER_URL="${TOKEN_MANAGER_URL:-}"
 export TOKEN_MANAGER_SECRET="${TOKEN_MANAGER_SECRET:-}"
 
+# Statistics tracking variables
+export TOTAL_TOOLS_CHECKED=0
+export TOTAL_TOOLS_UPDATED=0
+export TOTAL_TOOLS_SKIPPED=0
+export TOTAL_TOOLS_FAILED=0
+export TOTAL_TOOLS_NO_VERSIONS=0
+export TOTAL_TOKENS_USED=0
+export TOTAL_RATE_LIMITS_HIT=0
+export TOTAL_TOOLS_AVAILABLE=0
+export UPDATED_TOOLS_LIST=""
+export START_TIME=$(date +%s)
+
 if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.email "189793748+mise-en-versions@users.noreply.github.com"
 	git config --local user.name "mise-en-versions"
 fi
+
+# Function to generate GitHub Actions summary
+generate_summary() {
+	local end_time=$(date +%s)
+	local duration=$((end_time - START_TIME))
+	local duration_minutes=$((duration / 60))
+	local duration_seconds=$((duration % 60))
+	
+	# Create summary file
+	cat > summary.md << EOF
+# 📊 Mise Versions Update Summary
+
+**Generated**: $(date '+%Y-%m-%d %H:%M:%S UTC')
+
+## 📊 Quick Stats
+| Metric | Value |
+|--------|-------|
+| Tools Processed | $TOTAL_TOOLS_CHECKED |
+| Tools Updated | $TOTAL_TOOLS_UPDATED |
+| Success Rate | $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")% |
+| Tokens Used | $TOTAL_TOKENS_USED |
+| Rate Limits Hit | $TOTAL_RATE_LIMITS_HIT |
+| Duration | ${duration_minutes}m ${duration_seconds}s |
+
+## 🎯 Overview
+- **Total Tools Checked**: $TOTAL_TOOLS_CHECKED
+- **Tools Updated**: $TOTAL_TOOLS_UPDATED
+- **Tools Skipped**: $TOTAL_TOOLS_SKIPPED
+- **Tools Failed**: $TOTAL_TOOLS_FAILED
+- **Tools with No Versions**: $TOTAL_TOOLS_NO_VERSIONS
+- **Tokens Used**: $TOTAL_TOKENS_USED
+- **Rate Limits Hit**: $TOTAL_RATE_LIMITS_HIT
+- **Duration**: ${duration_minutes}m ${duration_seconds}s
+
+## 📈 Success Rate
+- **Success Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
+- **Update Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
+- **Coverage**: $([ "$TOTAL_TOOLS_AVAILABLE" -gt 0 ] && echo "$(( (TOTAL_TOOLS_CHECKED * 100) / TOTAL_TOOLS_AVAILABLE ))" || echo "0")%
+
+## 🔧 Token Management
+- **Tokens Consumed**: $TOTAL_TOKENS_USED
+- **Rate Limit Events**: $TOTAL_RATE_LIMITS_HIT
+
+## 📋 Details
+- **Tools Available**: $TOTAL_TOOLS_AVAILABLE
+- **Tools Processed**: $TOTAL_TOOLS_CHECKED
+- **Tools with Updates**: $TOTAL_TOOLS_UPDATED
+- **Tools Skipped**: $TOTAL_TOOLS_SKIPPED
+- **Tools Failed**: $TOTAL_TOOLS_FAILED
+- **Tools with No Versions**: $TOTAL_TOOLS_NO_VERSIONS
+- **Total Duration**: ${duration_minutes}m ${duration_seconds}s
+
+## 📊 Performance Metrics
+- **Processing Speed**: $([ "$duration" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / (duration / 60) ))" || echo "0") tools/minute
+- **Update Speed**: $([ "$duration" -gt 0 ] && echo "$(( TOTAL_TOOLS_UPDATED / (duration / 60) ))" || echo "0") updates/minute
+- **Token Efficiency**: $([ "$TOTAL_TOKENS_USED" -gt 0 ] && echo "$(( TOTAL_TOOLS_CHECKED / TOTAL_TOKENS_USED ))" || echo "0") tools per token
+
+## 🚀 Next Steps
+- Monitor token usage patterns
+- Review failed tools for potential fixes
+- Consider token pool expansion if rate limits are frequent
+
+## 📦 Updated Tools ($TOTAL_TOOLS_UPDATED)
+EOF
+
+	# Add updated tools list if any tools were updated
+	if [ -n "$UPDATED_TOOLS_LIST" ]; then
+		echo "" >> summary.md
+		echo "The following tools were updated:" >> summary.md
+		echo "" >> summary.md
+		for tool in $UPDATED_TOOLS_LIST; do
+			# Link to the local docs file
+			echo "- [$tool](docs/$tool)" >> summary.md
+		done
+	else
+		echo "" >> summary.md
+		echo "No tools were updated in this run." >> summary.md
+	fi
+EOF
+
+	# Output to GitHub Actions summary
+	if [ -n "${GITHUB_STEP_SUMMARY:-}" ]; then
+		cat summary.md >> "$GITHUB_STEP_SUMMARY"
+	fi
+	
+	echo "📊 Summary generated:"
+	cat summary.md
+}
 
 # Function to mark a token as rate-limited
 mark_token_rate_limited() {
@@ -25,6 +126,7 @@ mark_token_rate_limited() {
 	fi
 	
 	echo "🚫 Marking token $token_id as rate-limited" >&2
+	((TOTAL_RATE_LIMITS_HIT++))
 	
 	# Mark token as rate-limited asynchronously
 	{
@@ -44,6 +146,7 @@ get_github_token() {
 	fi
 
 	echo "🔄 Getting fresh GitHub token from token manager..." >&2
+	((TOTAL_TOKENS_USED++))
 	
 	# Use the github-token.js script to get a token
 	# Capture both stdout (token) and stderr (includes token_id)
@@ -69,13 +172,17 @@ get_github_token() {
 
 
 fetch() {
+	((TOTAL_TOOLS_CHECKED++))
+	
 	case "$1" in
 	awscli-local) # TODO: remove this when it is working
 		echo "Skipping $1"
+		((TOTAL_TOOLS_SKIPPED++))
 		return
 		;;
 	jfrog-cli | minio | tiny | teleport-ent | flyctl | flyway | vim | awscli | aws | aws-cli | checkov | snyk | chromedriver | sui | rebar)
 		echo "Skipping $1"
+		((TOTAL_TOOLS_SKIPPED++))
 		return
 		;;
 	esac
@@ -85,6 +192,7 @@ fetch() {
 	if ! token_info=$(get_github_token); then
 		# No tokens available, stop processing this tool gracefully
 		echo "🛑 No tokens available for $1, skipping..."
+		((TOTAL_TOOLS_FAILED++))
 		return 1
 	fi
 	local token
@@ -97,6 +205,7 @@ fetch() {
 	else
 		# No valid token received, stop processing this tool
 		echo "❌ No valid token received for $1, skipping..."
+		((TOTAL_TOOLS_FAILED++))
 		return 1
 	fi
 	
@@ -110,6 +219,7 @@ fetch() {
 	if ! docker run -e GITHUB_TOKEN="$token" -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2>"$stderr_file"; then
 		echo "Failed to fetch versions for $1"
+		((TOTAL_TOOLS_FAILED++))
 		
 		# Check if this was a rate limit issue (403 Forbidden)
 		if grep -q "403 Forbidden" "$stderr_file"; then
@@ -138,8 +248,11 @@ fetch() {
 	new_lines=$(wc -l <"docs/$1")
 	if [ ! "$new_lines" -gt 1 ]; then
 		echo "No versions for $1" >/dev/null
+		((TOTAL_TOOLS_NO_VERSIONS++))
 		rm -f "docs/$1"
 	else
+		((TOTAL_TOOLS_UPDATED++))
+		UPDATED_TOOLS_LIST="$UPDATED_TOOLS_LIST $1"
 		case "$1" in
 		cargo-binstall)
 			mv docs/cargo-binstall{,.tmp}
@@ -206,6 +319,7 @@ setup_token_management
 
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
+TOTAL_TOOLS_AVAILABLE=$(echo "$tools" | wc -w)
 
 # Check if tokens are available before starting processing
 echo "🔍 Checking token availability before starting..."
@@ -219,6 +333,7 @@ echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | shuf -n 100)
 export -f fetch get_github_token mark_token_rate_limited
+export TOTAL_TOOLS_CHECKED TOTAL_TOOLS_UPDATED TOTAL_TOOLS_SKIPPED TOTAL_TOOLS_FAILED TOTAL_TOOLS_NO_VERSIONS TOTAL_TOKENS_USED TOTAL_RATE_LIMITS_HIT TOTAL_TOOLS_AVAILABLE UPDATED_TOOLS_LIST
 for tool in $tools_limited; do
 	if ! timeout 60s bash -c "fetch $tool"; then
 		echo "❌ Failed to fetch $tool, stopping processing"
@@ -231,6 +346,13 @@ if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git commit -m "versions"
 	git pull --autostash --rebase origin main
 	git push
+fi
+
+# Generate and display summary
+if [ "$TOTAL_TOOLS_CHECKED" -gt 0 ]; then
+	generate_summary
+else
+	echo "⚠️  No tools were processed, skipping summary generation"
 fi
 
 echo "✅ Update complete!"
