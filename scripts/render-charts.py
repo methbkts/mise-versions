@@ -60,7 +60,7 @@ def get_daily_tool_updates(repo_path=".", days_back=30):
                         tool_name = path_parts[1]
                         
                         # Skip excluded tools
-                        if tool_name in ['aqua-registry', 'python-precompiled']:
+                        if tool_name in ['aqua-registry'] or tool_name.startswith('python-precompiled'):
                             continue
                             
                         # Only count actual tool files (not subdirectories)
