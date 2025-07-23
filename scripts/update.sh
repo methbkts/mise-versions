@@ -188,7 +188,7 @@ setup_token_management() {
 				
 				if [ "$ACTIVE_TOKENS" -eq 0 ]; then
 					echo "❌ No active tokens available, stopping processing" >&2
-					exit 1
+					exit 0
 				fi
 			fi
 		else
