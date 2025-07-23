@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC1091
-source env_parallel.bash
 set -euo pipefail
 
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
@@ -243,10 +241,9 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | shuf -n 100)
-echo "$tools_limited" | env_parallel -j4 fetch {} || true
-
-# Clean up any background processes
-wait
+for tool in $tools_limited; do
+	timeout 60s fetch "$tool" || true
+done
 
 if [ "${DRY_RUN:-}" == 0 ] && ! git diff-index --cached --quiet HEAD; then
 	git diff --compact-summary --cached
