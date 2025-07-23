@@ -106,9 +106,23 @@ def create_chart(daily_updates, days_back, output_dir="charts"):
     plt.plot(dates, counts, marker='o', linewidth=2, markersize=4, color='steelblue')
     plt.fill_between(dates, counts, alpha=0.3, color='steelblue')
     
+    # Add text annotations for non-zero values
+    for i, (date, count) in enumerate(zip(dates, counts)):
+        if count > 0:
+            plt.annotate(str(count), (date, count), 
+                        textcoords="offset points", xytext=(0,8), 
+                        ha='center', va='bottom', fontsize=9, 
+                        bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='none'))
+    
     plt.title(f'Tool Updates Per Day (Last {days_back} Days)')
     plt.xlabel('Date')
     plt.ylabel('Number of Tools Updated')
+    
+    # Move y-axis label to the right
+    ax = plt.gca()
+    ax.yaxis.set_label_position("right")
+    ax.yaxis.tick_right()
+    
     plt.grid(True, alpha=0.3)
     plt.xticks(rotation=45)
     
