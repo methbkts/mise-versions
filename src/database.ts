@@ -69,7 +69,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
 
     // Mark a token as rate-limited for 1 hour
     async markTokenRateLimited(tokenId: number, resetAt?: string) {
-      const rateLimitedUntil = resetAt || new Date(Date.now() + 3600000).toISOString(); // Default to 1 hour from now
+      const rateLimitedUntil = resetAt || new Date(Date.now() + 30 * 60 * 1000).toISOString(); // Default to 30 minutes from now
       
       await db.update(tokens)
         .set({
