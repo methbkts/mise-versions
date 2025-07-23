@@ -15,91 +15,94 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.name "mise-en-versions"
 fi
 
-fetch() {
-	# Function to record token usage for monitoring
-	record_token_usage() {
-		local plugin_name="$1"
-		local token_id="$2"
-		local remaining="${3:-}"
-		local reset_time="${4:-}"
-		
-		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-			return
-		fi
-		
-		# Record usage asynchronously to not slow down the main process
-		{
-			if [ -n "$remaining" ] && [ -n "$reset_time" ]; then
-				node scripts/github-token.js record-usage \
-					"$token_id" \
-					"/repos/*/$plugin_name" \
-					"$remaining" \
-					"$reset_time" \
-					|| true
-			else
-				node scripts/github-token.js record-usage \
-					"$token_id" \
-					"/repos/*/$plugin_name" \
-					|| true
-			fi
-		} &
-	}
-
-	# Function to mark a token as rate-limited
-	mark_token_rate_limited() {
-		local token_id="$1"
-		local reset_time="${2:-}"
-		
-		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-			return
-		fi
-		
-		echo "🚫 Marking token $token_id as rate-limited" >&2
-		
-		# Mark token as rate-limited asynchronously
-		{
-			if [ -n "$reset_time" ]; then
-				node scripts/github-token.js mark-rate-limited "$token_id" "$reset_time" || true
-			else
-				node scripts/github-token.js mark-rate-limited "$token_id" || true
-			fi
-		} &
-	}
-
-	# Function to get a fresh GitHub token from the token manager
-	get_github_token() {
-		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-			echo "❌ TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, stopping processing" >&2
-			exit 1
-		fi
-
-		echo "🔄 Getting fresh GitHub token from token manager..." >&2
-		
-		# Use the github-token.js script to get a token
-		# Capture both stdout (token) and stderr (includes token_id)
-		local token_output
-		if ! token_output=$(node scripts/github-token.js get-token 2>&1); then
-			echo "❌ Failed to get token from token manager, stopping processing" >&2
-			exit 1
-		fi
-		
-		# Extract token (last line of output) and token_id (from stderr)
-		local token
-		local token_id
-		
-		token=$(echo "$token_output" | tail -1)
-		token_id=$(echo "$token_output" | grep "TOKEN_ID:" | cut -d: -f2 || echo "unknown")
-		
-		if [ -n "$GITHUB_ACTIONS" ]; then
-			# In GitHub Actions, just return the token response
-			echo "✅ Token obtained from token manager (ID: $token_id)" >&2
-			echo "$token $token_id"
+# Function to record token usage for monitoring
+record_token_usage() {
+	local plugin_name="$1"
+	local token_id="$2"
+	local remaining="${3:-}"
+	local reset_time="${4:-}"
+	
+	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+		return
+	fi
+	
+	# Record usage asynchronously to not slow down the main process
+	{
+		if [ -n "$remaining" ] && [ -n "$reset_time" ]; then
+			node scripts/github-token.js record-usage \
+				"$token_id" \
+				"/repos/*/$plugin_name" \
+				"$remaining" \
+				"$reset_time" \
+				|| true
 		else
-			# For local runs, return token and token_id
-			echo "$token $token_id"
+			node scripts/github-token.js record-usage \
+				"$token_id" \
+				"/repos/*/$plugin_name" \
+				|| true
 		fi
-	}
+	} &
+}
 
+# Function to mark a token as rate-limited
+mark_token_rate_limited() {
+	local token_id="$1"
+	local reset_time="${2:-}"
+	
+	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+		return
+	fi
+	
+	echo "🚫 Marking token $token_id as rate-limited" >&2
+	
+	# Mark token as rate-limited asynchronously
+	{
+		if [ -n "$reset_time" ]; then
+			node scripts/github-token.js mark-rate-limited "$token_id" "$reset_time" || true
+		else
+			node scripts/github-token.js mark-rate-limited "$token_id" || true
+		fi
+	} &
+}
+
+# Function to get a fresh GitHub token from the token manager
+get_github_token() {
+	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+		echo "❌ TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, stopping processing" >&2
+		return 1
+	fi
+
+	echo "🔄 Getting fresh GitHub token from token manager..." >&2
+	
+	# Use the github-token.js script to get a token
+	# Capture both stdout (token) and stderr (includes token_id)
+	local token_output
+	if ! token_output=$(node scripts/github-token.js get-token 2>&1); then
+		echo "❌ Failed to get token from token manager - no more tokens available" >&2
+		echo "🛑 Stopping processing as no tokens are available" >&2
+		return 1
+	fi
+	
+	# Extract token (last line of output) and token_id (from stderr)
+	local token
+	local token_id
+	
+	token=$(echo "$token_output" | tail -1)
+	token_id=$(echo "$token_output" | grep "TOKEN_ID:" | cut -d: -f2 || echo "unknown")
+	
+	if [ -n "$GITHUB_ACTIONS" ]; then
+		# In GitHub Actions, just return the token response
+		echo "✅ Token obtained from token manager (ID: $token_id)" >&2
+		echo "$token $token_id"
+	else
+		# For local runs, return token and token_id
+		echo "$token $token_id"
+	fi
+	return 0
+}
+
+
+fetch() {
 	case "$1" in
 	awscli-local) # TODO: remove this when it is working
 		echo "Skipping $1"
@@ -113,7 +116,11 @@ fetch() {
 	
 	# Get a fresh token for this fetch operation
 	local token_info
-	token_info=$(get_github_token)
+	if ! token_info=$(get_github_token); then
+		# No tokens available, stop processing this tool gracefully
+		echo "🛑 No tokens available for $1, skipping..."
+		return 0
+	fi
 	local token
 	local token_id
 	
@@ -122,9 +129,9 @@ fetch() {
 		token=$(echo "$token_info" | cut -d' ' -f1)
 		token_id=$(echo "$token_info" | cut -d' ' -f2)
 	else
-		# No valid token received, stop processing
-		echo "❌ No valid token received, stopping processing"
-		exit 1
+		# No valid token received, stop processing this tool
+		echo "❌ No valid token received for $1, skipping..."
+		return 0
 	fi
 	
 	GITHUB_TOKEN="$token" mise x -- wait-for-gh-rate-limit || true
@@ -237,11 +244,18 @@ setup_token_management
 docker run jdxcode/mise -v
 tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $1}')"
 
+# Check if tokens are available before starting processing
+echo "🔍 Checking token availability before starting..."
+if ! get_github_token >/dev/null 2>&1; then
+	echo "🛑 No tokens available - stopping all processing"
+	exit 0
+fi
+
 # Enhanced parallel processing with better token distribution
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | shuf -n 100)
-export -f fetch
+export -f fetch get_github_token record_token_usage mark_token_rate_limited
 for tool in $tools_limited; do
 	timeout 60s bash -c "fetch $tool" || true
 done
