@@ -84,7 +84,7 @@ fetch() {
 	MISE_GITHUB_TOKEN=$(get_github_token)
 	export MISE_GITHUB_TOKEN
 	
-	mise x -- wait-for-gh-rate-limit || true
+	GITHUB_TOKEN=$MISE_GITHUB_TOKEN mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
 	if ! docker run -e MISE_GITHUB_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" >/tmp/mise_403); then
