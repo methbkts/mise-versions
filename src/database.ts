@@ -182,7 +182,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getTokenStats() {
       const active = await db.select({ count: sql<number>`count(*)` })
         .from(tokens)
-        .where(sql`is_active = 1 AND expires_at > datetime('now')`)
+        .where(sql`is_active = 1 AND expires_at > datetime('now') AND (rate_limited_at IS NULL OR rate_limited_at <= datetime('now'))`)
         .get();
       
       const total = await db.select({ count: sql<number>`count(*)` })
