@@ -1,6 +1,6 @@
 import { drizzle } from 'drizzle-orm/d1';
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core';
-import { sql } from 'drizzle-orm';
+import { sql, eq, gt, lte, isNull, isNotNull, and, or } from 'drizzle-orm';
 
 // GitHub tokens table for round-robin usage (user tokens only)
 export const tokens = sqliteTable('tokens', {
@@ -34,11 +34,11 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getNextToken() {
       const result = await db.select()
         .from(tokens)
-        .where(sql`
-          is_active = 1 
-          AND expires_at > datetime('now')
-          AND (rate_limited_at IS NULL OR rate_limited_at <= datetime('now'))
-        `)
+        .where(and(
+          eq(tokens.is_active, 1),
+          gt(tokens.expires_at, new Date().toISOString()),
+          or(isNull(tokens.rate_limited_at), lte(tokens.rate_limited_at, new Date().toISOString()))
+        ))
         .orderBy(sql`COALESCE(last_used, '1970-01-01') ASC, usage_count ASC`)
         .limit(1)
         .get();
@@ -50,7 +50,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
             last_used: new Date().toISOString(),
             usage_count: sql`usage_count + 1`
           })
-          .where(sql`id = ${result.id}`)
+          .where(eq(tokens.id, result.id))
           .run();
       }
       
@@ -65,7 +65,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
         .set({
           rate_limited_at: rateLimitedUntil
         })
-        .where(sql`id = ${tokenId}`)
+        .where(eq(tokens.id, tokenId))
         .run();
       
       console.log(`Token ${tokenId} marked as rate-limited until ${rateLimitedUntil}`);
@@ -75,7 +75,10 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getAllTokens() {
       return await db.select()
         .from(tokens)
-        .where(sql`is_active = 1 AND expires_at > datetime('now')`)
+        .where(and(
+          eq(tokens.is_active, 1),
+          gt(tokens.expires_at, new Date().toISOString())
+        ))
         .orderBy(sql`COALESCE(last_used, '1970-01-01') ASC`)
         .all();
     },
@@ -118,7 +121,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
         .set({ 
           last_validated: new Date().toISOString() 
         })
-        .where(sql`id = ${tokenId}`)
+        .where(eq(tokens.id, tokenId))
         .run();
     },
 
@@ -126,7 +129,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async deactivateExpiredTokens() {
       const result = await db.update(tokens)
         .set({ is_active: 0 })
-        .where(sql`expires_at <= datetime('now') AND is_active = 1`)
+        .where(and(lte(tokens.expires_at, new Date().toISOString()), eq(tokens.is_active, 1)))
         .run();
       
       console.log('Deactivated expired tokens');
@@ -138,7 +141,11 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getExpiringTokens() {
       return await db.select()
         .from(tokens)
-        .where(sql`is_active = 1 AND expires_at <= datetime('now', '+24 hours') AND expires_at > datetime('now')`)
+        .where(and(
+          eq(tokens.is_active, 1),
+          lte(tokens.expires_at, new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()),
+          gt(tokens.expires_at, new Date().toISOString())
+        ))
         .all();
     },
 
@@ -146,12 +153,12 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getRefreshableTokens() {
       return await db.select()
         .from(tokens)
-        .where(sql`
-          is_active = 1 
-          AND refresh_token IS NOT NULL 
-          AND (refresh_token_expires_at IS NULL OR refresh_token_expires_at > datetime('now'))
-          AND expires_at <= datetime('now', '+1 hour')
-        `)
+        .where(and(
+          eq(tokens.is_active, 1),
+          isNotNull(tokens.refresh_token),
+          or(isNull(tokens.refresh_token_expires_at), gt(tokens.refresh_token_expires_at, new Date().toISOString())),
+          lte(tokens.expires_at, new Date(Date.now() + 60 * 60 * 1000).toISOString())
+        ))
         .all();
     },
 
@@ -159,7 +166,11 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async getTokenStats() {
       const active = await db.select({ count: sql<number>`count(*)` })
         .from(tokens)
-        .where(sql`is_active = 1 AND expires_at > datetime('now') AND (rate_limited_at IS NULL OR rate_limited_at <= datetime('now'))`)
+        .where(and(
+          eq(tokens.is_active, 1),
+          gt(tokens.expires_at, new Date().toISOString()),
+          or(isNull(tokens.rate_limited_at), lte(tokens.rate_limited_at, new Date().toISOString()))
+        ))
         .get();
       
       const total = await db.select({ count: sql<number>`count(*)` })
@@ -167,8 +178,8 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
         .get();
 
       return {
-        active: active?.count || 0,
-        total: total?.count || 0,
+        active: active?.count ?? 0,
+        total: total?.count ?? 0,
       };
     }
   };
