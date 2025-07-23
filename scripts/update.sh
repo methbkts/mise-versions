@@ -28,7 +28,7 @@ get_github_token() {
 	echo "🔄 Getting fresh GitHub token from token manager..."
 	
 	# Use the github-token.js script to get a token
-	if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token 2>/dev/null); then
+	if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
 		echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
 		echo "$GITHUB_API_TOKEN"
 		return
@@ -61,7 +61,7 @@ record_token_usage() {
 			"/repos/*/$plugin_name" \
 			4800 \
 			"$(date -d '+1 hour' +%s)" \
-			2>/dev/null || true
+			|| true
 	} &
 }
 
@@ -167,7 +167,9 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 
 # Enhanced parallel processing with better token distribution
 echo "🚀 Starting parallel fetch operations..."
-echo "$tools" | sort -R | head -n 100 | env_parallel -j4 --env fetch --env record_token_usage --env get_github_token fetch {} || true
+# Prevent broken pipe error by collecting tools first
+tools_limited=$(echo "$tools" | sort -R | head -n 100)
+echo "$tools_limited" | env_parallel -j4 --env fetch --env record_token_usage --env get_github_token fetch {} || true
 
 # Clean up any background processes
 wait
