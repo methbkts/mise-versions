@@ -71,9 +71,8 @@ fetch() {
 	# Function to get a fresh GitHub token from the token manager
 	get_github_token() {
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN" >&2
-			echo "GITHUB_API_TOKEN"
-			return
+			echo "❌ TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, stopping processing" >&2
+			exit 1
 		fi
 
 		echo "🔄 Getting fresh GitHub token from token manager..." >&2
@@ -82,9 +81,8 @@ fetch() {
 		# Capture both stdout (token) and stderr (includes token_id)
 		local token_output
 		if ! token_output=$(node scripts/github-token.js get-token 2>&1); then
-			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN" >&2
-			echo "GITHUB_API_TOKEN"
-			return
+			echo "❌ Failed to get token from token manager, stopping processing" >&2
+			exit 1
 		fi
 		
 		# Extract token (last line of output) and token_id (from stderr)
@@ -126,9 +124,9 @@ fetch() {
 		token=$(echo "$token_info" | cut -d' ' -f1)
 		token_id=$(echo "$token_info" | cut -d' ' -f2)
 	else
-		# Fallback for GITHUB_API_TOKEN
-		token="$token_info"
-		token_id="fallback"
+		# No valid token received, stop processing
+		echo "❌ No valid token received, stopping processing"
+		exit 1
 	fi
 	
 	GITHUB_TOKEN="$token" mise x -- wait-for-gh-rate-limit || true
@@ -206,29 +204,32 @@ fetch() {
 
 # Enhanced token management setup
 setup_token_management() {
-	echo "🔧 Setting up token management..."
+	echo "🔧 Setting up token management..." >&2
 	
 	if [ -n "$TOKEN_MANAGER_URL" ] && [ -n "$TOKEN_MANAGER_SECRET" ]; then
-		echo "✅ Using GitHub Token Manager at $TOKEN_MANAGER_URL"
+		echo "✅ Using GitHub Token Manager at $TOKEN_MANAGER_URL" >&2
 		
 		# Check token manager health
 		if curl -f -s "$TOKEN_MANAGER_URL/health" >/dev/null 2>&1; then
-			echo "✅ Token manager is healthy"
+			echo "✅ Token manager is healthy" >&2
 			
 			# Get token statistics
 			if STATS=$(curl -s -H "Authorization: Bearer $TOKEN_MANAGER_SECRET" "$TOKEN_MANAGER_URL/api/stats" 2>/dev/null); then
 				ACTIVE_TOKENS=$(echo "$STATS" | jq -r '.active // 0' 2>/dev/null || echo "0")
-				echo "📊 Available tokens: $ACTIVE_TOKENS"
+				echo "📊 Available tokens: $ACTIVE_TOKENS" >&2
 				
 				if [ "$ACTIVE_TOKENS" -eq 0 ]; then
-					echo "⚠️  No active tokens available, falling back to GITHUB_API_TOKEN"
+					echo "❌ No active tokens available, stopping processing" >&2
+					exit 1
 				fi
 			fi
 		else
-			echo "⚠️  Token manager health check failed, falling back to GITHUB_API_TOKEN"
+			echo "❌ Token manager health check failed, stopping processing" >&2
+			exit 1
 		fi
 	else
-		echo "⚠️  Token manager not configured, using GITHUB_API_TOKEN"
+		echo "❌ Token manager not configured, stopping processing" >&2
+		exit 1
 	fi
 }
 
