@@ -42,7 +42,6 @@ fetch() {
 	get_github_token() {
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
 			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN"
-			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
@@ -52,7 +51,6 @@ fetch() {
 		# Use the github-token.js script to get a token
 		if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
 			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
-			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
@@ -60,12 +58,10 @@ fetch() {
 		# Extract token from the response (the script outputs it to stdout)
 		if [ -n "$GITHUB_ACTIONS" ]; then
 			# In GitHub Actions, mask the token and set as output
-			echo "::add-mask::$TOKEN_RESPONSE"
 			echo "✅ Token obtained from token manager"
 			echo "$TOKEN_RESPONSE"
 		else
 			# For local runs, parse from script output or use fallback
-			echo "::add-mask::$GITHUB_API_TOKEN"
 			echo "$GITHUB_API_TOKEN"
 		fi
 	}
@@ -85,12 +81,11 @@ fetch() {
 	esac
 	
 	# Get a fresh token for this fetch operation
-	GITHUB_API_TOKEN=$(get_github_token)
-	export GITHUB_API_TOKEN
+	token=$(get_github_token)
 	
-	mise x -- wait-for-gh-rate-limit || true
+	GITHUB_TOKEN="$token" mise x -- wait-for-gh-rate-limit || true
 	echo "Fetching $1"
-	if ! docker run -e GITHUB_API_TOKEN -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
+	if ! docker run -e GITHUB_TOKEN="$token" -e MISE_USE_VERSIONS_HOST -e MISE_LIST_ALL_VERSIONS -e MISE_LOG_HTTP -e MISE_EXPERIMENTAL -e MISE_TRUSTED_CONFIG_PATHS=/ \
 		jdxcode/mise -y ls-remote "$1" >"docs/$1" 2> >(tee /dev/stderr | grep -q "403 Forbidden" && echo "403" >/tmp/mise_403); then
 		echo "Failed to fetch versions for $1"
 		rm -f "docs/$1"
@@ -138,10 +133,6 @@ fetch() {
 # Enhanced token management setup
 setup_token_management() {
 	echo "🔧 Setting up token management..."
-	
-	# Mask sensitive values in GitHub Actions
-	echo "::add-mask::$TOKEN_MANAGER_SECRET"
-	echo "::add-mask::$GITHUB_API_TOKEN"
 	
 	if [ -n "$TOKEN_MANAGER_URL" ] && [ -n "$TOKEN_MANAGER_SECRET" ]; then
 		echo "✅ Using GitHub Token Manager at $TOKEN_MANAGER_URL"
