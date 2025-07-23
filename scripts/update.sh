@@ -41,16 +41,16 @@ fetch() {
 	# Function to get a fresh GitHub token from the token manager
 	get_github_token() {
 		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN"
+			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN" >&2
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
 
-		echo "🔄 Getting fresh GitHub token from token manager..."
+		echo "🔄 Getting fresh GitHub token from token manager..." >&2
 		
 		# Use the github-token.js script to get a token
 		if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
-			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
+			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN" >&2
 			echo "$GITHUB_API_TOKEN"
 			return
 		fi
@@ -58,7 +58,7 @@ fetch() {
 		# Extract token from the response (the script outputs it to stdout)
 		if [ -n "$GITHUB_ACTIONS" ]; then
 			# In GitHub Actions, mask the token and set as output
-			echo "✅ Token obtained from token manager"
+			echo "✅ Token obtained from token manager" >&2
 			echo "$TOKEN_RESPONSE"
 		else
 			# For local runs, parse from script output or use fallback
