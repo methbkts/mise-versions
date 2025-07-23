@@ -17,55 +17,55 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 	git config --local user.name "mise-en-versions"
 fi
 
-# Function to get a fresh GitHub token from the token manager
-get_github_token() {
-	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-		echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN"
-		echo "$GITHUB_API_TOKEN"
-		return
-	fi
-
-	echo "🔄 Getting fresh GitHub token from token manager..."
-	
-	# Use the github-token.js script to get a token
-	if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
-		echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
-		echo "$GITHUB_API_TOKEN"
-		return
-	fi
-	
-	# Extract token from the response (the script outputs it to stdout)
-	if [ -n "$GITHUB_ACTIONS" ]; then
-		# In GitHub Actions, the token is set as an output
-		echo "✅ Token obtained from token manager"
-		echo "$TOKEN_RESPONSE"
-	else
-		# For local runs, parse from script output or use fallback
-		echo "$GITHUB_API_TOKEN"
-	fi
-}
-
-# Function to record token usage for monitoring
-record_token_usage() {
-	local plugin_name="$1"
-	local token_id="${2:-unknown}"
-	
-	if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
-		return
-	fi
-	
-	# Record usage asynchronously to not slow down the main process
-	{
-		node scripts/github-token.js record-usage \
-			"$token_id" \
-			"/repos/*/$plugin_name" \
-			4800 \
-			"$(date -d '+1 hour' +%s)" \
-			|| true
-	} &
-}
-
 fetch() {
+	# Function to record token usage for monitoring
+	record_token_usage() {
+		local plugin_name="$1"
+		local token_id="${2:-unknown}"
+		
+		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+			return
+		fi
+		
+		# Record usage asynchronously to not slow down the main process
+		{
+			node scripts/github-token.js record-usage \
+				"$token_id" \
+				"/repos/*/$plugin_name" \
+				4800 \
+				"$(date -d '+1 hour' +%s)" \
+				|| true
+		} &
+	}
+
+	# Function to get a fresh GitHub token from the token manager
+	get_github_token() {
+		if [ -z "$TOKEN_MANAGER_URL" ] || [ -z "$TOKEN_MANAGER_SECRET" ]; then
+			echo "⚠️  TOKEN_MANAGER_URL and TOKEN_MANAGER_SECRET not set, falling back to GITHUB_API_TOKEN"
+			echo "$GITHUB_API_TOKEN"
+			return
+		fi
+
+		echo "🔄 Getting fresh GitHub token from token manager..."
+		
+		# Use the github-token.js script to get a token
+		if ! TOKEN_RESPONSE=$(node scripts/github-token.js get-token); then
+			echo "❌ Failed to get token from token manager, falling back to GITHUB_API_TOKEN"
+			echo "$GITHUB_API_TOKEN"
+			return
+		fi
+		
+		# Extract token from the response (the script outputs it to stdout)
+		if [ -n "$GITHUB_ACTIONS" ]; then
+			# In GitHub Actions, the token is set as an output
+			echo "✅ Token obtained from token manager"
+			echo "$TOKEN_RESPONSE"
+		else
+			# For local runs, parse from script output or use fallback
+			echo "$GITHUB_API_TOKEN"
+		fi
+	}
+
 	if [ -f /tmp/mise_403 ]; then
 		return
 	fi
@@ -169,7 +169,7 @@ tools="$(docker run -e MISE_EXPERIMENTAL=1 jdxcode/mise registry | awk '{print $
 echo "🚀 Starting parallel fetch operations..."
 # Prevent broken pipe error by collecting tools first
 tools_limited=$(echo "$tools" | sort -R | head -n 100)
-echo "$tools_limited" | env_parallel -j4 --env fetch --env record_token_usage --env get_github_token fetch {} || true
+echo "$tools_limited" | env_parallel -j4 fetch {} || true
 
 # Clean up any background processes
 wait
