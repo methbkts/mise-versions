@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC1091
 source env_parallel.bash
-set -euo pipefail
+set -euxo pipefail
 
 export MISE_NODE_MIRROR_URL="https://nodejs.org/dist/"
 export MISE_USE_VERSIONS_HOST=0
@@ -18,6 +18,7 @@ if [ "${DRY_RUN:-}" == 0 ]; then
 fi
 
 fetch() {
+	set -x
 	# Function to record token usage for monitoring
 	record_token_usage() {
 		local plugin_name="$1"
