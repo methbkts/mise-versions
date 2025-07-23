@@ -61,7 +61,7 @@ generate_summary() {
 - **Tokens Used**: $TOTAL_TOKENS_USED
 - **Rate Limits Hit**: $TOTAL_RATE_LIMITS_HIT
 - **Duration**: ${duration_minutes}m ${duration_seconds}s
-- **Mise Version**: $CUR_MISE_VERSION
+- **Mise Version**: ${CUR_MISE_VERSION:-not set}
 
 ## 📈 Success Rate
 - **Success Rate**: $([ "$TOTAL_TOOLS_CHECKED" -gt 0 ] && echo "$(( (TOTAL_TOOLS_UPDATED * 100) / TOTAL_TOOLS_CHECKED ))" || echo "0")%
