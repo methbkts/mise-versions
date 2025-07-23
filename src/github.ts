@@ -92,17 +92,7 @@ export class GitHubAppManager {
       return null;
     }
   }
-
-  // Get default expiration for tokens without explicit expiration
-  getDefaultExpiration(): string {
-    // For tokens without explicit expiration (like OAuth app tokens), set to 1 year
-    // They typically don't expire but we want to refresh them periodically
-    const oneYearFromNow = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
-    return oneYearFromNow.toISOString();
-  }
 }
-
-// No webhook events needed for user token flow
 
 // Rate limit information from GitHub API responses
 export interface RateLimitInfo {

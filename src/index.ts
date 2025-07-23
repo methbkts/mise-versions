@@ -81,8 +81,8 @@ export default {
           console.log('User authentication successful');
           console.log(`User: ${authResult.user.login}`);
           
-          // Determine expiration - use provided expiration or default
-          const expiresAt = authResult.expiresAt || github.getDefaultExpiration();
+          // Determine expiration - use provided expiration or default to 1 year from now
+          const expiresAt = authResult.expiresAt ?? null;
           console.log(`Token expires at: ${expiresAt}`);
           
           if (authResult.refreshToken) {

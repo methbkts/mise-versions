@@ -87,7 +87,7 @@ export function setupDatabase(db: ReturnType<typeof drizzle>) {
     async storeToken(
       userId: string | null, 
       token: string, 
-      expiresAt: string,
+      expiresAt: string | null,
       options?: {
         userName?: string;
         userEmail?: string;
