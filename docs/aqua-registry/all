@@ -102,6 +102,7 @@ MHNightCat/superfile
 Macchina-CLI/macchina
 Macmod/godap
 Madh93/tpm
+MaybeJustJames/zephyr
 Melkeydev/go-blueprint
 MiSawa/xq
 Mic-U/ecsher
@@ -1410,6 +1411,7 @@ noborus/trdsql
 noborus/xlsxsql
 nodejs/node
 nojima/httpie-go
+noperator/jqfmt
 norwoodj/helm-docs
 notaryproject/notation
 npryce/adr-tools
