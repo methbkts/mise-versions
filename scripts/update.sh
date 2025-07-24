@@ -299,8 +299,7 @@ fetch() {
 		increment_stat "total_tools_no_versions"
 		rm -f "docs/$1"
 	else
-		increment_stat "total_tools_updated"
-		add_to_list "$1"
+		git add "docs/$1"
 		case "$1" in
 		cargo-binstall)
 			mv docs/cargo-binstall{,.tmp}
@@ -328,6 +327,14 @@ fetch() {
 			git add "docs/$1"
 			;;
 		esac
+
+		# Only count as updated if the file actually changed (is staged)
+		if git diff --cached --quiet -- "docs/$1"; then
+			:
+		else
+			increment_stat "total_tools_updated"
+			add_to_list "$1"
+		fi
 	fi
 }
 
