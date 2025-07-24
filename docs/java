@@ -2426,6 +2426,7 @@ mandrel-23.1.4.0-Final+java21
 mandrel-23.1.5.0-Final+java21
 mandrel-23.1.6.0-Final+java21
 mandrel-23.1.7.0-Final+java21
+mandrel-23.1.8.0-Final+java21
 mandrel-24.0.0.0-Final+java22
 mandrel-24.0.1.0-Final+java22
 mandrel-24.0.2.0-Final+java22
@@ -2628,11 +2629,17 @@ oracle-graalvm-23.0.1
 oracle-graalvm-23.0.2
 oracle-graalvm-24.0.2
 redhat-8u452-b09_1
+redhat-8u462-b08_1
 redhat-17.0.15+6_1
+redhat-17.0.16+8_1
 redhat-21.0.7+6_1
+redhat-21.0.8+9_1
 redhat-jre-8u452-b09_1
+redhat-jre-8u462-b08_1
 redhat-jre-17.0.15+6_1
+redhat-jre-17.0.16+8_1
 redhat-jre-21.0.7+6_1
+redhat-jre-21.0.8+9_1
 sapmachine-10.0.1.10
 sapmachine-10.0.2.13
 sapmachine-10.46
