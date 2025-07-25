@@ -635,6 +635,7 @@ dotenv-linter/dotenv-linter
 dotenvx/dotenvx
 doy/rbw
 dprint/dprint
+drager/wasm-pack
 drlau/akashi
 drud/ddev
 dstotijn/hetty
