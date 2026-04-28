@@ -250,6 +250,53 @@ describe("generate-toml.js", () => {
       assert.strictEqual(code, 0);
       assert.ok(parse(stdout).versions["1.0.0"]);
     });
+
+    it("should preserve existing versions when input is a likely partial fetch", async () => {
+      const existingToml = join(tempDir, "existing.toml");
+      writeFileSync(
+        existingToml,
+        `[versions]
+"1.0.0" = { created_at = 2024-01-01T00:00:00.000Z }
+"1.1.0" = { created_at = 2024-02-01T00:00:00.000Z }
+"1.2.0" = { created_at = 2024-03-01T00:00:00.000Z }
+"1.3.0" = { created_at = 2024-04-01T00:00:00.000Z }
+"1.3.1" = { created_at = 2024-04-02T00:00:00.000Z }
+"1.3.2" = { created_at = 2024-04-03T00:00:00.000Z }
+"1.3.3" = { created_at = 2024-04-04T00:00:00.000Z }
+"1.3.4" = { created_at = 2024-04-05T00:00:00.000Z }
+`,
+      );
+
+      const input = [
+        '{"version":"1.2.0","created_at":"2024-03-02T00:00:00Z"}',
+        '{"version":"1.3.0"}',
+        '{"version":"1.4.0"}',
+      ].join("\n");
+
+      const { stdout, stderr, code } = await runGenerateToml(input, [
+        "test-tool",
+        existingToml,
+      ]);
+      assert.strictEqual(code, 0);
+      assert.ok(stderr.includes("preserving existing TOML entries"));
+
+      const parsed = parse(stdout);
+      assert.deepStrictEqual(Object.keys(parsed.versions), [
+        "1.0.0",
+        "1.1.0",
+        "1.2.0",
+        "1.3.0",
+        "1.3.1",
+        "1.3.2",
+        "1.3.3",
+        "1.3.4",
+        "1.4.0",
+      ]);
+      assert.strictEqual(
+        parsed.versions["1.2.0"].created_at.toISOString(),
+        "2024-03-02T00:00:00.000Z",
+      );
+    });
   });
 
   describe("prerelease", () => {

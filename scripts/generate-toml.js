@@ -103,12 +103,14 @@ function toISOString(value) {
 
 // Load existing TOML if provided
 let existingVersions = {};
+let existingVersionOrder = [];
 if (existingTomlPath && existsSync(existingTomlPath)) {
   try {
     const existingContent = readFileSync(existingTomlPath, "utf-8");
     const parsed = parse(existingContent);
     if (parsed.versions) {
       for (const [version, data] of Object.entries(parsed.versions)) {
+        existingVersionOrder.push(version);
         existingVersions[version] = {
           created_at: toISOString(data.created_at),
           release_url: data.release_url || null,
@@ -122,7 +124,46 @@ if (existingTomlPath && existsSync(existingTomlPath)) {
 }
 
 // Parse new version data (preserves order from mise ls-remote)
-const newVersions = parseNdjson(stdinData);
+let newVersions = parseNdjson(stdinData);
+
+// Some backends can transiently return a valid-looking but truncated list
+// during API failures or backend regressions. If the new list looks partial,
+// preserve the old entries and append any genuinely new versions so one bad
+// fetch cannot erase history.
+const existingCount = existingVersionOrder.length;
+if (
+  existingCount > 0 &&
+  newVersions.length > 0 &&
+  newVersions.length < existingCount
+) {
+  const newByVersion = new Map(newVersions.map((v) => [v.version, v]));
+  const overlapCount = [...newByVersion.keys()].filter((version) =>
+    Object.hasOwn(existingVersions, version),
+  ).length;
+  const overlapRatio = overlapCount / newVersions.length;
+  const incomingRatio = newVersions.length / existingCount;
+
+  if (overlapRatio >= 0.8 || incomingRatio < 0.5) {
+    const mergedVersions = [];
+    const seen = new Set();
+
+    for (const version of existingVersionOrder) {
+      mergedVersions.push(newByVersion.get(version) || { version });
+      seen.add(version);
+    }
+
+    for (const version of newByVersion.keys()) {
+      if (!seen.has(version)) {
+        mergedVersions.push(newByVersion.get(version));
+      }
+    }
+
+    console.error(
+      `Warning: ${tool} returned ${newVersions.length}/${existingCount} versions with ${Math.round(overlapRatio * 100)}% overlap; preserving existing TOML entries`,
+    );
+    newVersions = mergedVersions;
+  }
+}
 
 // For "unstable" tools, sort by semver ascending so the output is
 // deterministic regardless of which fetch path produced the input. Versions

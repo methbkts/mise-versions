@@ -112,10 +112,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
   let toolsProcessed = 0;
   let versionsUpserted = 0;
   let errors = 0;
+  let partialSyncsPreserved = 0;
 
   // Step 5: Batch upsert versions for all tools
   const allVersionStatements: D1PreparedStatement[] = [];
   const toolIdToName = new Map<number, string>();
+  const partialSyncToolIds = new Set<number>();
 
   for (const toolData of body.tools) {
     if (!toolData.tool || !Array.isArray(toolData.versions)) {
@@ -132,8 +134,70 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     toolIdToName.set(toolId, toolData.tool);
 
+    const incomingVersions = toolData.versions
+      .map((v) => v.version)
+      .filter((version): version is string => Boolean(version));
+    const incomingVersionSet = new Set(incomingVersions);
+    const beforeCount = beforeCounts.get(toolId) ?? 0;
+    const existingSortOrders = new Map<string, number | null>();
+    let preserveExistingOrder = false;
+    let nextAppendedSortOrder: number | null = null;
+
+    if (
+      beforeCount > 0 &&
+      incomingVersionSet.size > 0 &&
+      incomingVersionSet.size < beforeCount
+    ) {
+      const existingVersions = await d1
+        .prepare(
+          `
+          SELECT version, sort_order
+          FROM versions
+          WHERE tool_id = ? AND from_mise = 1
+          ORDER BY sort_order ASC, id ASC
+        `,
+        )
+        .bind(toolId)
+        .all<{ version: string; sort_order: number | null }>();
+
+      for (const row of existingVersions.results) {
+        existingSortOrders.set(row.version, row.sort_order);
+      }
+
+      const overlapCount = incomingVersions.filter((version) =>
+        existingSortOrders.has(version),
+      ).length;
+      const overlapRatio = overlapCount / incomingVersionSet.size;
+      const incomingRatio = incomingVersionSet.size / beforeCount;
+
+      if (overlapRatio >= 0.8 || incomingRatio < 0.5) {
+        preserveExistingOrder = true;
+        partialSyncToolIds.add(toolId);
+        partialSyncsPreserved++;
+        const maxSortOrder = Math.max(
+          -1,
+          ...existingVersions.results.map((row) => row.sort_order ?? -1),
+        );
+        nextAppendedSortOrder = maxSortOrder + 1;
+        console.warn(
+          `Preserving existing version order for partial sync of ${toolData.tool}: incoming=${incomingVersionSet.size}, existing=${beforeCount}, overlap=${Math.round(overlapRatio * 100)}%`,
+        );
+      }
+    }
+
     for (const v of toolData.versions) {
       if (!v.version) continue;
+
+      let sortOrder = v.sort_order ?? null;
+      if (preserveExistingOrder) {
+        const existingSortOrder = existingSortOrders.get(v.version);
+        if (existingSortOrder !== undefined) {
+          sortOrder = existingSortOrder;
+        } else {
+          sortOrder = nextAppendedSortOrder;
+          if (nextAppendedSortOrder !== null) nextAppendedSortOrder++;
+        }
+      }
 
       allVersionStatements.push(
         d1
@@ -155,7 +219,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             v.created_at || null,
             v.release_url || null,
             v.prerelease === true ? 1 : 0,
-            v.sort_order ?? null,
+            sortOrder,
           ),
       );
     }
@@ -183,6 +247,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     const toolId = toolIdMap.get(toolData.tool);
     if (!toolId) continue;
+    if (partialSyncToolIds.has(toolId)) continue;
 
     const incomingVersions = new Set(
       toolData.versions
@@ -269,6 +334,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     versions_upserted: versionsUpserted,
     versions_deleted: versionsDeleted,
     new_versions: newVersionsTotal,
+    partial_syncs_preserved: partialSyncsPreserved,
     errors,
   });
 };
