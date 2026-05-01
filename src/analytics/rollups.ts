@@ -4,6 +4,7 @@ import { sql, eq, and, type SQL } from "drizzle-orm";
 import {
   backends,
   downloads,
+  tools,
   dailyStats,
   dailyToolStats,
   dailyBackendStats,
@@ -656,39 +657,75 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
   async function populateTrendingToolSummaries(
     d1?: D1Database,
   ): Promise<{ trendingSummaries: number }> {
+    const LOOKBACK_DAYS = 30;
+    const SPARKLINE_DAYS = 13; // yesterday through 13 days ago; today is incomplete.
+    const MIN_DOWNLOADS = 500;
     const now = Math.floor(Date.now() / 1000);
-    const thirtyDaysAgo = new Date((now - 30 * 86400) * 1000)
+    const thirtyDaysAgo = new Date((now - LOOKBACK_DAYS * 86400) * 1000)
       .toISOString()
       .split("T")[0];
     const today = new Date(now * 1000).toISOString().split("T")[0];
     const updatedAt = new Date().toISOString();
+    const lookupDates = Array.from(
+      { length: LOOKBACK_DAYS },
+      (_, index) =>
+        new Date((now - (index + 1) * 86400) * 1000)
+          .toISOString()
+          .split("T")[0],
+    );
+    const sparklineDates = lookupDates.slice(0, SPARKLINE_DAYS).reverse();
 
-    const dailyData = await db
+    const candidates = await db
       .select({
         tool_id: dailyToolStats.tool_id,
-        date: dailyToolStats.date,
-        downloads: dailyToolStats.downloads,
+        downloads_30d: sql<number>`sum(${dailyToolStats.downloads})`,
       })
       .from(dailyToolStats)
+      .innerJoin(tools, eq(dailyToolStats.tool_id, tools.id))
       .where(
         and(
           sql`${dailyToolStats.date} >= ${thirtyDaysAgo}`,
           sql`${dailyToolStats.date} < ${today}`,
+          sql`tools.latest_version IS NOT NULL`,
         ),
       )
-      .orderBy(dailyToolStats.date)
+      .groupBy(dailyToolStats.tool_id)
+      .having(sql`sum(${dailyToolStats.downloads}) >= ${MIN_DOWNLOADS}`)
       .all();
+    const candidateIds = candidates.map((row) => row.tool_id);
+
+    const dailyData =
+      candidateIds.length === 0
+        ? []
+        : await db
+            .select({
+              tool_id: dailyToolStats.tool_id,
+              date: dailyToolStats.date,
+              downloads: dailyToolStats.downloads,
+            })
+            .from(dailyToolStats)
+            .where(
+              and(
+                sql`${dailyToolStats.tool_id} IN (${sql.join(
+                  candidateIds,
+                  sql`, `,
+                )})`,
+                sql`${dailyToolStats.date} >= ${thirtyDaysAgo}`,
+                sql`${dailyToolStats.date} < ${today}`,
+              ),
+            )
+            .orderBy(dailyToolStats.date)
+            .all();
 
     const toolData = new Map<
       number,
       { total: number; daily: Map<string, number> }
     >();
+    for (const row of candidates) {
+      toolData.set(row.tool_id, { total: row.downloads_30d, daily: new Map() });
+    }
     for (const row of dailyData) {
-      if (!toolData.has(row.tool_id)) {
-        toolData.set(row.tool_id, { total: 0, daily: new Map() });
-      }
       const data = toolData.get(row.tool_id)!;
-      data.total += row.downloads;
       data.daily.set(row.date, row.downloads);
     }
 
@@ -701,13 +738,7 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
     }> = [];
 
     for (const [toolId, data] of toolData) {
-      const dailyValues: number[] = [];
-      for (let i = 1; i <= 30; i++) {
-        const date = new Date((now - i * 86400) * 1000)
-          .toISOString()
-          .split("T")[0];
-        dailyValues.push(data.daily.get(date) ?? 0);
-      }
+      const dailyValues = lookupDates.map((date) => data.daily.get(date) ?? 0);
 
       const mean =
         dailyValues.reduce((sum, value) => sum + value, 0) / dailyValues.length;
@@ -716,56 +747,64 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
         dailyValues.length;
       const stddev = Math.sqrt(variance);
 
-      if (data.total < 500 || stddev === 0) {
+      if (stddev === 0) {
         continue;
       }
 
       const recentAvg = (dailyValues[0] + dailyValues[1] + dailyValues[2]) / 3;
       const dailyBoost = (recentAvg - mean) / stddev;
-      const sparkline: number[] = [];
-      for (let i = 13; i >= 1; i--) {
-        const date = new Date((now - i * 86400) * 1000)
-          .toISOString()
-          .split("T")[0];
-        sparkline.push(data.daily.get(date) ?? 0);
-      }
+      const sparkline = sparklineDates.map((date) => data.daily.get(date) ?? 0);
 
       rows.push({
         tool_id: toolId,
         downloads_30d: data.total,
         daily_boost: dailyBoost,
+        // Keep this separate so the ranking formula can evolve without a schema change.
         trending_score: dailyBoost,
         sparkline: JSON.stringify(sparkline),
       });
     }
 
     if (d1) {
-      const BATCH_SIZE = 50;
+      const BATCH_SIZE = 100;
       for (let i = 0; i < rows.length; i += BATCH_SIZE) {
         const batch = rows.slice(i, i + BATCH_SIZE);
-        await d1.batch(
-          batch.map((row) =>
-            d1
-              .prepare(
-                "INSERT OR REPLACE INTO trending_tool_summaries (tool_id, downloads_30d, daily_boost, trending_score, sparkline, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-              )
-              .bind(
-                row.tool_id,
-                row.downloads_30d,
-                row.daily_boost,
-                row.trending_score,
-                row.sparkline,
-                updatedAt,
-              ),
-          ),
-        );
+        const placeholders = batch.map(() => "(?, ?, ?, ?, ?, ?)").join(", ");
+        await d1
+          .prepare(
+            `INSERT OR REPLACE INTO trending_tool_summaries (tool_id, downloads_30d, daily_boost, trending_score, sparkline, updated_at) VALUES ${placeholders}`,
+          )
+          .bind(
+            ...batch.flatMap((row) => [
+              row.tool_id,
+              row.downloads_30d,
+              row.daily_boost,
+              row.trending_score,
+              row.sparkline,
+              updatedAt,
+            ]),
+          )
+          .run();
       }
-      await d1
-        .prepare("DELETE FROM trending_tool_summaries WHERE updated_at != ?")
-        .bind(updatedAt)
-        .run();
-    } else {
-      for (const row of rows) {
+      if (rows.length > 0) {
+        await d1
+          .prepare("DELETE FROM trending_tool_summaries WHERE updated_at != ?")
+          .bind(updatedAt)
+          .run();
+      }
+    } else if (rows.length > 0) {
+      const BATCH_SIZE = 100;
+      for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+        const values = rows.slice(i, i + BATCH_SIZE).map(
+          (row) => sql`(
+            ${row.tool_id},
+            ${row.downloads_30d},
+            ${row.daily_boost},
+            ${row.trending_score},
+            ${row.sparkline},
+            ${updatedAt}
+          )`,
+        );
         await db.run(sql`
           INSERT OR REPLACE INTO trending_tool_summaries (
             tool_id,
@@ -775,19 +814,12 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
             sparkline,
             updated_at
           )
-          VALUES (
-            ${row.tool_id},
-            ${row.downloads_30d},
-            ${row.daily_boost},
-            ${row.trending_score},
-            ${row.sparkline},
-            ${updatedAt}
-          )
+          VALUES ${sql.join(values, sql`, `)}
         `);
       }
       await db.run(sql`
-        DELETE FROM trending_tool_summaries
-        WHERE updated_at != ${updatedAt}
+          DELETE FROM trending_tool_summaries
+          WHERE updated_at != ${updatedAt}
       `);
     }
 

@@ -139,7 +139,9 @@ export const toolVersionDownloadSummaries = sqliteTable(
 );
 
 export const trendingToolSummaries = sqliteTable("trending_tool_summaries", {
-  tool_id: integer("tool_id").primaryKey(),
+  tool_id: integer("tool_id")
+    .primaryKey()
+    .references(() => tools.id),
   downloads_30d: integer("downloads_30d").notNull(),
   daily_boost: real("daily_boost").notNull(),
   trending_score: real("trending_score").notNull(),
