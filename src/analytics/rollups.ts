@@ -653,12 +653,162 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
     return countSummaryRows(d1);
   }
 
+  async function populateTrendingToolSummaries(
+    d1?: D1Database,
+  ): Promise<{ trendingSummaries: number }> {
+    const now = Math.floor(Date.now() / 1000);
+    const thirtyDaysAgo = new Date((now - 30 * 86400) * 1000)
+      .toISOString()
+      .split("T")[0];
+    const today = new Date(now * 1000).toISOString().split("T")[0];
+    const updatedAt = new Date().toISOString();
+
+    const dailyData = await db
+      .select({
+        tool_id: dailyToolStats.tool_id,
+        date: dailyToolStats.date,
+        downloads: dailyToolStats.downloads,
+      })
+      .from(dailyToolStats)
+      .where(
+        and(
+          sql`${dailyToolStats.date} >= ${thirtyDaysAgo}`,
+          sql`${dailyToolStats.date} < ${today}`,
+        ),
+      )
+      .orderBy(dailyToolStats.date)
+      .all();
+
+    const toolData = new Map<
+      number,
+      { total: number; daily: Map<string, number> }
+    >();
+    for (const row of dailyData) {
+      if (!toolData.has(row.tool_id)) {
+        toolData.set(row.tool_id, { total: 0, daily: new Map() });
+      }
+      const data = toolData.get(row.tool_id)!;
+      data.total += row.downloads;
+      data.daily.set(row.date, row.downloads);
+    }
+
+    const rows: Array<{
+      tool_id: number;
+      downloads_30d: number;
+      daily_boost: number;
+      trending_score: number;
+      sparkline: string;
+    }> = [];
+
+    for (const [toolId, data] of toolData) {
+      const dailyValues: number[] = [];
+      for (let i = 1; i <= 30; i++) {
+        const date = new Date((now - i * 86400) * 1000)
+          .toISOString()
+          .split("T")[0];
+        dailyValues.push(data.daily.get(date) ?? 0);
+      }
+
+      const mean =
+        dailyValues.reduce((sum, value) => sum + value, 0) / dailyValues.length;
+      const variance =
+        dailyValues.reduce((sum, value) => sum + (value - mean) ** 2, 0) /
+        dailyValues.length;
+      const stddev = Math.sqrt(variance);
+
+      if (data.total < 500 || stddev === 0) {
+        continue;
+      }
+
+      const recentAvg = (dailyValues[0] + dailyValues[1] + dailyValues[2]) / 3;
+      const dailyBoost = (recentAvg - mean) / stddev;
+      const sparkline: number[] = [];
+      for (let i = 13; i >= 1; i--) {
+        const date = new Date((now - i * 86400) * 1000)
+          .toISOString()
+          .split("T")[0];
+        sparkline.push(data.daily.get(date) ?? 0);
+      }
+
+      rows.push({
+        tool_id: toolId,
+        downloads_30d: data.total,
+        daily_boost: dailyBoost,
+        trending_score: dailyBoost,
+        sparkline: JSON.stringify(sparkline),
+      });
+    }
+
+    if (d1) {
+      const BATCH_SIZE = 50;
+      for (let i = 0; i < rows.length; i += BATCH_SIZE) {
+        const batch = rows.slice(i, i + BATCH_SIZE);
+        await d1.batch(
+          batch.map((row) =>
+            d1
+              .prepare(
+                "INSERT OR REPLACE INTO trending_tool_summaries (tool_id, downloads_30d, daily_boost, trending_score, sparkline, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
+              )
+              .bind(
+                row.tool_id,
+                row.downloads_30d,
+                row.daily_boost,
+                row.trending_score,
+                row.sparkline,
+                updatedAt,
+              ),
+          ),
+        );
+      }
+      await d1
+        .prepare("DELETE FROM trending_tool_summaries WHERE updated_at != ?")
+        .bind(updatedAt)
+        .run();
+    } else {
+      for (const row of rows) {
+        await db.run(sql`
+          INSERT OR REPLACE INTO trending_tool_summaries (
+            tool_id,
+            downloads_30d,
+            daily_boost,
+            trending_score,
+            sparkline,
+            updated_at
+          )
+          VALUES (
+            ${row.tool_id},
+            ${row.downloads_30d},
+            ${row.daily_boost},
+            ${row.trending_score},
+            ${row.sparkline},
+            ${updatedAt}
+          )
+        `);
+      }
+      await db.run(sql`
+        DELETE FROM trending_tool_summaries
+        WHERE updated_at != ${updatedAt}
+      `);
+    }
+
+    const result = d1
+      ? await d1
+          .prepare("SELECT COUNT(*) AS count FROM trending_tool_summaries")
+          .first<{ count: number }>()
+      : await db.get<{ count: number }>(
+          sql`SELECT COUNT(*) AS count FROM trending_tool_summaries`,
+        );
+
+    return { trendingSummaries: result?.count ?? 0 };
+  }
+
   return {
     populateVersionStatsRollup,
     populateRollupTables,
     populateDailyMauStats,
     backfillArchivedToolStats,
     populateToolDownloadSummaries,
+    populateTrendingToolSummaries,
 
     // Backfill rollup tables for the last N days (one-time migration)
     async backfillRollupTables(
@@ -693,6 +843,7 @@ export function createRollupFunctions(db: ReturnType<typeof drizzle>) {
 
       const archived = await backfillArchivedToolStats(d1);
       await populateToolDownloadSummaries(d1);
+      await populateTrendingToolSummaries(d1);
 
       return {
         daysProcessed,

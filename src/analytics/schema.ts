@@ -1,5 +1,5 @@
 // Analytics schema - normalized tables for download tracking
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
 // Tools lookup table
 export const tools = sqliteTable("tools", {
@@ -137,3 +137,12 @@ export const toolVersionDownloadSummaries = sqliteTable(
     downloads_all_time: integer("downloads_all_time").notNull(),
   },
 );
+
+export const trendingToolSummaries = sqliteTable("trending_tool_summaries", {
+  tool_id: integer("tool_id").primaryKey(),
+  downloads_30d: integer("downloads_30d").notNull(),
+  daily_boost: real("daily_boost").notNull(),
+  trending_score: real("trending_score").notNull(),
+  sparkline: text("sparkline").notNull(),
+  updated_at: text("updated_at").notNull(),
+});

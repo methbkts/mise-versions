@@ -467,6 +467,48 @@ export function createTrendsFunctions(db: ReturnType<typeof drizzle>) {
         version_count: number;
       }>
     > {
+      const summaryRows = await db.all<{
+        name: string;
+        downloads_30d: number;
+        trending_score: number;
+        daily_boost: number;
+        sparkline: string;
+        description: string | null;
+        backends: string | null;
+        security: string | null;
+        version_count: number | null;
+      }>(sql`
+	        SELECT
+	          t.name,
+	          s.downloads_30d,
+	          s.trending_score,
+	          s.daily_boost,
+	          s.sparkline,
+	          t.description,
+	          t.backends,
+	          t.security,
+	          t.version_count
+	        FROM trending_tool_summaries s
+	        INNER JOIN tools t ON s.tool_id = t.id
+	        WHERE t.latest_version IS NOT NULL
+	        ORDER BY s.trending_score DESC
+	        LIMIT ${limit}
+	      `);
+
+      if (summaryRows.length > 0) {
+        return summaryRows.map((row) => ({
+          name: row.name,
+          downloads_30d: row.downloads_30d,
+          trendingScore: row.trending_score,
+          dailyBoost: row.daily_boost,
+          sparkline: JSON.parse(row.sparkline),
+          description: row.description || undefined,
+          backends: row.backends ? JSON.parse(row.backends) : undefined,
+          security: row.security ? JSON.parse(row.security) : undefined,
+          version_count: row.version_count || 0,
+        }));
+      }
+
       const now = Math.floor(Date.now() / 1000);
       const thirtyDaysAgo = new Date((now - 30 * 86400) * 1000)
         .toISOString()

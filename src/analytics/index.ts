@@ -31,6 +31,7 @@ export {
   toolDownloadSummaries,
   toolPlatformDownloadSummaries,
   toolVersionDownloadSummaries,
+  trendingToolSummaries,
 } from "./schema.js";
 
 // Re-export migrations
@@ -86,6 +87,7 @@ export function setupAnalytics(
     populateVersionStatsRollup: rollups.populateVersionStatsRollup,
     backfillArchivedToolStats: rollups.backfillArchivedToolStats,
     populateToolDownloadSummaries: rollups.populateToolDownloadSummaries,
+    populateTrendingToolSummaries: rollups.populateTrendingToolSummaries,
     backfillRollupTables: rollups.backfillRollupTables,
 
     // Growth functions

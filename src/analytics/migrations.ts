@@ -646,6 +646,22 @@ export async function runAnalyticsMigrations(db: AnalyticsDb): Promise<void> {
     ON tool_version_download_summaries(tool_id, downloads_all_time DESC)
   `);
 
+  await db.run(sql`
+    CREATE TABLE IF NOT EXISTS trending_tool_summaries (
+      tool_id INTEGER PRIMARY KEY,
+      downloads_30d INTEGER NOT NULL DEFAULT 0,
+      daily_boost REAL NOT NULL DEFAULT 0,
+      trending_score REAL NOT NULL DEFAULT 0,
+      sparkline TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
+      FOREIGN KEY (tool_id) REFERENCES tools(id)
+    )
+  `);
+  await db.run(sql`
+    CREATE INDEX IF NOT EXISTS idx_trending_tool_summaries_score
+    ON trending_tool_summaries(trending_score DESC, tool_id)
+  `);
+
   await runAnalyticsDataMigrations(db);
 
   console.log("Analytics migrations completed");

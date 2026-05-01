@@ -101,6 +101,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
       `Download summaries refreshed: ${summaries.toolSummaries} tools, ${summaries.platformSummaries} platform rows, ${summaries.versionSummaries} version rows`,
     );
 
+    const trendingSummaries = await analytics.populateTrendingToolSummaries(
+      env.ANALYTICS_DB,
+    );
+    console.log(
+      `Trending summaries refreshed: ${trendingSummaries.trendingSummaries} tools`,
+    );
+
     return jsonResponse({
       success: true,
       aggregation: {
@@ -131,6 +138,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
         daysUpdated: mauDaysUpdated,
       },
       summaries,
+      trendingSummaries,
     });
   } catch (error) {
     console.error("Scheduled task error:", error);

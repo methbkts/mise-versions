@@ -111,6 +111,13 @@ export async function scheduled(
       `Download summaries refreshed: ${summaries.toolSummaries} tools, ${summaries.platformSummaries} platform rows, ${summaries.versionSummaries} version rows`,
     );
 
+    const trendingSummaries = await analytics.populateTrendingToolSummaries(
+      env.ANALYTICS_DB,
+    );
+    console.log(
+      `Trending summaries refreshed: ${trendingSummaries.trendingSummaries} tools`,
+    );
+
     console.log("Scheduled tasks completed successfully");
   } catch (error) {
     console.error("Scheduled task error:", error);
