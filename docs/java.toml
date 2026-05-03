@@ -3311,7 +3311,7 @@
 "redhat-8u462-b08_1" = { created_at = 2025-07-23T22:04:56.837Z }
 "sapmachine-jre-musl-10.0.1.10" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-jre-musl-10.0.0-ea.46" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-17.0.4.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
+"sapmachine-jre-musl-17.0.4.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
 "sapmachine-jre-musl-17.0.7" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-jre-musl-17.0.8" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-jre-musl-17.0.8.1" = { created_at = 2025-03-28T22:04:28.081Z }
@@ -3326,15 +3326,15 @@
 "sapmachine-jre-musl-17.0.17" = { created_at = 2025-10-21T22:05:45.207Z }
 "sapmachine-jre-musl-17.0.18" = { created_at = 2026-01-20T22:05:15.587Z }
 "sapmachine-jre-musl-17.0.19" = { created_at = 2026-04-21T22:15:54.754Z }
-"sapmachine-jre-musl-17.0.4-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-17.0.5-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-17.0.6-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-18.0.1.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-18.0.2.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-18.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-19.0.0-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-19.0.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-jre-musl-19.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z }
+"sapmachine-jre-musl-17.0.4-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-17.0.5-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-17.0.6-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-18.0.1.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-18.0.2.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-18.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-19.0.0-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-19.0.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-jre-musl-19.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
 "sapmachine-jre-musl-20.0.0" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-jre-musl-20.0.1" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-jre-musl-20.0.2" = { created_at = 2025-03-28T22:04:28.081Z }
@@ -3485,7 +3485,7 @@
 "sapmachine-jre-26.0.1" = { created_at = 2026-04-21T22:15:54.754Z }
 "sapmachine-musl-10.0.1.10" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-musl-10.0.0-ea.46" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-17.0.4.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
+"sapmachine-musl-17.0.4.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
 "sapmachine-musl-17.0.7" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-musl-17.0.8" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-musl-17.0.8.1" = { created_at = 2025-03-28T22:04:28.081Z }
@@ -3500,15 +3500,15 @@
 "sapmachine-musl-17.0.17" = { created_at = 2025-10-21T22:05:45.207Z }
 "sapmachine-musl-17.0.18" = { created_at = 2026-01-20T22:05:15.587Z }
 "sapmachine-musl-17.0.19" = { created_at = 2026-04-21T22:15:54.754Z }
-"sapmachine-musl-17.0.4-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-17.0.5-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-17.0.6-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-18.0.1.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-18.0.2.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-18.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-19.0.0-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-19.0.1-beta" = { created_at = 2025-03-28T22:04:28.081Z }
-"sapmachine-musl-19.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z }
+"sapmachine-musl-17.0.4-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-17.0.5-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-17.0.6-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-18.0.1.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-18.0.2.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-18.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-19.0.0-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-19.0.1-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
+"sapmachine-musl-19.0.2-beta" = { created_at = 2025-03-28T22:04:28.081Z, prerelease = true }
 "sapmachine-musl-20.0.0" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-musl-20.0.1" = { created_at = 2025-03-28T22:04:28.081Z }
 "sapmachine-musl-20.0.2" = { created_at = 2025-03-28T22:04:28.081Z }

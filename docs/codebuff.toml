@@ -1,9 +1,9 @@
 [versions]
-"0.0.1-legacy.0" = { created_at = 2025-10-31T22:57:09.981Z }
-"0.0.2-legacy.0" = { created_at = 2025-10-31T23:43:04.334Z }
-"0.0.3-legacy.0" = { created_at = 2025-11-01T00:07:19.582Z }
-"0.0.4-legacy.0" = { created_at = 2025-11-15T00:14:57.273Z }
-"0.0.6-legacy.0" = { created_at = 2025-11-19T23:14:44.328Z }
+"0.0.1-legacy.0" = { created_at = 2025-10-31T22:57:09.981Z, prerelease = true }
+"0.0.2-legacy.0" = { created_at = 2025-10-31T23:43:04.334Z, prerelease = true }
+"0.0.3-legacy.0" = { created_at = 2025-11-01T00:07:19.582Z, prerelease = true }
+"0.0.4-legacy.0" = { created_at = 2025-11-15T00:14:57.273Z, prerelease = true }
+"0.0.6-legacy.0" = { created_at = 2025-11-19T23:14:44.328Z, prerelease = true }
 "1.0.99" = { created_at = 2024-11-04T18:12:13.003Z }
 "1.0.100" = { created_at = 2024-11-07T00:40:06.356Z }
 "1.0.101" = { created_at = 2024-11-07T07:47:45.240Z }

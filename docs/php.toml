@@ -66,7 +66,7 @@
 "4.2.3" = { created_at = 2025-12-17T23:53:31.981Z }
 "4.2.3RC1" = { created_at = 2025-12-17T23:53:31.981Z }
 "4.2.3RC2" = { created_at = 2025-12-17T23:53:31.981Z }
-"4.3.0dev-ZendEngine2-Preview1" = { created_at = 2025-12-17T23:53:31.981Z }
+"4.3.0dev-ZendEngine2-Preview1" = { created_at = 2025-12-17T23:53:31.981Z, prerelease = true }
 "4.3.0dev-ZendEngine2" = { created_at = 2025-12-17T23:53:31.981Z }
 "4.3.0" = { created_at = 2025-12-17T23:53:31.981Z }
 "4.3.0RC1" = { created_at = 2025-12-17T23:53:31.981Z }

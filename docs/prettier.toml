@@ -31,7 +31,7 @@
 "1.2.2" = { created_at = 2017-04-19T20:19:43.614Z }
 "1.3.0" = { created_at = 2017-05-02T22:31:53.986Z }
 "1.3.1" = { created_at = 2017-05-03T21:39:46.048Z }
-"1.4.0-beta" = { created_at = 2017-06-02T03:31:21.378Z }
+"1.4.0-beta" = { created_at = 2017-06-02T03:31:21.378Z, prerelease = true }
 "1.4.0" = { created_at = 2017-06-02T15:55:50.613Z }
 "1.4.1" = { created_at = 2017-06-02T23:26:58.416Z }
 "1.4.2" = { created_at = 2017-06-03T15:54:58.491Z }
@@ -41,7 +41,7 @@
 "1.5.1" = { created_at = 2017-06-27T20:42:58.348Z }
 "1.5.2" = { created_at = 2017-06-28T03:34:08.836Z }
 "1.5.3" = { created_at = 2017-07-15T09:53:32.355Z }
-"1.6.0-beta2" = { created_at = 2017-08-26T03:20:27.043Z }
+"1.6.0-beta2" = { created_at = 2017-08-26T03:20:27.043Z, prerelease = true }
 "1.6.0" = { created_at = 2017-08-28T16:05:27.943Z }
 "1.6.1" = { created_at = 2017-08-29T16:00:06.358Z }
 "1.7.0" = { created_at = 2017-09-14T17:22:53.046Z }
@@ -58,7 +58,7 @@
 "1.10.0" = { created_at = 2018-01-10T12:07:19.820Z }
 "1.10.1" = { created_at = 2018-01-10T12:26:45.817Z }
 "1.10.2" = { created_at = 2018-01-11T01:59:08.832Z }
-"1.11.0-rc.1" = { created_at = 2018-02-24T00:01:49.203Z }
+"1.11.0-rc.1" = { created_at = 2018-02-24T00:01:49.203Z, prerelease = true }
 "1.11.0" = { created_at = 2018-02-27T01:26:44.031Z }
 "1.11.1" = { created_at = 2018-02-28T22:22:11.608Z }
 "1.12.0" = { created_at = 2018-04-12T04:28:53.151Z }
@@ -123,19 +123,19 @@
 "2.8.6" = { created_at = 2023-03-21T08:17:39.465Z }
 "2.8.7" = { created_at = 2023-03-24T08:15:19.994Z }
 "2.8.8" = { created_at = 2023-04-23T07:26:12.772Z }
-"3.0.0-alpha.0" = { created_at = 2022-08-17T09:12:49.537Z }
-"3.0.0-alpha.1" = { created_at = 2022-10-08T08:54:58.929Z }
-"3.0.0-alpha.2" = { created_at = 2022-10-13T09:12:25.759Z }
-"3.0.0-alpha.3" = { created_at = 2022-10-20T01:59:24.589Z }
-"3.0.0-alpha.4" = { created_at = 2022-10-26T03:05:17.724Z }
-"3.0.0-alpha.5" = { created_at = 2023-03-01T10:00:47.035Z }
-"3.0.0-alpha.6" = { created_at = 2023-03-02T09:19:46.624Z }
-"3.0.0-alpha.10" = { created_at = 2023-04-23T10:51:27.118Z }
-"3.0.0-alpha.11" = { created_at = 2023-04-25T02:47:52.655Z }
-"3.0.0-alpha.12" = { created_at = 2023-05-26T14:12:45.252Z }
-"3.0.0-alpha.7-for-vscode" = { created_at = 2023-04-23T06:54:00.153Z }
-"3.0.0-alpha.8-for-vscode" = { created_at = 2023-04-23T08:07:28.795Z }
-"3.0.0-alpha.9-for-vscode" = { created_at = 2023-04-23T08:50:26.138Z }
+"3.0.0-alpha.0" = { created_at = 2022-08-17T09:12:49.537Z, prerelease = true }
+"3.0.0-alpha.1" = { created_at = 2022-10-08T08:54:58.929Z, prerelease = true }
+"3.0.0-alpha.2" = { created_at = 2022-10-13T09:12:25.759Z, prerelease = true }
+"3.0.0-alpha.3" = { created_at = 2022-10-20T01:59:24.589Z, prerelease = true }
+"3.0.0-alpha.4" = { created_at = 2022-10-26T03:05:17.724Z, prerelease = true }
+"3.0.0-alpha.5" = { created_at = 2023-03-01T10:00:47.035Z, prerelease = true }
+"3.0.0-alpha.6" = { created_at = 2023-03-02T09:19:46.624Z, prerelease = true }
+"3.0.0-alpha.10" = { created_at = 2023-04-23T10:51:27.118Z, prerelease = true }
+"3.0.0-alpha.11" = { created_at = 2023-04-25T02:47:52.655Z, prerelease = true }
+"3.0.0-alpha.12" = { created_at = 2023-05-26T14:12:45.252Z, prerelease = true }
+"3.0.0-alpha.7-for-vscode" = { created_at = 2023-04-23T06:54:00.153Z, prerelease = true }
+"3.0.0-alpha.8-for-vscode" = { created_at = 2023-04-23T08:07:28.795Z, prerelease = true }
+"3.0.0-alpha.9-for-vscode" = { created_at = 2023-04-23T08:50:26.138Z, prerelease = true }
 "3.0.0" = { created_at = 2023-07-05T12:44:13.820Z }
 "3.0.1" = { created_at = 2023-08-03T06:10:21.592Z }
 "3.0.2" = { created_at = 2023-08-15T15:44:19.367Z }
@@ -171,17 +171,17 @@
 "3.8.1" = { created_at = 2026-01-21T17:45:07.754Z }
 "3.8.2" = { created_at = 2026-04-10T02:30:00.024Z }
 "3.8.3" = { created_at = 2026-04-15T00:55:25.573Z }
-"4.0.0-alpha.0" = { created_at = 2023-11-30T05:45:34.115Z }
-"4.0.0-alpha.1" = { created_at = 2023-11-30T06:42:36.440Z }
-"4.0.0-alpha.2" = { created_at = 2023-11-30T16:49:10.348Z }
-"4.0.0-alpha.3" = { created_at = 2023-12-01T05:34:45.202Z }
-"4.0.0-alpha.4" = { created_at = 2023-12-10T08:09:33.912Z }
-"4.0.0-alpha.5" = { created_at = 2023-12-14T05:53:18.886Z }
-"4.0.0-alpha.6" = { created_at = 2023-12-16T03:16:14.815Z }
-"4.0.0-alpha.7" = { created_at = 2023-12-17T18:47:04.955Z }
-"4.0.0-alpha.8" = { created_at = 2023-12-20T18:12:56.119Z }
-"4.0.0-alpha.9" = { created_at = 2024-06-17T22:48:53.722Z }
-"4.0.0-alpha.10" = { created_at = 2024-09-02T22:37:55.892Z }
-"4.0.0-alpha.11" = { created_at = 2025-02-24T22:11:36.974Z }
-"4.0.0-alpha.12" = { created_at = 2025-03-06T09:58:16.951Z }
-"4.0.0-alpha.13" = { created_at = 2025-11-18T08:04:21.677Z }
+"4.0.0-alpha.0" = { created_at = 2023-11-30T05:45:34.115Z, prerelease = true }
+"4.0.0-alpha.1" = { created_at = 2023-11-30T06:42:36.440Z, prerelease = true }
+"4.0.0-alpha.2" = { created_at = 2023-11-30T16:49:10.348Z, prerelease = true }
+"4.0.0-alpha.3" = { created_at = 2023-12-01T05:34:45.202Z, prerelease = true }
+"4.0.0-alpha.4" = { created_at = 2023-12-10T08:09:33.912Z, prerelease = true }
+"4.0.0-alpha.5" = { created_at = 2023-12-14T05:53:18.886Z, prerelease = true }
+"4.0.0-alpha.6" = { created_at = 2023-12-16T03:16:14.815Z, prerelease = true }
+"4.0.0-alpha.7" = { created_at = 2023-12-17T18:47:04.955Z, prerelease = true }
+"4.0.0-alpha.8" = { created_at = 2023-12-20T18:12:56.119Z, prerelease = true }
+"4.0.0-alpha.9" = { created_at = 2024-06-17T22:48:53.722Z, prerelease = true }
+"4.0.0-alpha.10" = { created_at = 2024-09-02T22:37:55.892Z, prerelease = true }
+"4.0.0-alpha.11" = { created_at = 2025-02-24T22:11:36.974Z, prerelease = true }
+"4.0.0-alpha.12" = { created_at = 2025-03-06T09:58:16.951Z, prerelease = true }
+"4.0.0-alpha.13" = { created_at = 2025-11-18T08:04:21.677Z, prerelease = true }
