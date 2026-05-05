@@ -522,3 +522,4 @@
 "2.11.44" = { created_at = 2026-04-29T09:56:10.000Z, release_url = "https://github.com/traefik/traefik/releases/tag/v2.11.44" }
 "3.6.15" = { created_at = 2026-04-29T12:36:05.000Z, release_url = "https://github.com/traefik/traefik/releases/tag/v3.6.15" }
 "3.7.0-rc.3" = { created_at = 2026-04-29T14:44:05.000Z, release_url = "https://github.com/traefik/traefik/releases/tag/v3.7.0-rc.3", prerelease = true }
+"2.11.45" = { created_at = 2026-05-05T12:22:05.000Z, release_url = "https://github.com/traefik/traefik/releases/tag/v2.11.45" }
