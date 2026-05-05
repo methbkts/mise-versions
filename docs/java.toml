@@ -3963,6 +3963,7 @@
 "temurin-jre-musl-8.0.462+8" = { created_at = 2025-07-22T22:06:06.816Z }
 "temurin-jre-musl-8.0.472+8" = { created_at = 2025-10-24T22:04:20.684Z }
 "temurin-jre-musl-8.0.482+8" = { created_at = 2026-02-03T22:09:26.911Z }
+"temurin-jre-musl-8.0.492+9" = { created_at = 2026-05-05T22:21:50.364Z }
 "temurin-jre-11.0.12+7" = { created_at = 2025-03-28T22:04:33.817Z }
 "temurin-jre-11.0.13+8" = { created_at = 2025-03-28T22:04:33.817Z }
 "temurin-jre-11.0.14+9" = { created_at = 2025-03-28T22:04:33.817Z }
@@ -4162,6 +4163,7 @@
 "temurin-musl-8.0.462+8" = { created_at = 2025-07-22T22:06:06.816Z }
 "temurin-musl-8.0.472+8" = { created_at = 2025-10-24T22:04:20.684Z }
 "temurin-musl-8.0.482+8" = { created_at = 2026-02-03T22:09:26.911Z }
+"temurin-musl-8.0.492+9" = { created_at = 2026-05-05T22:21:50.364Z }
 "temurin-8.0.302+8" = { created_at = 2025-03-28T22:04:33.817Z }
 "temurin-8.0.312+7" = { created_at = 2025-03-28T22:04:33.817Z }
 "temurin-8.0.322+6" = { created_at = 2025-03-28T22:04:33.817Z }
