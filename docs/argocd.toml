@@ -558,3 +558,4 @@
 "3.3.9" = { created_at = 2026-04-30T17:22:27.000Z, release_url = "https://github.com/argoproj/argo-cd/releases/tag/v3.3.9" }
 "3.4.0-rc7" = { created_at = 2026-04-30T17:22:49.000Z, release_url = "https://github.com/argoproj/argo-cd/releases/tag/v3.4.0-rc7", prerelease = true }
 "3.1.16" = { created_at = 2026-05-05T06:51:06.000Z, release_url = "https://github.com/argoproj/argo-cd/releases/tag/v3.1.16" }
+"3.4.1" = { created_at = 2026-05-06T07:46:04.000Z, release_url = "https://github.com/argoproj/argo-cd/releases/tag/v3.4.1" }
