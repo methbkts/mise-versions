@@ -55,6 +55,6 @@
 "0.12.1" = { created_at = 2025-12-25T16:43:08.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/0.12.1" }
 "0.12.2" = { created_at = 2025-12-27T16:58:56.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/0.12.2" }
 "0.12.3" = { created_at = 2025-12-31T22:46:26.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/0.12.3" }
-"nightly-a9863107-1777165424" = { created_at = 2026-04-25T10:38:18.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/nightly-a9863107-1777165424", prerelease = true }
 "nightly-79712915-1777856854" = { created_at = 2026-05-03T07:19:49.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/nightly-79712915-1777856854", prerelease = true }
 "nightly-9aa3e24b-1777942990" = { created_at = 2026-05-04T06:54:07.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/nightly-9aa3e24b-1777942990", prerelease = true }
+"nightly-e6700c98-1778029286" = { created_at = 2026-05-05T05:23:50.000Z, release_url = "https://github.com/ClementTsang/bottom/releases/tag/nightly-e6700c98-1778029286", prerelease = true }
