@@ -579,3 +579,4 @@
 "9.3.0-alpha01-15009934" = { created_at = 2026-04-16T18:46:38.562Z, prerelease = true }
 "9.3.0-alpha02-15228143" = { created_at = 2026-04-24T16:21:19.554Z, prerelease = true }
 "9.3.0-alpha03-15228143" = { created_at = 2026-04-30T17:54:42.864Z, prerelease = true }
+"9.3.0-alpha04-15228143" = { created_at = 2026-05-07T14:15:26.725Z, prerelease = true }
