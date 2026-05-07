@@ -1544,5 +1544,5 @@
 "2.98.0" = { created_at = 2026-04-30T17:36:47.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.98.0", prerelease = true }
 "2.98.1" = { created_at = 2026-05-04T07:29:37.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.98.1", prerelease = true }
 "2.98.2" = { created_at = 2026-05-05T08:42:11.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.98.2", prerelease = true }
-"2.99.0-beta.1" = { created_at = 2026-05-07T17:17:01.982Z }
-"2.99.0-beta.2" = { created_at = 2026-05-07T17:17:01.982Z }
+"2.99.0-beta.1" = { created_at = 2026-05-07T09:12:26.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.1", prerelease = true }
+"2.99.0-beta.2" = { created_at = 2026-05-07T16:15:30.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.2", prerelease = true }
