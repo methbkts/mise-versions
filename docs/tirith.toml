@@ -43,4 +43,4 @@
 "threatdb-25420513772-1" = { created_at = 2026-05-05T06:36:01.000Z, release_url = "https://github.com/sheeki03/tirith/releases/tag/threatdb-25420513772-1" }
 "threatdb-25480623118-1" = { created_at = 2026-05-05T06:36:01.000Z, release_url = "https://github.com/sheeki03/tirith/releases/tag/threatdb-25480623118-1" }
 "threatdb-25539937184-1" = { created_at = 2026-05-05T06:36:01.000Z, release_url = "https://github.com/sheeki03/tirith/releases/tag/threatdb-25539937184-1" }
-"0.3.1" = { created_at = 2026-05-08T09:46:51.360Z }
+"0.3.1" = { created_at = 2026-05-08T09:07:05.000Z, release_url = "https://github.com/sheeki03/tirith/releases/tag/v0.3.1" }
