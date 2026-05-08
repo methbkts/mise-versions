@@ -966,3 +966,4 @@
 "2.9.11-canary.4" = { created_at = 2026-05-08T14:55:02.552Z, prerelease = true }
 "2.9.11-canary.5" = { created_at = 2026-05-08T15:40:00.383Z, prerelease = true }
 "2.9.11-canary.6" = { created_at = 2026-05-08T16:27:47.557Z, prerelease = true }
+"2.9.11-canary.7" = { created_at = 2026-05-08T21:00:46.982Z, prerelease = true }
