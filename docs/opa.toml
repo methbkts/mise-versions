@@ -198,4 +198,3 @@
 "1.15.2" = { created_at = 2026-04-08T13:05:16.000Z, release_url = "https://github.com/open-policy-agent/opa/releases/tag/v1.15.2" }
 "1.16.0" = { created_at = 2026-04-30T14:29:23.000Z, release_url = "https://github.com/open-policy-agent/opa/releases/tag/v1.16.0" }
 "1.16.1" = { created_at = 2026-05-01T11:58:59.000Z, release_url = "https://github.com/open-policy-agent/opa/releases/tag/v1.16.1" }
-"edge" = { created_at = 2026-05-08T20:28:19.000Z, release_url = "https://github.com/open-policy-agent/opa/releases/tag/edge", prerelease = true }
