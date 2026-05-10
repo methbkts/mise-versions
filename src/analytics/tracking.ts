@@ -1,13 +1,7 @@
 // Tracking functions for downloads and version requests
 import type { drizzle } from "drizzle-orm/d1";
 import { sql, eq, and } from "drizzle-orm";
-import {
-  tools,
-  backends,
-  platforms,
-  downloads,
-  versionRequests,
-} from "./schema.js";
+import { tools, backends, platforms, downloads } from "./schema.js";
 import { keyPart } from "../../web/src/lib/kv-cache.js";
 
 // Caches for ID lookups (shared within the tracking module)
@@ -16,7 +10,6 @@ const backendCache = new Map<string, number>();
 const platformCache = new Map<string, number>();
 
 const ID_CACHE_TTL_SECONDS = 30 * 24 * 60 * 60;
-const DAILY_DEDUPE_TTL_SECONDS = 2 * 24 * 60 * 60;
 
 type TrackingCache = {
   kv?: KVNamespace;
@@ -45,11 +38,6 @@ async function putCachedId(
   await cache.kv.put(key, String(id), {
     expirationTtl: ID_CACHE_TTL_SECONDS,
   });
-}
-
-function dailyDedupeKey(name: string, ipHash: string): string {
-  const day = Math.floor(Date.now() / 86400000);
-  return `tracking-dedupe:${name}:${day}:${ipHash}`;
 }
 
 export function createTrackingFunctions(
@@ -203,56 +191,22 @@ export function createTrackingFunctions(
     getOrCreateBackendId,
     getOrCreatePlatformId,
 
-    // Track a version request (for mise DAU/MAU) with daily deduplication per IP
+    // Track a version request (for mise DAU/MAU) with daily deduplication per IP.
+    // Relies on the UNIQUE(ip_hash, day) index in D1; INSERT OR IGNORE returns
+    // changes=0 when the (ip, day) pair is already present.
     async trackVersionRequest(
       ipHash: string,
     ): Promise<{ deduplicated: boolean }> {
       const now = Math.floor(Date.now() / 1000);
-      const todayStart = Math.floor(now / 86400) * 86400; // Start of today (UTC)
+      const day = Math.floor(now / 86400);
 
-      if (cache.kv) {
-        const key = dailyDedupeKey("version-request", ipHash);
-        const seen = await cache.kv.get(key);
-        if (seen) {
-          return { deduplicated: true };
-        }
+      const result = (await db.run(sql`
+        INSERT OR IGNORE INTO version_requests (ip_hash, created_at, day)
+        VALUES (${ipHash}, ${now}, ${day})
+      `)) as { meta?: { changes?: number } };
 
-        await cache.kv.put(key, "1", {
-          expirationTtl: DAILY_DEDUPE_TTL_SECONDS,
-        });
-
-        await db.insert(versionRequests).values({
-          ip_hash: ipHash,
-          created_at: now,
-        });
-
-        return { deduplicated: false };
-      }
-
-      // Check if already tracked today for this IP
-      const existing = await db
-        .select()
-        .from(versionRequests)
-        .where(
-          and(
-            eq(versionRequests.ip_hash, ipHash),
-            sql`${versionRequests.created_at} >= ${todayStart}`,
-          ),
-        )
-        .limit(1)
-        .get();
-
-      if (existing) {
-        return { deduplicated: true };
-      }
-
-      // Insert new record
-      await db.insert(versionRequests).values({
-        ip_hash: ipHash,
-        created_at: now,
-      });
-
-      return { deduplicated: false };
+      const changes = result.meta?.changes ?? 0;
+      return { deduplicated: changes === 0 };
     },
 
     // Track a download with daily deduplication per IP/tool/version

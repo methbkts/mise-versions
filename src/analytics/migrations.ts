@@ -274,6 +274,26 @@ const analyticsMigrations: AnalyticsMigration[] = [
       }
     },
   },
+  {
+    id: 4,
+    name: "version_requests_day_unique_index",
+    async up(db) {
+      const cols = await db.all<{ name: string }>(
+        sql`PRAGMA table_info(version_requests)`,
+      );
+      const hasDay = (cols as { name: string }[]).some((c) => c.name === "day");
+      if (!hasDay) {
+        await db.run(sql`ALTER TABLE version_requests ADD COLUMN day INTEGER`);
+      }
+      // Old rows keep day=NULL. SQLite treats NULLs as distinct in unique
+      // indexes, so the index only enforces uniqueness on rows tracked after
+      // the cutover (where day is set explicitly).
+      await db.run(sql`
+        CREATE UNIQUE INDEX IF NOT EXISTS idx_version_requests_unique_ip_day
+        ON version_requests(ip_hash, day)
+      `);
+    },
+  },
 ];
 
 async function runAnalyticsDataMigrations(db: AnalyticsDb): Promise<void> {
@@ -564,12 +584,15 @@ export async function runAnalyticsMigrations(db: AnalyticsDb): Promise<void> {
     sql`CREATE INDEX IF NOT EXISTS idx_daily_backend_stats_date ON daily_backend_stats(date)`,
   );
 
-  // Create version_requests table for mise DAU/MAU tracking
+  // Create version_requests table for mise DAU/MAU tracking.
+  // `day` is the UTC day-bucket (created_at / 86400) and pairs with the
+  // unique index below to dedupe via INSERT OR IGNORE.
   await db.run(sql`
     CREATE TABLE IF NOT EXISTS version_requests (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       ip_hash TEXT NOT NULL,
-      created_at INTEGER NOT NULL
+      created_at INTEGER NOT NULL,
+      day INTEGER
     )
   `);
   await db.run(

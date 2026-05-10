@@ -4,10 +4,6 @@ import { hashIP, getClientIP } from "../../lib/hash";
 import { setupAnalytics } from "../../../../src/analytics";
 import { env } from "cloudflare:workers";
 import {
-  emitTelemetry,
-  getMiseVersionFromHeaders,
-} from "../../../../src/pipelines";
-import {
   getCachedVersionRows,
   getCachedText,
   loadVersionRows,
@@ -60,36 +56,24 @@ export const GET: APIRoute = async ({ request, params, locals }) => {
       );
     }
 
-    // Track version request for DAU/MAU using waitUntil to ensure it completes
-    const clientIP = getClientIP(request);
-    const miseVersion = getMiseVersionFromHeaders(request.headers);
+    // Track version request for DAU/MAU using waitUntil to ensure it completes.
+    // Skip database storage for CI requests (excludes from MAU calculations).
     const isCI = request.headers.get("x-mise-ci") === "true";
-    locals.cfContext.waitUntil(
-      hashIP(clientIP, env.API_SECRET).then(async (ipHash) => {
-        try {
-          // Always emit telemetry (includes is_ci flag for analysis)
-          await emitTelemetry(env, {
-            schema_version: 1,
-            type: "version_request",
-            ts: Date.now(),
-            tool,
-            ip_hash: ipHash,
-            mise_version: miseVersion,
-            source: "toml",
-            is_ci: isCI,
-          });
-          // Skip database storage for CI requests (excludes from MAU calculations)
-          if (!isCI) {
+    if (!isCI) {
+      const clientIP = getClientIP(request);
+      locals.cfContext.waitUntil(
+        hashIP(clientIP, env.API_SECRET).then(async (ipHash) => {
+          try {
             const analytics = setupAnalytics(db, {
               trackingCache: env.DOWNLOAD_DEDUPE,
             });
             await analytics.trackVersionRequest(ipHash);
+          } catch (e) {
+            console.error("Failed to track version request:", e);
           }
-        } catch (e) {
-          console.error("Failed to track version request:", e);
-        }
-      }),
-    );
+        }),
+      );
+    }
 
     return new Response(toml, {
       status: 200,
