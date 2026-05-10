@@ -68,11 +68,14 @@ export const dailyBackendStats = sqliteTable("daily_backend_stats", {
   unique_users: integer("unique_users").notNull(),
 });
 
-// Version requests table - tracks mise CLI requests for DAU/MAU
+// Version requests table - tracks mise CLI requests for DAU/MAU.
+// `day` is the UTC day-bucket (created_at / 86400). A unique index on
+// (ip_hash, day) lets INSERT OR IGNORE handle dedup without a KV roundtrip.
 export const versionRequests = sqliteTable("version_requests", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   ip_hash: text("ip_hash").notNull(),
   created_at: integer("created_at").notNull(), // Unix timestamp
+  day: integer("day"),
 });
 
 // Daily stats for version requests (for mise DAU/MAU)
