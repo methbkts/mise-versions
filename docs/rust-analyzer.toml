@@ -334,4 +334,4 @@
 "2026-04-20" = { created_at = 2026-04-19T22:04:18.000Z, release_url = "https://github.com/rust-lang/rust-analyzer/releases/tag/2026-04-20" }
 "2026-04-27" = { created_at = 2026-04-21T19:42:01.000Z, release_url = "https://github.com/rust-lang/rust-analyzer/releases/tag/2026-04-27" }
 "2026-05-04" = { created_at = 2026-05-03T21:19:42.000Z, release_url = "https://github.com/rust-lang/rust-analyzer/releases/tag/2026-05-04" }
-"nightly" = { created_at = 2026-05-08T13:17:38.000Z, release_url = "https://github.com/rust-lang/rust-analyzer/releases/tag/nightly", prerelease = true }
+"nightly" = { created_at = 2026-05-09T23:24:09.000Z, release_url = "https://github.com/rust-lang/rust-analyzer/releases/tag/nightly", prerelease = true }
