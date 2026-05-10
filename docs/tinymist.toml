@@ -163,3 +163,4 @@
 "0.14.16-rc1" = { created_at = 2026-04-03T15:30:28.000Z, release_url = "https://github.com/Myriad-Dreamin/tinymist/releases/tag/v0.14.16-rc1", prerelease = true }
 "0.14.16" = { created_at = 2026-04-05T01:32:23.000Z, release_url = "https://github.com/Myriad-Dreamin/tinymist/releases/tag/v0.14.16" }
 "0.14.18-rc1" = { created_at = 2026-05-10T06:02:49.000Z, release_url = "https://github.com/Myriad-Dreamin/tinymist/releases/tag/v0.14.18-rc1", prerelease = true }
+"0.14.18" = { created_at = 2026-05-10T20:57:10.000Z, release_url = "https://github.com/Myriad-Dreamin/tinymist/releases/tag/v0.14.18" }
