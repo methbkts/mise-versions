@@ -429,6 +429,7 @@
 "0.15.9-nightly.20260509.199c0e290" = { created_at = 2026-05-09T00:32:44.746Z, prerelease = true }
 "0.15.9-nightly.20260510.f4d0ad6b7" = { created_at = 2026-05-10T00:31:03.764Z, prerelease = true }
 "0.15.9" = { created_at = 2026-05-08T14:44:51.701Z }
+"0.15.10-nightly.20260511.0a05ea800" = { created_at = 2026-05-11T00:32:22.152Z, prerelease = true }
 "0.15.10-preview.0" = { created_at = 2026-05-09T07:26:54.179Z, prerelease = true }
 "0.15.10" = { created_at = 2026-05-10T06:48:22.718Z }
 "0.16.10-preview.0" = { created_at = 2026-05-09T06:11:32.747Z, prerelease = true }
