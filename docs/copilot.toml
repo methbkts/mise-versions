@@ -218,3 +218,4 @@
 "1.0.44-3" = { created_at = 2026-05-06T22:00:40.000Z, release_url = "https://github.com/github/copilot-cli/releases/tag/v1.0.44-3", prerelease = true }
 "1.0.44" = { created_at = 2026-05-06T22:00:40.000Z, release_url = "https://github.com/github/copilot-cli/releases/tag/v1.0.44" }
 "1.0.45" = { created_at = 2026-05-08T19:39:08.000Z, release_url = "https://github.com/github/copilot-cli/releases/tag/v1.0.45" }
+"1.0.46" = { created_at = 2026-05-11T17:43:12.000Z, release_url = "https://github.com/github/copilot-cli/releases/tag/v1.0.46" }
