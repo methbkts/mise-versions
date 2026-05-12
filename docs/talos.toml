@@ -149,3 +149,4 @@
 "1.12.6" = { created_at = 2026-03-19T15:05:58.000Z, release_url = "https://github.com/siderolabs/talos/releases/tag/v1.12.6" }
 "1.12.7" = { created_at = 2026-04-24T15:10:40.000Z, release_url = "https://github.com/siderolabs/talos/releases/tag/v1.12.7" }
 "1.13.0" = { created_at = 2026-04-27T11:24:20.000Z, release_url = "https://github.com/siderolabs/talos/releases/tag/v1.13.0" }
+"1.13.2" = { created_at = 2026-05-12T17:40:24.000Z, release_url = "https://github.com/siderolabs/talos/releases/tag/v1.13.2" }
