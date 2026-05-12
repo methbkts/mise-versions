@@ -432,4 +432,5 @@
 "0.15.10-nightly.20260511.0a05ea800" = { created_at = 2026-05-11T00:32:22.152Z, prerelease = true }
 "0.15.10-preview.0" = { created_at = 2026-05-09T07:26:54.179Z, prerelease = true }
 "0.15.10" = { created_at = 2026-05-10T06:48:22.718Z }
+"0.15.11-preview.0" = { created_at = 2026-05-12T04:20:52.822Z, prerelease = true }
 "0.16.10-preview.0" = { created_at = 2026-05-09T06:11:32.747Z, prerelease = true }
