@@ -310,3 +310,9 @@
 "2.33.0" = { created_at = 2026-05-05T21:52:26.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.0" }
 "2.33.1" = { created_at = 2026-05-06T18:21:53.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.1" }
 "2.33.2" = { created_at = 2026-05-08T23:17:21.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.2" }
+"2.24.5" = { created_at = 2026-05-13T19:53:06.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.24.5" }
+"2.29.13" = { created_at = 2026-05-13T19:51:42.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.29.13" }
+"2.30.8" = { created_at = 2026-05-13T19:49:38.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.30.8" }
+"2.31.12" = { created_at = 2026-05-13T19:36:53.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.31.12" }
+"2.32.2" = { created_at = 2026-05-13T19:17:46.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.32.2" }
+"2.33.3" = { created_at = 2026-05-13T18:41:00.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.3" }
