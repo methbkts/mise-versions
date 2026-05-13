@@ -110,3 +110,4 @@
 "2.1.138" = { created_at = 2026-05-09T07:15:23.983Z, release_url = "https://github.com/anthropics/claude-code/releases/tag/v2.1.138" }
 "2.1.139" = { created_at = 2026-05-11T19:33:03.054Z, release_url = "https://github.com/anthropics/claude-code/releases/tag/v2.1.139" }
 "2.1.140" = { created_at = 2026-05-12T21:37:52.282Z, release_url = "https://github.com/anthropics/claude-code/releases/tag/v2.1.140" }
+"2.1.141" = { created_at = 2026-05-13T23:23:18.813Z }
