@@ -736,21 +736,21 @@
 "0.129.0-alpha.15" = { created_at = 2026-05-07T05:56:34.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.129.0-alpha.15", prerelease = true }
 "0.130.0-alpha.1" = { created_at = 2026-05-07T17:07:14.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.1", prerelease = true }
 "0.129.0" = { created_at = 2026-05-07T15:13:38.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.129.0" }
-"0.130.0-alpha.10" = { created_at = 2026-05-08T21:21:33.640Z }
-"0.130.0-alpha.3" = { created_at = 2026-05-08T21:21:33.640Z }
-"0.130.0-alpha.4" = { created_at = 2026-05-08T21:21:33.640Z }
-"0.130.0-alpha.5" = { created_at = 2026-05-08T21:21:33.640Z }
-"0.130.0-alpha.7" = { created_at = 2026-05-08T21:21:33.640Z }
-"0.131.0-alpha.1" = { created_at = 2026-05-09T10:22:15.037Z }
-"0.130.0" = { created_at = 2026-05-09T10:22:15.037Z }
-"0.131.0-alpha.2" = { created_at = 2026-05-09T10:22:15.037Z }
-"0.131.0-alpha.4" = { created_at = 2026-05-09T10:22:15.037Z }
-"0.131.0-alpha.6" = { created_at = 2026-05-11T22:22:31.281Z }
-"0.131.0-alpha.7" = { created_at = 2026-05-12T22:26:40.536Z }
-"0.131.0-alpha.8" = { created_at = 2026-05-12T22:26:40.536Z }
-"0.131.0-alpha.9" = { created_at = 2026-05-12T22:26:40.536Z }
-"0.131.0-alpha.16" = { created_at = 2026-05-14T22:23:39.349Z }
-"0.131.0-alpha.18" = { created_at = 2026-05-14T22:23:39.349Z }
-"0.131.0-alpha.19" = { created_at = 2026-05-16T12:17:17.225Z }
-"0.131.0-alpha.21" = { created_at = 2026-05-16T12:17:17.225Z }
-"0.131.0-alpha.22" = { created_at = 2026-05-16T12:17:17.225Z }
+"0.130.0-alpha.10" = { created_at = 2026-05-08T19:40:40.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.10", prerelease = true }
+"0.130.0-alpha.3" = { created_at = 2026-05-08T03:07:07.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.3", prerelease = true }
+"0.130.0-alpha.4" = { created_at = 2026-05-08T04:29:29.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.4", prerelease = true }
+"0.130.0-alpha.5" = { created_at = 2026-05-08T08:15:42.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.5", prerelease = true }
+"0.130.0-alpha.7" = { created_at = 2026-05-08T15:19:29.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0-alpha.7", prerelease = true }
+"0.131.0-alpha.1" = { created_at = 2026-05-08T23:41:40.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.1", prerelease = true }
+"0.130.0" = { created_at = 2026-05-08T21:57:55.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.130.0" }
+"0.131.0-alpha.2" = { created_at = 2026-05-09T03:47:45.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.2", prerelease = true }
+"0.131.0-alpha.4" = { created_at = 2026-05-09T05:22:01.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.4", prerelease = true }
+"0.131.0-alpha.6" = { created_at = 2026-05-11T10:58:45.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.6", prerelease = true }
+"0.131.0-alpha.7" = { created_at = 2026-05-11T20:05:55.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.7", prerelease = true }
+"0.131.0-alpha.8" = { created_at = 2026-05-11T22:30:40.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.8", prerelease = true }
+"0.131.0-alpha.9" = { created_at = 2026-05-12T00:02:43.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.9", prerelease = true }
+"0.131.0-alpha.16" = { created_at = 2026-05-14T15:52:02.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.16", prerelease = true }
+"0.131.0-alpha.18" = { created_at = 2026-05-14T20:50:41.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.18", prerelease = true }
+"0.131.0-alpha.19" = { created_at = 2026-05-15T04:16:43.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.19", prerelease = true }
+"0.131.0-alpha.21" = { created_at = 2026-05-15T17:43:37.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.21", prerelease = true }
+"0.131.0-alpha.22" = { created_at = 2026-05-15T21:55:45.000Z, release_url = "https://github.com/openai/codex/releases/tag/rust-v0.131.0-alpha.22", prerelease = true }
