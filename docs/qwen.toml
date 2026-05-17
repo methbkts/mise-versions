@@ -443,4 +443,5 @@
 "0.15.12-preview.1" = { created_at = 2026-05-15T09:17:35.207Z, prerelease = true }
 "0.15.12-preview.2" = { created_at = 2026-05-15T22:24:14.124Z, prerelease = true }
 "0.15.12-preview.3" = { created_at = 2026-05-17T10:23:13.763Z, prerelease = true }
+"0.16.0-preview.0" = { created_at = 2026-05-17T15:10:25.623Z, prerelease = true }
 "0.16.10-preview.0" = { created_at = 2026-05-09T06:11:32.747Z, prerelease = true }
