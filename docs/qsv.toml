@@ -228,3 +228,4 @@
 "19.0.0" = { created_at = 2026-04-06T14:59:33.000Z, release_url = "https://github.com/dathere/qsv/releases/tag/19.0.0" }
 "19.1.0" = { created_at = 2026-04-13T02:54:59.000Z, release_url = "https://github.com/dathere/qsv/releases/tag/19.1.0" }
 "20.0.0" = { created_at = 2026-05-03T03:41:08.000Z, release_url = "https://github.com/dathere/qsv/releases/tag/20.0.0", prerelease = true }
+"20.1.0" = { created_at = 2026-05-18T03:25:57.000Z, release_url = "https://github.com/dathere/qsv/releases/tag/20.1.0", prerelease = true }
