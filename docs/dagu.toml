@@ -245,3 +245,4 @@
 "helm-dagu-1.0.7" = { created_at = 2026-05-15T16:33:49.000Z, release_url = "https://github.com/dagucloud/dagu/releases/tag/helm-dagu-1.0.7" }
 "helm-dagu-1.0.8" = { created_at = 2026-05-17T15:37:07.000Z, release_url = "https://github.com/dagucloud/dagu/releases/tag/helm-dagu-1.0.8" }
 "2.7.1" = { created_at = 2026-05-18T08:36:53.000Z, release_url = "https://github.com/dagucloud/dagu/releases/tag/v2.7.1" }
+"2.7.2" = { created_at = 2026-05-18T12:44:59.000Z, release_url = "https://github.com/dagucloud/dagu/releases/tag/v2.7.2" }
