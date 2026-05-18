@@ -734,6 +734,7 @@
 "jetbrains-jre-jcef-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-jre-jcef-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-jre-jcef-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-jre-jcef-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "jetbrains-jre-musl-17.0.10-b1000.48" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jre-musl-17.0.10-b1000.50" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jre-musl-17.0.10-b1087.17" = { created_at = 2025-03-28T22:04:32.259Z }
@@ -843,6 +844,7 @@
 "jetbrains-jre-musl-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-jre-musl-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-jre-musl-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-jre-musl-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "jetbrains-jre-11.0.14.1-b1751.46" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jre-11.0.14.1-b2043.11" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jre-11.0.14.1-b2043.14" = { created_at = 2025-03-28T22:04:32.259Z }
@@ -1048,6 +1050,7 @@
 "jetbrains-jre-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-jre-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-jre-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-jre-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "jetbrains-jcef-11.0.14.1-b2043.45" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jcef-11.0.15-b2043.56" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-jcef-11.0.16-b2043.64" = { created_at = 2025-03-28T22:04:32.259Z }
@@ -1222,6 +1225,7 @@
 "jetbrains-jcef-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-jcef-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-jcef-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-jcef-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "jetbrains-musl-17.0.10-b1000.48" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-musl-17.0.10-b1000.50" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-musl-17.0.10-b1087.17" = { created_at = 2025-03-28T22:04:32.259Z }
@@ -1331,6 +1335,7 @@
 "jetbrains-musl-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-musl-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-musl-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-musl-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "jetbrains-11.0.14.1-b1751.46" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-11.0.14.1-b2043.11" = { created_at = 2025-03-28T22:04:32.259Z }
 "jetbrains-11.0.14.1-b2043.14" = { created_at = 2025-03-28T22:04:32.259Z }
@@ -1536,6 +1541,7 @@
 "jetbrains-25.0.2-b432.48" = { created_at = 2026-04-27T22:17:59.333Z }
 "jetbrains-25.0.3-b329.124" = { created_at = 2026-05-15T22:22:18.033Z }
 "jetbrains-25.0.3-b475.60" = { created_at = 2026-05-11T22:24:35.084Z }
+"jetbrains-25.0.3-b480.61" = { created_at = 2026-05-17T22:18:54.683Z }
 "kona-8.0.5.b1" = { created_at = 2025-03-28T22:04:33.827Z }
 "kona-8.0.13.b2" = { created_at = 2025-03-28T22:04:33.827Z }
 "kona-11.0.8.b3" = { created_at = 2025-03-28T22:04:33.827Z }
