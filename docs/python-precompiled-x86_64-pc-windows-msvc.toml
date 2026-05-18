@@ -338,9 +338,6 @@
 "cpython-3.9.22+20250517-x86_64-pc-windows-msvc-install_only.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250517-x86_64-pc-windows-msvc-install_only_stripped.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250517-x86_64-pc-windows-msvc-pgo-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
-"cpython-3.9.22+20250521-x86_64-pc-windows-msvc-install_only.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
-"cpython-3.9.22+20250521-x86_64-pc-windows-msvc-install_only_stripped.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
-"cpython-3.9.22+20250521-x86_64-pc-windows-msvc-pgo-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-pc-windows-msvc-install_only.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-pc-windows-msvc-install_only_stripped.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-pc-windows-msvc-pgo-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
