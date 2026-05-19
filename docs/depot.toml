@@ -324,3 +324,4 @@
 "2.101.60" = { created_at = 2026-05-07T19:58:31.000Z, release_url = "https://github.com/depot/cli/releases/tag/v2.101.60" }
 "2.101.61" = { created_at = 2026-05-13T15:45:18.000Z, release_url = "https://github.com/depot/cli/releases/tag/v2.101.61" }
 "2.101.62" = { created_at = 2026-05-14T14:47:30.000Z, release_url = "https://github.com/depot/cli/releases/tag/v2.101.62" }
+"2.101.63" = { created_at = 2026-05-19T16:51:09.000Z, release_url = "https://github.com/depot/cli/releases/tag/v2.101.63" }
