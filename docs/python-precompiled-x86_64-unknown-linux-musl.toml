@@ -354,6 +354,14 @@
 "cpython-3.9.22+20250517-x86_64-unknown-linux-musl-lto-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250517-x86_64-unknown-linux-musl-noopt+static-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250517-x86_64-unknown-linux-musl-noopt-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-debug+static-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-debug-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-install_only.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-install_only_stripped.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-lto+static-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-lto-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-noopt+static-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
+"cpython-3.9.22+20250521-x86_64-unknown-linux-musl-noopt-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-unknown-linux-musl-debug+static-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-unknown-linux-musl-debug-full.tar.zst" = { created_at = 2025-04-08T15:21:55.000Z }
 "cpython-3.9.22+20250529-x86_64-unknown-linux-musl-install_only.tar.gz" = { created_at = 2025-04-08T15:21:55.000Z }
