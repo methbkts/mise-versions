@@ -1552,18 +1552,18 @@
 "2.99.0-beta.6" = { created_at = 2026-05-11T18:13:44.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.6", prerelease = true }
 "2.99.0-beta.7" = { created_at = 2026-05-13T12:57:21.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.7", prerelease = true }
 "2.99.0-beta.8" = { created_at = 2026-05-14T10:11:48.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.8", prerelease = true }
-"2.99.0-beta.9" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.99.0" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.99.1-beta.1" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.99.1-beta.2" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.100.0-beta.1" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.100.0-beta.2" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.100.0" = { created_at = 2026-05-18T17:50:47.777Z }
-"2.100.1-beta.1" = { created_at = 2026-05-18T21:08:09.766Z }
-"2.100.1-beta.2" = { created_at = 2026-05-18T21:08:09.766Z }
-"2.100.1-beta.3" = { created_at = 2026-05-19T18:40:25.481Z }
-"2.100.1-beta.4" = { created_at = 2026-05-19T18:40:25.481Z }
-"2.100.1-beta.5" = { created_at = 2026-05-19T18:40:25.481Z }
-"2.100.1-beta.6" = { created_at = 2026-05-19T18:40:25.481Z }
-"2.100.1" = { created_at = 2026-05-19T18:40:25.481Z }
-"2.100.2-beta.1" = { created_at = 2026-05-19T18:40:25.481Z }
+"2.99.0-beta.9" = { created_at = 2026-05-18T07:43:03.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0-beta.9", prerelease = true }
+"2.99.0" = { created_at = 2026-05-18T09:29:02.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.0" }
+"2.99.1-beta.1" = { created_at = 2026-05-18T11:47:32.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.1-beta.1", prerelease = true }
+"2.99.1-beta.2" = { created_at = 2026-05-18T14:03:49.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.99.1-beta.2", prerelease = true }
+"2.100.0-beta.1" = { created_at = 2026-05-18T14:47:11.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.0-beta.1", prerelease = true }
+"2.100.0-beta.2" = { created_at = 2026-05-18T15:20:16.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.0-beta.2", prerelease = true }
+"2.100.0" = { created_at = 2026-05-18T16:14:42.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.0" }
+"2.100.1-beta.1" = { created_at = 2026-05-18T18:20:18.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.1", prerelease = true }
+"2.100.1-beta.2" = { created_at = 2026-05-18T18:43:06.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.2", prerelease = true }
+"2.100.1-beta.3" = { created_at = 2026-05-19T02:15:05.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.3", prerelease = true }
+"2.100.1-beta.4" = { created_at = 2026-05-19T07:48:11.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.4", prerelease = true }
+"2.100.1-beta.5" = { created_at = 2026-05-19T09:06:00.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.5", prerelease = true }
+"2.100.1-beta.6" = { created_at = 2026-05-19T09:41:06.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1-beta.6", prerelease = true }
+"2.100.1" = { created_at = 2026-05-19T10:08:02.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.1" }
+"2.100.2-beta.1" = { created_at = 2026-05-19T15:41:01.000Z, release_url = "https://github.com/supabase/cli/releases/tag/v2.100.2-beta.1", prerelease = true }
