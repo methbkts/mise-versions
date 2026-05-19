@@ -596,3 +596,4 @@
 "2.16.0-c9b458fa-nightly" = { created_at = 2026-05-12T00:38:50.000Z, release_url = "https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-c9b458fa-nightly", prerelease = true }
 "2.16.0-2827930b-nightly" = { created_at = 2026-05-16T19:03:53.000Z, release_url = "https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-2827930b-nightly", prerelease = true }
 "2.16.0-036a3e67-nightly" = { created_at = 2026-05-19T00:45:44.000Z, release_url = "https://github.com/goreleaser/goreleaser/releases/tag/v2.16.0-036a3e67-nightly", prerelease = true }
+"2.16.0-6c2d9e07-nightly" = { created_at = 2026-05-19T02:21:48.302Z }
