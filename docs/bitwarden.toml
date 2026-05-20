@@ -13,12 +13,6 @@
 "2023.5.0" = { created_at = 2023-05-31T00:42:10.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.5.0" }
 "2023.7.0" = { created_at = 2023-07-13T14:09:47.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.7.0" }
 "2023.8.2" = { created_at = 2023-08-28T20:13:17.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.8.2" }
-"2023.9.0" = { created_at = 2023-09-20T15:35:15.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.9.0" }
-"2023.9.1" = { created_at = 2023-10-09T14:11:01.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.9.1" }
-"2023.10.0" = { created_at = 2023-10-30T16:26:01.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.10.0" }
-"2023.12.0" = { created_at = 2023-12-06T15:48:24.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.12.0" }
-"2023.12.1" = { created_at = 2023-12-20T00:39:27.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2023.12.1" }
-"2024.1.0" = { created_at = 2024-01-09T15:12:51.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2024.1.0" }
 "2024.2.0" = { created_at = 2024-02-05T20:13:10.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2024.2.0" }
 "2024.2.1" = { created_at = 2024-03-06T20:31:11.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2024.2.1" }
 "2024.3.1" = { created_at = 2024-03-29T13:12:23.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2024.3.1" }
@@ -48,12 +42,3 @@
 "2025.6.1" = { created_at = 2025-07-01T17:12:33.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.6.1" }
 "2025.7.0" = { created_at = 2025-07-24T17:32:49.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.7.0" }
 "2025.8.0" = { created_at = 2025-08-19T16:09:37.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.8.0" }
-"2025.9.0" = { created_at = 2025-09-09T17:14:14.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.9.0" }
-"2025.10.0" = { created_at = 2025-10-10T16:12:57.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.10.0" }
-"2025.11.0" = { created_at = 2025-11-07T19:32:19.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.11.0" }
-"2025.12.0" = { created_at = 2025-12-05T21:39:33.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.12.0" }
-"2025.12.1" = { created_at = 2026-01-07T19:48:19.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2025.12.1" }
-"2026.1.0" = { created_at = 2026-02-02T09:34:46.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2026.1.0" }
-"2026.2.0" = { created_at = 2026-03-02T17:39:37.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2026.2.0" }
-"2026.3.0" = { created_at = 2026-03-27T19:20:46.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2026.3.0" }
-"2026.4.1" = { created_at = 2026-04-23T14:11:09.000Z, release_url = "https://github.com/bitwarden/clients/releases/tag/cli-v2026.4.1" }
