@@ -340,4 +340,4 @@
 "3.239.0" = { created_at = 2026-05-14T09:52:17.000Z, release_url = "https://github.com/pulumi/pulumi/releases/tag/v3.239.0" }
 "3.241.0" = { created_at = 2026-05-18T15:22:01.000Z, release_url = "https://github.com/pulumi/pulumi/releases/tag/v3.241.0" }
 "3.242.0" = { created_at = 2026-05-19T10:19:31.000Z, release_url = "https://github.com/pulumi/pulumi/releases/tag/v3.242.0" }
-"3.243.0" = { created_at = 2026-05-22T21:55:41.571Z }
+"3.243.0" = { created_at = 2026-05-22T19:30:29.000Z, release_url = "https://github.com/pulumi/pulumi/releases/tag/v3.243.0" }
