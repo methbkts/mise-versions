@@ -320,3 +320,4 @@
 "4.57.5" = { created_at = 2026-05-12T07:33:06.000Z, release_url = "https://github.com/railwayapp/cli/releases/tag/v4.57.5" }
 "4.58.0" = { created_at = 2026-05-12T15:49:57.000Z, release_url = "https://github.com/railwayapp/cli/releases/tag/v4.58.0" }
 "4.59.0" = { created_at = 2026-05-19T01:39:28.000Z, release_url = "https://github.com/railwayapp/cli/releases/tag/v4.59.0" }
+"4.61.1" = { created_at = 2026-05-23T01:06:42.000Z, release_url = "https://github.com/railwayapp/cli/releases/tag/v4.61.1" }
