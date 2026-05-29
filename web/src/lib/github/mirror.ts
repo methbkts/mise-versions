@@ -3,6 +3,8 @@ import { setupDatabase } from "../../../../src/database";
 
 const CACHE_TTL_SECONDS = 30 * 24 * 60 * 60;
 const RELEASE_FRESH_MS = 6 * 60 * 60 * 1000;
+const EMPTY_RELEASE_FRESH_MS = 30 * 60 * 1000;
+const EMPTY_RELEASE_CACHE_TTL_SECONDS = 30 * 60;
 const RELEASE_IMMUTABLE_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
 const NEGATIVE_ATTESTATION_FRESH_MS = 30 * 60 * 1000;
 const EDGE_SHORT_TTL_SECONDS = 10 * 60;
@@ -118,18 +120,31 @@ export async function getCachedGitHubRelease(
   repo: string,
   tag: string,
 ): Promise<GitHubRelease> {
-  return getOrRefresh({
+  const release = await getOrRefresh({
     env,
     cacheKey: `github:release:${owner}/${repo}:${tag}`,
     isFresh: (entry) =>
       (tag !== "latest" && entry.data.immutable === true) ||
-      Date.now() - entry.cached_at < RELEASE_FRESH_MS,
+      Date.now() - entry.cached_at <
+        (entry.data.assets.length === 0
+          ? EMPTY_RELEASE_FRESH_MS
+          : RELEASE_FRESH_MS),
     fetcher: (token) => fetchGitHubRelease(owner, repo, tag, token),
     expirationTtl: (data) =>
-      tag !== "latest" && data.immutable === true
-        ? undefined
-        : CACHE_TTL_SECONDS,
+      data.assets.length === 0
+        ? EMPTY_RELEASE_CACHE_TTL_SECONDS
+        : tag !== "latest" && data.immutable === true
+          ? undefined
+          : CACHE_TTL_SECONDS,
   });
+  if (release.assets.length === 0) {
+    throw new GitHubError(
+      404,
+      "GitHub release response did not include assets",
+      new Headers(),
+    );
+  }
+  return release;
 }
 
 export async function getCachedGitHubAttestations(
@@ -238,20 +253,14 @@ async function fetchGitHubRelease(
   const publishedAt = data.published_at
     ? new Date(data.published_at).getTime()
     : NaN;
+  const assets = data.assets ?? [];
   const immutable =
+    assets.length > 0 &&
     tag !== "latest" &&
     !data.draft &&
     !data.prerelease &&
     Number.isFinite(publishedAt) &&
     Date.now() - publishedAt > RELEASE_IMMUTABLE_AFTER_MS;
-  const assets = data.assets ?? [];
-  if (assets.length === 0) {
-    throw new GitHubError(
-      502,
-      "GitHub release response did not include assets",
-      new Headers(),
-    );
-  }
 
   return {
     tag_name: data.tag_name,
@@ -313,7 +322,7 @@ async function hydrateBundle(
       new Headers(),
     );
   }
-  if (!validGitHubApiUrl(attestation.bundle_url)) {
+  if (!validGitHubAttestationBundleUrl(attestation.bundle_url)) {
     throw new GitHubError(
       502,
       "Invalid GitHub attestation bundle URL",
@@ -330,23 +339,17 @@ async function githubJson<T>(
   url: string,
   token: TokenRecord | null,
 ): Promise<T> {
-  const headers: Record<string, string> = {
-    Accept: "application/vnd.github+json",
-    "User-Agent": "mise-versions (https://github.com/jdx/mise-versions)",
-    "X-GitHub-Api-Version": "2022-11-28",
-  };
-  if (token) {
-    headers.Authorization = `Bearer ${token.token}`;
-  }
+  const headers = githubJsonHeaders(url, token);
   const response = await fetch(url, { headers, redirect: "manual" });
   if (response.status === 404) {
-    throw new GitHubError(404, "Not found", response.headers);
+    throw new GitHubError(404, "Not found", response.headers, url);
   }
   if (!response.ok) {
     throw new GitHubError(
       response.status,
       await response.text(),
       response.headers,
+      url,
     );
   }
   return response.json();
@@ -362,18 +365,52 @@ function assertValidRepo(owner: string, repo: string) {
   }
 }
 
-function validGitHubApiUrl(value: string): boolean {
+function validGitHubAttestationBundleUrl(value: string): boolean {
   try {
     const url = new URL(value);
-    return url.protocol === "https:" && url.hostname === "api.github.com";
+    return (
+      url.protocol === "https:" &&
+      (url.hostname === "api.github.com" ||
+        url.hostname.endsWith(".blob.core.windows.net"))
+    );
   } catch {
     return false;
   }
 }
 
+function isGitHubApiUrl(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+  try {
+    return new URL(value).hostname === "api.github.com";
+  } catch {
+    return false;
+  }
+}
+
+function githubJsonHeaders(
+  url: string,
+  token: TokenRecord | null,
+): Record<string, string> {
+  const isGitHub = isGitHubApiUrl(url);
+  const headers: Record<string, string> = {
+    "User-Agent": "mise-versions (https://github.com/jdx/mise-versions)",
+  };
+  if (isGitHub) {
+    headers.Accept = "application/vnd.github+json";
+    headers["X-GitHub-Api-Version"] = "2022-11-28";
+  }
+  if (token && isGitHub) {
+    headers.Authorization = `Bearer ${token.token}`;
+  }
+  return headers;
+}
+
 function isRateLimited(error: unknown): boolean {
   return (
     error instanceof GitHubError &&
+    isGitHubApiUrl(error.url) &&
     (error.status === 403 || error.status === 429)
   );
 }
@@ -397,7 +434,16 @@ class GitHubError extends Error {
     readonly status: number,
     message: string,
     readonly headers: Headers,
+    readonly url?: string,
   ) {
     super(message);
   }
 }
+
+export const __testing = {
+  GitHubError,
+  githubJsonHeaders,
+  isGitHubApiUrl,
+  isRateLimited,
+  validGitHubAttestationBundleUrl,
+};
