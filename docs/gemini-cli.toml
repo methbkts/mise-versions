@@ -620,5 +620,6 @@
 "0.45.0-nightly.20260527.g41c9260ca" = { created_at = 2026-05-27T17:29:42.798Z, prerelease = true }
 "0.45.0-nightly.20260528.g5cac7c10f" = { created_at = 2026-05-28T06:16:51.204Z, prerelease = true }
 "0.45.0-nightly.20260529.gc82e2b597" = { created_at = 2026-05-29T16:52:10.899Z, prerelease = true }
+"0.45.0-nightly.20260530.g013914071" = { created_at = 2026-05-30T02:38:06.421Z, prerelease = true }
 "0.45.0-preview.0" = { created_at = 2026-05-27T19:01:32.221Z, prerelease = true }
 "0.45.0-preview.1" = { created_at = 2026-05-28T17:32:36.141Z, prerelease = true }
