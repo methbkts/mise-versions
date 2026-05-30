@@ -327,3 +327,4 @@
 "2.32.4" = { created_at = 2026-05-19T20:50:27.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.32.4" }
 "2.33.5" = { created_at = 2026-05-19T20:48:46.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.5" }
 "2.33.6" = { created_at = 2026-05-23T01:48:29.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.33.6" }
+"2.32.5" = { created_at = 2026-05-30T19:36:10.000Z, release_url = "https://github.com/coder/coder/releases/tag/v2.32.5" }
