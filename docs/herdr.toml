@@ -1,44 +1,44 @@
 [versions]
-"0.1.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.1.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.1.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.2.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.2.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.2.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.2.3" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.2.4" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.3.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.3.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.3.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.3" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.4" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.5" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.6" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.7" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.8" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.9" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.10" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.4.11" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.3" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.4" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.5" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.6" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.7" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.8" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.9" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.10" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.11" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.5.12" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.0" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.1" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.2" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.3" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.4" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.5" = { created_at = 2026-05-31T21:50:14.460Z }
-"0.6.6" = { created_at = 2026-05-31T21:50:14.460Z }
+"0.1.0" = { created_at = 2026-03-27T19:55:48.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.1.0" }
+"0.1.1" = { created_at = 2026-03-27T23:00:11.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.1.1" }
+"0.1.2" = { created_at = 2026-03-28T18:29:54.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.1.2" }
+"0.2.0" = { created_at = 2026-03-30T13:43:03.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.2.0" }
+"0.2.1" = { created_at = 2026-03-31T11:25:51.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.2.1" }
+"0.2.2" = { created_at = 2026-03-31T17:51:58.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.2.2" }
+"0.2.3" = { created_at = 2026-03-31T20:22:54.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.2.3" }
+"0.2.4" = { created_at = 2026-03-31T23:07:20.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.2.4" }
+"0.3.0" = { created_at = 2026-04-02T23:38:34.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.3.0" }
+"0.3.1" = { created_at = 2026-04-03T14:38:48.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.3.1" }
+"0.3.2" = { created_at = 2026-04-03T19:14:25.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.3.2" }
+"0.4.0" = { created_at = 2026-04-05T20:27:50.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.0" }
+"0.4.1" = { created_at = 2026-04-05T22:24:20.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.1" }
+"0.4.2" = { created_at = 2026-04-07T00:56:58.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.2" }
+"0.4.3" = { created_at = 2026-04-07T15:57:31.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.3" }
+"0.4.4" = { created_at = 2026-04-08T11:39:35.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.4" }
+"0.4.5" = { created_at = 2026-04-09T11:36:02.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.5" }
+"0.4.6" = { created_at = 2026-04-09T16:09:40.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.6" }
+"0.4.7" = { created_at = 2026-04-10T12:20:03.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.7" }
+"0.4.8" = { created_at = 2026-04-11T21:23:36.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.8" }
+"0.4.9" = { created_at = 2026-04-13T00:42:37.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.9" }
+"0.4.10" = { created_at = 2026-04-14T19:09:49.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.10" }
+"0.4.11" = { created_at = 2026-04-16T19:53:28.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.4.11" }
+"0.5.0" = { created_at = 2026-04-21T17:48:00.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.0" }
+"0.5.1" = { created_at = 2026-04-25T20:28:23.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.1" }
+"0.5.2" = { created_at = 2026-04-27T19:10:25.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.2" }
+"0.5.3" = { created_at = 2026-04-29T21:50:12.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.3" }
+"0.5.4" = { created_at = 2026-05-02T21:33:07.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.4" }
+"0.5.5" = { created_at = 2026-05-06T18:02:51.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.5" }
+"0.5.6" = { created_at = 2026-05-09T13:00:24.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.6" }
+"0.5.7" = { created_at = 2026-05-10T20:56:19.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.7" }
+"0.5.8" = { created_at = 2026-05-12T13:19:50.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.8" }
+"0.5.9" = { created_at = 2026-05-15T15:49:23.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.9" }
+"0.5.10" = { created_at = 2026-05-17T17:21:05.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.10" }
+"0.5.11" = { created_at = 2026-05-19T12:06:08.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.11" }
+"0.5.12" = { created_at = 2026-05-19T20:13:32.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.5.12" }
+"0.6.0" = { created_at = 2026-05-20T20:16:08.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.0" }
+"0.6.1" = { created_at = 2026-05-22T17:12:28.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.1" }
+"0.6.2" = { created_at = 2026-05-23T15:07:45.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.2" }
+"0.6.3" = { created_at = 2026-05-27T15:49:33.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.3" }
+"0.6.4" = { created_at = 2026-05-27T18:37:18.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.4" }
+"0.6.5" = { created_at = 2026-05-29T18:51:01.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.5" }
+"0.6.6" = { created_at = 2026-05-31T20:25:23.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.6.6" }
