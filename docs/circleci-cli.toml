@@ -521,3 +521,5 @@
 "1.0.38248-pre" = { created_at = 2026-06-01T12:13:01.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.38248-pre", prerelease = true }
 "1.0.38272-pre" = { created_at = 2026-06-01T14:10:38.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.38272-pre", prerelease = true }
 "1.0.38283-pre" = { created_at = 2026-06-01T14:23:08.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.38283-pre", prerelease = true }
+"1.0.38322-pre" = { created_at = 2026-06-01T16:28:46.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.38322-pre", prerelease = true }
+"1.0.38340-pre" = { created_at = 2026-06-01T17:27:01.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.38340-pre", prerelease = true }
