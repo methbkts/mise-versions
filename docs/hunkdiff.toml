@@ -41,3 +41,4 @@
 "0.14.0-beta.2" = { created_at = 2026-05-25T15:39:09.000Z, release_url = "https://github.com/modem-dev/hunk/releases/tag/v0.14.0-beta.2", prerelease = true }
 "0.14.0-beta.3" = { created_at = 2026-05-25T17:45:16.000Z, release_url = "https://github.com/modem-dev/hunk/releases/tag/v0.14.0-beta.3", prerelease = true }
 "0.14.0" = { created_at = 2026-05-26T17:19:40.000Z, release_url = "https://github.com/modem-dev/hunk/releases/tag/v0.14.0" }
+"0.14.1" = { created_at = 2026-06-01T19:38:12.000Z, release_url = "https://github.com/modem-dev/hunk/releases/tag/v0.14.1" }
