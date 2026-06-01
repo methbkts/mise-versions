@@ -432,6 +432,7 @@
 "3.4.4-snapshot.20260527.a9013c4" = { created_at = 2026-05-27T16:03:03.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260527.a9013c4", prerelease = true }
 "3.4.4-snapshot.20260528.4338ee0" = { created_at = 2026-05-28T18:23:40.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260528.4338ee0", prerelease = true }
 "3.4.4-snapshot.20260528.fafcbbd" = { created_at = 2026-05-28T15:17:48.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260528.fafcbbd", prerelease = true }
+"3.4.4-snapshot.20260601.11d9824" = { created_at = 2026-06-01T09:38:53.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260601.11d9824", prerelease = true }
 "3.4.4-snapshot.20260601.2badbb1" = { created_at = 2026-06-01T08:14:21.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260601.2badbb1", prerelease = true }
 "3.4.4-snapshot.20260601.42c6fd4" = { created_at = 2026-06-01T08:16:17.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260601.42c6fd4", prerelease = true }
 "3.4.4-snapshot.20260601.9b8df25" = { created_at = 2026-06-01T08:12:26.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.4.4-snapshot.20260601.9b8df25", prerelease = true }
