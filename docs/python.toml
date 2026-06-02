@@ -442,7 +442,6 @@
 "pypy3.3-5.2-alpha1" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.3-5.5-alpha-src" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.3-5.5-alpha" = { created_at = 2025-12-18T00:12:04.355Z }
-"pypy3.5-c-jit-latest" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.5-5.7-beta-src" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.5-5.7-beta" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.5-5.7.1-beta-src" = { created_at = 2025-12-18T00:12:04.355Z }
@@ -475,7 +474,6 @@
 "pypy3.6-7.3.2" = { created_at = 2020-09-23T07:02:22.000Z }
 "pypy3.6-7.3.3-src" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.6-7.3.3" = { created_at = 2020-11-17T22:53:23.000Z }
-"pypy3.7-c-jit-latest" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.7-7.3.2-src" = { created_at = 2025-12-18T00:12:04.355Z }
 "pypy3.7-7.3.2" = { created_at = 2020-09-24T05:51:01.000Z }
 "pypy3.7-7.3.3-src" = { created_at = 2025-12-18T00:12:04.355Z }
