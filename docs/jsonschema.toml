@@ -194,3 +194,4 @@
 "15.6.2" = { created_at = 2026-05-15T14:27:28.000Z, release_url = "https://github.com/sourcemeta/jsonschema/releases/tag/v15.6.2" }
 "15.6.3" = { created_at = 2026-05-18T16:40:58.000Z, release_url = "https://github.com/sourcemeta/jsonschema/releases/tag/v15.6.3" }
 "15.7.0" = { created_at = 2026-06-01T20:35:44.000Z, release_url = "https://github.com/sourcemeta/jsonschema/releases/tag/v15.7.0" }
+"15.8.0" = { created_at = 2026-06-02T14:46:45.000Z, release_url = "https://github.com/sourcemeta/jsonschema/releases/tag/v15.8.0" }
