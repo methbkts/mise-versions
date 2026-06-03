@@ -461,4 +461,6 @@
 "0.17.0-nightly.20260531.c699738f9" = { created_at = 2026-05-31T00:40:18.498Z, prerelease = true }
 "0.17.0-nightly.20260601.1c48e4121" = { created_at = 2026-06-01T00:40:20.778Z, prerelease = true }
 "0.17.0-nightly.20260602.cea15a118" = { created_at = 2026-06-02T00:46:39.892Z, prerelease = true }
+"0.17.0-nightly.20260603.68408c30c" = { created_at = 2026-06-03T00:51:10.736Z, prerelease = true }
+"0.17.0-preview.0" = { created_at = 2026-06-03T00:55:30.292Z, prerelease = true }
 "0.17.0" = { created_at = 2026-05-29T09:58:40.432Z }
