@@ -322,3 +322,4 @@
 "26.1.7" = { created_at = 2026-05-08T11:12:47.000Z, release_url = "https://github.com/redpanda-data/redpanda/releases/tag/v26.1.7" }
 "26.1.8" = { created_at = 2026-05-14T01:51:10.000Z, release_url = "https://github.com/redpanda-data/redpanda/releases/tag/v26.1.8" }
 "26.1.9" = { created_at = 2026-05-21T20:57:04.000Z, release_url = "https://github.com/redpanda-data/redpanda/releases/tag/v26.1.9" }
+"25.3.15" = { created_at = 2026-06-04T21:38:56.467Z }
