@@ -7,6 +7,9 @@ const RELEASE_FRESH_MS = 6 * 60 * 60 * 1000;
 const EMPTY_RELEASE_FRESH_MS = 30 * 60 * 1000;
 const EMPTY_RELEASE_CACHE_TTL_SECONDS = 30 * 60;
 const RELEASE_IMMUTABLE_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
+const NEGATIVE_RELEASE_NOT_FOUND_FRESH_MS = 30 * 60 * 1000;
+const NEGATIVE_RELEASE_AUTH_FRESH_MS = 5 * 60 * 1000;
+const NEGATIVE_RELEASE_TRANSIENT_FRESH_MS = 60 * 1000;
 const NEGATIVE_ATTESTATION_FRESH_MS = 30 * 60 * 1000;
 const EDGE_SHORT_TTL_SECONDS = 10 * 60;
 const EDGE_NEGATIVE_ATTESTATION_TTL_SECONDS = 30 * 60;
@@ -36,6 +39,11 @@ export interface GitHubRelease {
 interface GitHubAttestation {
   bundle?: unknown;
   bundle_url?: string;
+}
+
+interface CachedGitHubError {
+  status: number;
+  message: string;
 }
 
 export interface GitHubAttestationsResponse {
@@ -121,23 +129,43 @@ export async function getCachedGitHubRelease(
   repo: string,
   tag: string,
 ): Promise<GitHubRelease> {
-  const release = await getOrRefresh({
-    env,
-    cacheKey: `github:release:${owner}/${repo}:${tag}`,
-    isFresh: (entry) =>
-      (tag !== "latest" && entry.data.immutable === true) ||
-      Date.now() - entry.cached_at <
-        (entry.data.assets.length === 0
-          ? EMPTY_RELEASE_FRESH_MS
-          : RELEASE_FRESH_MS),
-    fetcher: (token) => fetchGitHubRelease(owner, repo, tag, token),
-    expirationTtl: (data) =>
-      data.assets.length === 0
-        ? EMPTY_RELEASE_CACHE_TTL_SECONDS
-        : tag !== "latest" && data.immutable === true
-          ? undefined
-          : CACHE_TTL_SECONDS,
-  });
+  const cacheKey = `github:release:${owner}/${repo}:${tag}`;
+  const negativeCacheKey = `github:release-error:${owner}/${repo}:${tag}`;
+  const cachedError = await cachedReleaseError(env, negativeCacheKey);
+  if (cachedError) {
+    throw cachedError;
+  }
+
+  let release: GitHubRelease;
+  try {
+    release = await getOrRefresh({
+      env,
+      cacheKey,
+      isFresh: (entry) =>
+        (tag !== "latest" && entry.data.immutable === true) ||
+        Date.now() - entry.cached_at <
+          (entry.data.assets.length === 0
+            ? EMPTY_RELEASE_FRESH_MS
+            : RELEASE_FRESH_MS),
+      fetcher: (token) => fetchGitHubRelease(owner, repo, tag, token),
+      expirationTtl: (data) =>
+        data.assets.length === 0
+          ? EMPTY_RELEASE_CACHE_TTL_SECONDS
+          : tag !== "latest" && data.immutable === true
+            ? undefined
+            : CACHE_TTL_SECONDS,
+    });
+  } catch (error) {
+    try {
+      await cacheReleaseError(env, negativeCacheKey, error);
+    } catch (cacheError) {
+      console.warn(
+        "failed to persist GitHub release negative cache:",
+        cacheError,
+      );
+    }
+    throw error;
+  }
   if (release.assets.length === 0) {
     throw new GitHubError(
       404,
@@ -145,7 +173,82 @@ export async function getCachedGitHubRelease(
       new Headers(),
     );
   }
+  await clearCachedReleaseError(env, negativeCacheKey);
   return release;
+}
+
+async function cachedReleaseError(
+  env: Env,
+  cacheKey: string,
+): Promise<GitHubError | null> {
+  const cached = await env.GITHUB_CACHE.get<CacheEntry<CachedGitHubError>>(
+    cacheKey,
+    "json",
+  );
+  if (!cached) {
+    return null;
+  }
+  const freshMs = releaseErrorFreshMs(cached.data.status);
+  if (!freshMs || Date.now() - cached.cached_at >= freshMs) {
+    return null;
+  }
+  return new GitHubError(
+    cached.data.status,
+    cached.data.message,
+    new Headers(),
+  );
+}
+
+async function cacheReleaseError(
+  env: Env,
+  cacheKey: string,
+  error: unknown,
+): Promise<void> {
+  if (!(error instanceof GitHubError)) {
+    return;
+  }
+  const freshMs = releaseErrorFreshMs(error.status, error);
+  if (!freshMs) {
+    return;
+  }
+  await env.GITHUB_CACHE.put(
+    cacheKey,
+    JSON.stringify({
+      cached_at: Date.now(),
+      data: {
+        status: error.status,
+        message: error.message,
+      },
+    }),
+    { expirationTtl: Math.ceil(freshMs / 1000) },
+  );
+}
+
+async function clearCachedReleaseError(
+  env: Env,
+  cacheKey: string,
+): Promise<void> {
+  try {
+    await env.GITHUB_CACHE.delete?.(cacheKey);
+  } catch (error) {
+    console.warn("failed to clear GitHub release negative cache:", error);
+  }
+}
+
+function releaseErrorFreshMs(status: number, error?: unknown): number | null {
+  if (status === 404) {
+    return NEGATIVE_RELEASE_NOT_FOUND_FRESH_MS;
+  }
+  if (error && isRateLimited(error)) {
+    return null;
+  }
+  if (status === 401 || status === 403) {
+    return NEGATIVE_RELEASE_AUTH_FRESH_MS;
+  }
+  if (status >= 500 && status < 600) {
+    return NEGATIVE_RELEASE_TRANSIENT_FRESH_MS;
+  }
+  return null;
 }
 
 export async function getCachedGitHubAttestations(
@@ -488,7 +591,10 @@ function isRateLimited(error: unknown): boolean {
   return (
     error instanceof GitHubError &&
     isGitHubApiUrl(error.url) &&
-    (error.status === 403 || error.status === 429)
+    (error.status === 429 ||
+      (error.status === 403 &&
+        (error.headers.has("x-ratelimit-reset") ||
+          error.headers.has("retry-after"))))
   );
 }
 
@@ -497,12 +603,23 @@ function resetAt(error: unknown): string | undefined {
     return undefined;
   }
   const reset = error.headers.get("x-ratelimit-reset");
-  if (!reset) {
+  if (reset) {
+    const epochSeconds = Number(reset);
+    return Number.isFinite(epochSeconds)
+      ? new Date(epochSeconds * 1000).toISOString()
+      : undefined;
+  }
+  const retryAfter = error.headers.get("retry-after");
+  if (!retryAfter) {
     return undefined;
   }
-  const epochSeconds = Number(reset);
-  return Number.isFinite(epochSeconds)
-    ? new Date(epochSeconds * 1000).toISOString()
+  const retryAfterSeconds = Number(retryAfter);
+  if (Number.isFinite(retryAfterSeconds)) {
+    return new Date(Date.now() + retryAfterSeconds * 1000).toISOString();
+  }
+  const retryAfterDate = new Date(retryAfter);
+  return Number.isFinite(retryAfterDate.getTime())
+    ? retryAfterDate.toISOString()
     : undefined;
 }
 
@@ -522,5 +639,6 @@ export const __testing = {
   githubJsonHeaders,
   isGitHubApiUrl,
   isRateLimited,
+  resetAt,
   validGitHubAttestationBundleUrl,
 };
