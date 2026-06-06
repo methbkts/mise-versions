@@ -8,11 +8,23 @@ import {
   validReleaseTag,
   validRepoPart,
 } from "../../../../../../../lib/github/mirror";
+import { isRegisteredGitHubRepo } from "../../../../../../../lib/github/registry";
 
 export const GET: APIRoute = async ({ params }) => {
   const { owner, repo, tag } = params;
   if (!validRepoPart(owner) || !validRepoPart(repo) || !validReleaseTag(tag)) {
     return errorResponse("Invalid GitHub release path", 400);
+  }
+
+  let registered: boolean;
+  try {
+    registered = await isRegisteredGitHubRepo(env.ANALYTICS_DB, owner, repo);
+  } catch (error) {
+    console.error(`GitHub registry check failed for ${owner}/${repo}:`, error);
+    return errorResponse("Failed to check GitHub repo registry", 503);
+  }
+  if (!registered) {
+    return errorResponse("GitHub repo is not in the mise registry", 403);
   }
 
   try {
