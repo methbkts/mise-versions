@@ -3,7 +3,6 @@ import { uncompress } from "snappyjs";
 import { setupDatabase } from "../../../../src/database";
 
 const CACHE_TTL_SECONDS = 30 * 24 * 60 * 60;
-const RELEASE_FRESH_MS = 6 * 60 * 60 * 1000;
 const EMPTY_RELEASE_FRESH_MS = 30 * 60 * 1000;
 const EMPTY_RELEASE_CACHE_TTL_SECONDS = 30 * 60;
 const RELEASE_IMMUTABLE_AFTER_MS = 7 * 24 * 60 * 60 * 1000;
@@ -12,6 +11,7 @@ const NEGATIVE_RELEASE_AUTH_FRESH_MS = 5 * 60 * 1000;
 const NEGATIVE_RELEASE_TRANSIENT_FRESH_MS = 60 * 1000;
 const NEGATIVE_ATTESTATION_FRESH_MS = 30 * 60 * 1000;
 const EDGE_SHORT_TTL_SECONDS = 10 * 60;
+const MUTABLE_RELEASE_FRESH_MS = EDGE_SHORT_TTL_SECONDS * 1000;
 const EDGE_NEGATIVE_ATTESTATION_TTL_SECONDS = 30 * 60;
 const EDGE_IMMUTABLE_TTL_SECONDS = 365 * 24 * 60 * 60;
 
@@ -143,10 +143,7 @@ export async function getCachedGitHubRelease(
       cacheKey,
       isFresh: (entry) =>
         (tag !== "latest" && entry.data.immutable === true) ||
-        Date.now() - entry.cached_at <
-          (entry.data.assets.length === 0
-            ? EMPTY_RELEASE_FRESH_MS
-            : RELEASE_FRESH_MS),
+        Date.now() - entry.cached_at < releaseFreshMs(entry.data),
       fetcher: (token) => fetchGitHubRelease(owner, repo, tag, token),
       expirationTtl: (data) =>
         data.assets.length === 0
@@ -263,6 +260,12 @@ function releaseErrorFreshMs(status: number, error?: unknown): number | null {
     return NEGATIVE_RELEASE_TRANSIENT_FRESH_MS;
   }
   return null;
+}
+
+function releaseFreshMs(release: GitHubRelease): number {
+  return release.assets.length === 0
+    ? EMPTY_RELEASE_FRESH_MS
+    : MUTABLE_RELEASE_FRESH_MS;
 }
 
 function releaseStaleFallbackAllowed(error: unknown): boolean {
