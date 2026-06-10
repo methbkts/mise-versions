@@ -910,11 +910,3 @@
 "sdk/rust/v0.21.4" = { created_at = 2026-06-03T15:00:55.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/rust/v0.21.4" }
 "sdk/typescript/v0.21.4" = { created_at = 2026-06-03T15:00:55.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/typescript/v0.21.4" }
 "0.21.4" = { created_at = 2026-06-03T15:00:55.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/v0.21.4" }
-"helm/chart/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/helm/chart/v0.21.5" }
-"sdk/elixir/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/elixir/v0.21.5" }
-"sdk/go/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/go/v0.21.5" }
-"sdk/php/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/php/v0.21.5" }
-"sdk/python/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/python/v0.21.5" }
-"sdk/rust/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/rust/v0.21.5" }
-"sdk/typescript/v0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/sdk/typescript/v0.21.5" }
-"0.21.5" = { created_at = 2026-06-10T15:29:02.000Z, release_url = "https://github.com/dagger/dagger/releases/tag/v0.21.5" }
