@@ -681,3 +681,4 @@
 "4.197.1" = { created_at = 2026-06-09T11:18:08.000Z, release_url = "https://github.com/tuist/tuist/releases/tag/4.197.1" }
 "4.198.0" = { created_at = 2026-06-09T15:45:30.000Z, release_url = "https://github.com/tuist/tuist/releases/tag/4.198.0" }
 "4.198.1" = { created_at = 2026-06-09T16:48:38.000Z, release_url = "https://github.com/tuist/tuist/releases/tag/4.198.1" }
+"4.198.2" = { created_at = 2026-06-10T08:29:26.000Z, release_url = "https://github.com/tuist/tuist/releases/tag/4.198.2" }
