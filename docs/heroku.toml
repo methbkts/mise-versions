@@ -630,3 +630,4 @@
 "11.5.0-alpha.6" = { created_at = 2026-06-04T21:16:20.185Z, prerelease = true }
 "11.5.0-alpha.8" = { created_at = 2026-06-09T15:38:04.726Z, prerelease = true }
 "11.5.0-beta.0" = { created_at = 2026-06-11T22:13:59.699Z, prerelease = true }
+"11.5.0" = { created_at = 2026-06-11T23:09:12.984Z }
