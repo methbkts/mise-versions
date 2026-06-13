@@ -189,3 +189,4 @@
 "3.14.1" = { created_at = 2026-03-17T16:39:45.000Z, release_url = "https://github.com/vale-cli/vale/releases/tag/v3.14.1" }
 "3.14.2" = { created_at = 2026-05-15T20:39:50.000Z, release_url = "https://github.com/vale-cli/vale/releases/tag/v3.14.2" }
 "3.15.0" = { created_at = 2026-06-12T12:49:18.000Z, release_url = "https://github.com/vale-cli/vale/releases/tag/v3.15.0" }
+"3.15.1" = { created_at = 2026-06-13T21:00:25.747Z }
