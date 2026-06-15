@@ -201,3 +201,4 @@
 "dev-0.43.0-rc.271" = { created_at = 2026-06-08T11:41:34.000Z, release_url = "https://github.com/rtk-ai/rtk/releases/tag/dev-0.43.0-rc.271", prerelease = true }
 "dev-0.43.0-rc.272" = { created_at = 2026-06-09T19:51:23.000Z, release_url = "https://github.com/rtk-ai/rtk/releases/tag/dev-0.43.0-rc.272", prerelease = true }
 "0.42.4" = { created_at = 2026-06-12T16:06:05.000Z, release_url = "https://github.com/rtk-ai/rtk/releases/tag/v0.42.4" }
+"dev-0.43.0-rc.276" = { created_at = 2026-06-14T16:23:19.000Z, release_url = "https://github.com/rtk-ai/rtk/releases/tag/dev-0.43.0-rc.276", prerelease = true }
