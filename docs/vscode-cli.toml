@@ -134,3 +134,4 @@
 "1.123.2" = { created_at = 2026-06-10T06:06:17.000Z, release_url = "https://github.com/microsoft/vscode/releases/tag/1.123.2" }
 "1.124.0" = { created_at = 2026-06-10T04:29:32.000Z, release_url = "https://github.com/microsoft/vscode/releases/tag/1.124.0" }
 "1.124.2" = { created_at = 2026-06-12T00:12:36.000Z, release_url = "https://github.com/microsoft/vscode/releases/tag/1.124.2" }
+"1.125.0" = { created_at = 2026-06-15T22:24:03.000Z, release_url = "https://github.com/microsoft/vscode/releases/tag/1.125.0" }
