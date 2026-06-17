@@ -758,3 +758,4 @@
 "nightly-94f63eca749163ee17b1cde7ee5a9ca7c359084e" = { created_at = 2026-06-12T14:49:46.000Z, release_url = "https://github.com/foundry-rs/foundry/releases/tag/nightly-94f63eca749163ee17b1cde7ee5a9ca7c359084e", prerelease = true }
 "nightly-a0b37374f5bad527749da20bf4550dd51f34e8bc" = { created_at = 2026-06-12T06:50:38.000Z, release_url = "https://github.com/foundry-rs/foundry/releases/tag/nightly-a0b37374f5bad527749da20bf4550dd51f34e8bc", prerelease = true }
 "nightly-43727fd12c4d217a914281f609558f1b0e877296" = { created_at = 2026-06-15T07:38:43.000Z, release_url = "https://github.com/foundry-rs/foundry/releases/tag/nightly-43727fd12c4d217a914281f609558f1b0e877296", prerelease = true }
+"nightly-694b35f4037c6995af206b5c0015f179c85307c5" = { created_at = 2026-06-16T07:20:25.000Z, release_url = "https://github.com/foundry-rs/foundry/releases/tag/nightly-694b35f4037c6995af206b5c0015f179c85307c5", prerelease = true }
