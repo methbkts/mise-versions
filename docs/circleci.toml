@@ -590,3 +590,13 @@
 "1.0.39919-pre" = { created_at = 2026-06-12T15:04:47.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.39919-pre", prerelease = true }
 "1.0.39956-pre" = { created_at = 2026-06-15T11:36:47.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.39956-pre", prerelease = true }
 "1.0.39977-pre" = { created_at = 2026-06-15T15:18:14.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.39977-pre", prerelease = true }
+"1.0.40082-pre" = { created_at = 2026-06-16T09:27:35.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40082-pre", prerelease = true }
+"1.0.40099-pre" = { created_at = 2026-06-16T09:28:05.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40099-pre", prerelease = true }
+"1.0.40111-pre" = { created_at = 2026-06-16T09:29:30.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40111-pre", prerelease = true }
+"1.0.40118-pre" = { created_at = 2026-06-16T09:30:06.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40118-pre", prerelease = true }
+"1.0.40125-pre" = { created_at = 2026-06-16T09:30:06.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40125-pre", prerelease = true }
+"1.0.40141-pre" = { created_at = 2026-06-16T09:44:10.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40141-pre", prerelease = true }
+"1.0.40149-pre" = { created_at = 2026-06-16T09:45:20.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40149-pre", prerelease = true }
+"1.0.40156-pre" = { created_at = 2026-06-16T09:45:46.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40156-pre", prerelease = true }
+"1.0.40201-pre" = { created_at = 2026-06-16T11:00:20.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40201-pre", prerelease = true }
+"1.0.40222-pre" = { created_at = 2026-06-16T11:06:56.000Z, release_url = "https://github.com/CircleCI-Public/circleci-cli/releases/tag/v1.0.40222-pre", prerelease = true }
