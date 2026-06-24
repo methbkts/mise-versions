@@ -155,8 +155,8 @@ export async function getCachedGitHubRelease(
             ? undefined
             : CACHE_TTL_SECONDS,
       useStaleOnError: releaseStaleFallbackAllowed,
-      onFetchError: async (error) => {
-        if (githubStatus(error) === 404) {
+      onFetchError: async (error, cached) => {
+        if (cached && githubStatus(error) === 404) {
           await deleteCachedRelease(env, cacheKey);
         }
       },
@@ -179,7 +179,6 @@ export async function getCachedGitHubRelease(
       new Headers(),
     );
   }
-  await clearCachedReleaseError(env, negativeCacheKey);
   return release;
 }
 
@@ -228,17 +227,6 @@ async function cacheReleaseError(
     }),
     { expirationTtl: Math.ceil(freshMs / 1000) },
   );
-}
-
-async function clearCachedReleaseError(
-  env: Env,
-  cacheKey: string,
-): Promise<void> {
-  try {
-    await env.GITHUB_CACHE.delete?.(cacheKey);
-  } catch (error) {
-    console.warn("failed to clear GitHub release negative cache:", error);
-  }
 }
 
 async function deleteCachedRelease(env: Env, cacheKey: string): Promise<void> {
@@ -307,7 +295,10 @@ async function getOrRefresh<T>({
   fetcher: (token: TokenRecord | null) => Promise<T>;
   expirationTtl?: (data: T) => number | undefined;
   useStaleOnError?: (error: unknown) => boolean;
-  onFetchError?: (error: unknown) => Promise<void>;
+  onFetchError?: (
+    error: unknown,
+    cached: CacheEntry<T> | null,
+  ) => Promise<void>;
 }): Promise<T> {
   const cached = await env.GITHUB_CACHE.get<CacheEntry<T>>(cacheKey, "json");
   if (cached && isFresh(cached)) {
@@ -329,7 +320,7 @@ async function getOrRefresh<T>({
     if (isRateLimited(error) && token) {
       await markRateLimited(env, token.id, resetAt(error));
     }
-    await onFetchError?.(error);
+    await onFetchError?.(error, cached);
     if (cached && useStaleOnError(error)) {
       return cached.data;
     }

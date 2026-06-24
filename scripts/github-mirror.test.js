@@ -202,6 +202,7 @@ test("GitHub release mirror negative-caches upstream 404s", () => {
     } from "./web/src/lib/github/mirror.ts";
 
     const writes = [];
+    const deletes = [];
     let fetches = 0;
     globalThis.fetch = async () => {
       fetches++;
@@ -213,6 +214,7 @@ test("GitHub release mirror negative-caches upstream 404s", () => {
       GITHUB_CACHE: {
         get: async () => null,
         put: async (key, value, options) => writes.push({ key, value, options }),
+        delete: async (key) => deletes.push(key),
       },
     };
 
@@ -222,6 +224,7 @@ test("GitHub release mirror negative-caches upstream 404s", () => {
     );
 
     assert.equal(fetches, 1);
+    assert.deepEqual(deletes, []);
     assert.equal(writes.length, 1);
     assert.equal(writes[0].key, "github:release-error:owner/repo:v404.0.0");
     assert.deepEqual(writes[0].options, { expirationTtl: 1800 });
@@ -326,7 +329,7 @@ test("GitHub release mirror serves fresh negative cache without fetching", () =>
   `);
 });
 
-test("GitHub release mirror ignores stale negative cache and fetches", () => {
+test("GitHub release mirror ignores stale negative cache without deleting it", () => {
   runMirrorTest(`
     import assert from "node:assert/strict";
     import {
@@ -372,7 +375,7 @@ test("GitHub release mirror ignores stale negative cache and fetches", () => {
 
     assert.equal(fetches, 1);
     assert.equal(release.tag_name, "v1.0.0");
-    assert.deepEqual(deletes, ["github:release-error:owner/repo:v1.0.0"]);
+    assert.deepEqual(deletes, []);
   `);
 });
 
