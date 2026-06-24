@@ -14,7 +14,7 @@ import { runMigrations } from "./migrations.js";
 import { runAnalyticsMigrations, setupAnalytics } from "./analytics/index.js";
 
 const ROLLUP_BACKFILL_DAYS = 31;
-const MAU_BACKFILL_GAP_LIMIT = 3;
+const MAU_BACKFILL_GAP_LIMIT = 1;
 
 interface PipelineEnv {
   DB: D1Database;
@@ -85,8 +85,15 @@ export async function runMaintenancePipeline(
     const failures: string[] = [];
     for (const date of targets) {
       try {
-        await analytics.populateDailyMauStats(date, env.ANALYTICS_DB);
-        ok++;
+        const refreshed = await analytics.populateDailyMauStats(
+          date,
+          env.ANALYTICS_DB,
+        );
+        if (refreshed) {
+          ok++;
+        } else {
+          failures.push(`${date}: no MAU row was refreshed`);
+        }
       } catch (e) {
         failures.push(`${date}: ${errMsg(e)}`);
         console.error(`populateDailyMauStats failed for ${date}:`, e);
@@ -173,9 +180,9 @@ function dateStrAgo(now: Date, daysAgo: number): string {
   return d.toISOString().split("T")[0];
 }
 
-// Pick the dates we need to (re)compute MAU for: today + yesterday always
-// (user-visible), then the oldest missing days in the lookback window. We
-// cap the total work to keep D1 below its overload threshold.
+// Pick the dates we need to (re)compute MAU for: yesterday + today always
+// (user-visible), then the newest missing days in the lookback window. We cap
+// the total work to keep D1 below its overload threshold.
 async function pickMauTargets(
   analyticsDb: ReturnType<typeof drizzle>,
   now: Date,
@@ -193,10 +200,10 @@ async function pickMauTargets(
   `);
   const have = new Set(present.map((r) => r.date));
 
-  const targets = [today, yesterday];
+  const targets = [yesterday, today];
   const targetSet = new Set(targets);
   let added = 0;
-  for (let i = lookbackDays - 1; i >= 2 && added < gapBackfillLimit; i--) {
+  for (let i = 2; i < lookbackDays && added < gapBackfillLimit; i++) {
     const date = dateStrAgo(now, i);
     if (!have.has(date) && !targetSet.has(date)) {
       targets.push(date);

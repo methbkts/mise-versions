@@ -77,6 +77,9 @@ interface AeDownloadRow {
   sample_weight: number;
 }
 
+const MAU_HASH_BUCKETS = "0123456789abcdef".split("");
+const MAU_HASH_BUCKET_END = "g";
+
 export function createRollupFunctions(
   db: ReturnType<typeof drizzle>,
   options: RollupOptions = {},
@@ -90,6 +93,127 @@ export function createRollupFunctions(
 
   function datasetSql() {
     return analyticsEngineDataset(analyticsEngine);
+  }
+
+  function hashBucketEnd(bucket: string) {
+    const next = MAU_HASH_BUCKETS[MAU_HASH_BUCKETS.indexOf(bucket) + 1];
+    return next ?? MAU_HASH_BUCKET_END;
+  }
+
+  async function queryD1UsersForMauBucket(
+    startTimestamp: number,
+    endTimestamp: number,
+    bucketStart: string,
+    bucketEnd: string,
+    d1?: D1Database,
+  ): Promise<Array<{ ip_hash: string }>> {
+    if (d1) {
+      const result = await d1
+        .prepare(
+          `
+            SELECT DISTINCT ip_hash FROM (
+              SELECT ip_hash FROM downloads
+              WHERE ip_hash >= ? AND ip_hash < ?
+                AND created_at >= ? AND created_at < ?
+              UNION
+              SELECT ip_hash FROM version_requests
+              WHERE ip_hash >= ? AND ip_hash < ?
+                AND created_at >= ? AND created_at < ?
+            )
+          `,
+        )
+        .bind(
+          bucketStart,
+          bucketEnd,
+          startTimestamp,
+          endTimestamp,
+          bucketStart,
+          bucketEnd,
+          startTimestamp,
+          endTimestamp,
+        )
+        .all<{ ip_hash: string }>();
+      return result.results ?? [];
+    }
+
+    return db.all<{ ip_hash: string }>(sql`
+      SELECT DISTINCT ip_hash FROM (
+        SELECT ip_hash FROM downloads
+        WHERE ip_hash >= ${bucketStart} AND ip_hash < ${bucketEnd}
+          AND created_at >= ${startTimestamp} AND created_at < ${endTimestamp}
+        UNION
+        SELECT ip_hash FROM version_requests
+        WHERE ip_hash >= ${bucketStart} AND ip_hash < ${bucketEnd}
+          AND created_at >= ${startTimestamp} AND created_at < ${endTimestamp}
+      )
+    `);
+  }
+
+  async function countMauFromAnalyticsEngine(
+    table: string,
+    start: string,
+    end: string,
+  ): Promise<number> {
+    const result = await queryAnalyticsEngine<{ mau: number }>(
+      analyticsEngine!,
+      `
+        SELECT count(DISTINCT index1) AS mau
+        FROM ${table}
+        WHERE
+          blob1 IN ('download', 'version_request')
+          AND timestamp >= toDateTime('${start}')
+          AND timestamp <= toDateTime('${end}')
+      `,
+    );
+
+    return aeNumber(result.rows[0]?.mau);
+  }
+
+  async function countCutoverMauInBuckets(
+    table: string,
+    d1Start: number,
+    d1End: number,
+    aeStart: string,
+    aeEnd: string,
+    d1?: D1Database,
+  ): Promise<number> {
+    let mau = 0;
+
+    // The cutover window needs exact cross-source de-duping. Bucket by hash
+    // prefix so no single D1/Analytics Engine response has to carry every user.
+    for (const bucketStart of MAU_HASH_BUCKETS) {
+      const bucketEnd = hashBucketEnd(bucketStart);
+      const users = new Set<string>();
+
+      const d1Users = await queryD1UsersForMauBucket(
+        d1Start,
+        d1End,
+        bucketStart,
+        bucketEnd,
+        d1,
+      );
+      for (const row of d1Users) users.add(row.ip_hash);
+
+      const aeUsers = await queryAnalyticsEngine<{ ip_hash: string }>(
+        analyticsEngine!,
+        `
+          SELECT index1 AS ip_hash
+          FROM ${table}
+          WHERE
+            index1 >= '${bucketStart}'
+            AND index1 < '${bucketEnd}'
+            AND blob1 IN ('download', 'version_request')
+            AND timestamp >= toDateTime('${aeStart}')
+            AND timestamp <= toDateTime('${aeEnd}')
+          GROUP BY index1
+        `,
+      );
+      for (const row of aeUsers.rows) users.add(row.ip_hash);
+
+      mau += users.size;
+    }
+
+    return mau;
   }
 
   async function loadToolIds(
@@ -770,87 +894,40 @@ export function createRollupFunctions(
       const endTimestamp = Math.floor(
         new Date(`${date}T23:59:59Z`).getTime() / 1000,
       );
-      const users = new Set<string>();
+      const aeStart = new Date(
+        Math.max(startTimestamp, cutoverTimestamp) * 1000,
+      )
+        .toISOString()
+        .replace("T", " ")
+        .slice(0, 19);
+      const mau =
+        startTimestamp >= cutoverTimestamp
+          ? await countMauFromAnalyticsEngine(table, start, end)
+          : await countCutoverMauInBuckets(
+              table,
+              startTimestamp,
+              Math.min(cutoverTimestamp, endTimestamp + 1),
+              aeStart,
+              end,
+              d1,
+            );
 
-      if (startTimestamp < cutoverTimestamp) {
-        const d1End = Math.min(cutoverTimestamp, endTimestamp + 1);
-        const d1Users = d1
-          ? await d1
-              .prepare(
-                `
-                  SELECT DISTINCT ip_hash FROM (
-                    SELECT ip_hash FROM downloads WHERE created_at >= ? AND created_at < ?
-                    UNION
-                    SELECT ip_hash FROM version_requests WHERE created_at >= ? AND created_at < ?
-                  )
-                `,
-              )
-              .bind(startTimestamp, d1End, startTimestamp, d1End)
-              .all<{ ip_hash: string }>()
-          : {
-              results: await db.all<{ ip_hash: string }>(sql`
-                SELECT DISTINCT ip_hash FROM (
-                  SELECT ip_hash FROM downloads
-                  WHERE created_at >= ${startTimestamp} AND created_at < ${d1End}
-                  UNION
-                  SELECT ip_hash FROM version_requests
-                  WHERE created_at >= ${startTimestamp} AND created_at < ${d1End}
-                )
-              `),
-            };
-        for (const row of d1Users.results ?? []) users.add(row.ip_hash);
-      }
-
-      if (endTimestamp >= cutoverTimestamp) {
-        const aeStart = new Date(
-          Math.max(startTimestamp, cutoverTimestamp) * 1000,
-        )
-          .toISOString()
-          .replace("T", " ")
-          .slice(0, 19);
-        const result = await queryAnalyticsEngine<{ ip_hash: string }>(
-          analyticsEngine!,
-          `
-            SELECT index1 AS ip_hash
-            FROM ${table}
-            WHERE
-              blob1 IN ('download', 'version_request')
-              AND timestamp >= toDateTime('${aeStart}')
-              AND timestamp <= toDateTime('${end}')
-            GROUP BY index1
-          `,
-        );
-        for (const row of result.rows) users.add(row.ip_hash);
-      }
-
-      if (users.size <= 0) return null;
+      if (mau <= 0) return null;
 
       await runStatement(
         sql`
           INSERT OR REPLACE INTO daily_mau_stats (date, mau)
-          VALUES (${date}, ${users.size})
+          VALUES (${date}, ${mau})
         `,
         d1,
         "INSERT OR REPLACE INTO daily_mau_stats (date, mau) VALUES (?, ?)",
-        [date, users.size],
+        [date, mau],
       );
 
       return true;
     }
 
-    const result = await queryAnalyticsEngine<{ mau: number }>(
-      analyticsEngine!,
-      `
-        SELECT count(DISTINCT index1) AS mau
-        FROM ${table}
-        WHERE
-          blob1 IN ('download', 'version_request')
-          AND timestamp >= toDateTime('${start}')
-          AND timestamp <= toDateTime('${end}')
-      `,
-    );
-
-    const mau = result.rows[0]?.mau ?? 0;
+    const mau = await countMauFromAnalyticsEngine(table, start, end);
     if (mau <= 0) return null;
 
     await runStatement(

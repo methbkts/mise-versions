@@ -10,6 +10,9 @@
 const DEFAULT_ANALYTICS_DB_ID = "21a8b89a-c2cc-4a8a-9805-b4bcfcd4f6c8";
 const DEFAULT_DATASET = "mise_analytics_events";
 const DEFAULT_CUTOVER_DATE = "2026-06-12";
+const CLOUDFLARE_RETRY_ATTEMPTS = 3;
+const MAU_HASH_BUCKETS = "0123456789abcdef".split("");
+const MAU_HASH_BUCKET_END = "g";
 
 function usage() {
   console.error(`Usage: node scripts/refresh-mau-direct.js [--date=YYYY-MM-DD] [--days=N]
@@ -72,28 +75,56 @@ function timestamp(dateTime) {
   return Math.floor(new Date(`${dateTime}Z`).getTime() / 1000);
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function isRetryableCloudflareFailure(status, data) {
+  const codes = Array.isArray(data?.errors)
+    ? data.errors.map((error) => error?.code)
+    : [];
+  return status === 429 || status >= 500 || codes.includes(7429);
+}
+
 async function cfFetch(url, token, options = {}) {
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  });
-  const text = await response.text();
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = text;
+  const { retries = CLOUDFLARE_RETRY_ATTEMPTS, ...fetchOptions } = options;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    const response = await fetch(url, {
+      ...fetchOptions,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        ...fetchOptions.headers,
+      },
+    });
+    const text = await response.text();
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch {
+      data = text;
+    }
+
+    if (response.ok && data?.success !== false) {
+      return data;
+    }
+
+    const message = `Cloudflare API failed ${response.status}: ${JSON.stringify(data)}`;
+    if (
+      attempt < retries &&
+      isRetryableCloudflareFailure(response.status, data)
+    ) {
+      const delay = 2 ** attempt * 1000;
+      console.warn(`${message}; retrying in ${delay}ms`);
+      await sleep(delay);
+      continue;
+    }
+
+    throw new Error(message);
   }
-  if (!response.ok || data?.success === false) {
-    throw new Error(
-      `Cloudflare API failed ${response.status}: ${JSON.stringify(data)}`,
-    );
-  }
-  return data;
+
+  throw new Error("Cloudflare API failed after retries");
 }
 
 async function queryAnalyticsEngine({ accountId, token, dataset, sql }) {
@@ -156,6 +187,118 @@ async function legacyD1Mau(config, date, startTs, endTs) {
   return mau;
 }
 
+function hashBucketEnd(bucket) {
+  const next = MAU_HASH_BUCKETS[MAU_HASH_BUCKETS.indexOf(bucket) + 1];
+  return next || MAU_HASH_BUCKET_END;
+}
+
+async function countMauFromAnalyticsEngine(config, start, end) {
+  const rows = await queryAnalyticsEngine({
+    accountId: config.analyticsEngineAccountId,
+    token: config.analyticsEngineApiToken,
+    dataset: config.dataset,
+    sql: `
+      SELECT count(DISTINCT index1) AS mau
+      FROM ${config.dataset}
+      WHERE
+        blob1 IN ('download', 'version_request')
+        AND timestamp >= toDateTime('${start}')
+        AND timestamp <= toDateTime('${end}')
+    `,
+  });
+  const mau = Number(rows[0]?.mau ?? 0);
+  if (!Number.isFinite(mau)) {
+    throw new Error(
+      `Unexpected Analytics Engine MAU result: ${JSON.stringify(rows)}`,
+    );
+  }
+  return mau;
+}
+
+async function queryD1UsersForMauBucket(
+  config,
+  startTs,
+  endTs,
+  bucketStart,
+  bucketEnd,
+) {
+  return queryD1({
+    accountId: config.cloudflareAccountId,
+    token: config.cloudflareApiToken,
+    databaseId: config.analyticsDbId,
+    sql: `
+      SELECT DISTINCT ip_hash FROM (
+        SELECT ip_hash FROM downloads
+        WHERE ip_hash >= ? AND ip_hash < ?
+          AND created_at >= ? AND created_at < ?
+        UNION
+        SELECT ip_hash FROM version_requests
+        WHERE ip_hash >= ? AND ip_hash < ?
+          AND created_at >= ? AND created_at < ?
+      )
+    `,
+    params: [
+      bucketStart,
+      bucketEnd,
+      startTs,
+      endTs,
+      bucketStart,
+      bucketEnd,
+      startTs,
+      endTs,
+    ],
+  });
+}
+
+async function countCutoverMauInBuckets(
+  config,
+  d1Start,
+  d1End,
+  aeStart,
+  aeEnd,
+) {
+  let mau = 0;
+
+  for (const bucketStart of MAU_HASH_BUCKETS) {
+    const bucketEnd = hashBucketEnd(bucketStart);
+    const users = new Set();
+
+    const d1Users = await queryD1UsersForMauBucket(
+      config,
+      d1Start,
+      d1End,
+      bucketStart,
+      bucketEnd,
+    );
+    for (const row of d1Users) users.add(row.ip_hash);
+
+    const aeUsers = await queryAnalyticsEngine({
+      accountId: config.analyticsEngineAccountId,
+      token: config.analyticsEngineApiToken,
+      dataset: config.dataset,
+      sql: `
+        SELECT index1 AS ip_hash
+        FROM ${config.dataset}
+        WHERE
+          index1 >= '${bucketStart}'
+          AND index1 < '${bucketEnd}'
+          AND blob1 IN ('download', 'version_request')
+          AND timestamp >= toDateTime('${aeStart}')
+          AND timestamp <= toDateTime('${aeEnd}')
+        GROUP BY index1
+      `,
+    });
+    for (const row of aeUsers) users.add(row.ip_hash);
+
+    console.log(
+      `Bucket ${bucketStart}: ${users.size} unique user(s) after merge`,
+    );
+    mau += users.size;
+  }
+
+  return mau;
+}
+
 async function refreshMauForDate(config, date) {
   const cutoverDate = config.cutoverDate;
   const cutoverTs = timestamp(`${cutoverDate}T00:00:00`.replace("T", " "));
@@ -168,48 +311,25 @@ async function refreshMauForDate(config, date) {
 
   console.log(`Refreshing MAU for ${date} (${start} to ${end})`);
 
-  const users = new Set();
-  if (startTs < cutoverTs) {
-    const d1End = Math.min(cutoverTs, endTs + 1);
-    const d1Users = await queryD1({
-      accountId: config.cloudflareAccountId,
-      token: config.cloudflareApiToken,
-      databaseId: config.analyticsDbId,
-      sql: `
-        SELECT DISTINCT ip_hash FROM (
-          SELECT ip_hash FROM downloads WHERE created_at >= ? AND created_at < ?
-          UNION
-          SELECT ip_hash FROM version_requests WHERE created_at >= ? AND created_at < ?
-        )
-      `,
-      params: [startTs, d1End, startTs, d1End],
-    });
-    for (const row of d1Users) users.add(row.ip_hash);
-  }
-
-  if (endTs >= cutoverTs) {
-    const aeStart = new Date(Math.max(startTs, cutoverTs) * 1000)
+  let mau;
+  if (endTs < cutoverTs) {
+    mau = await legacyD1Mau(config, date, startTs, endTs);
+  } else if (startTs >= cutoverTs) {
+    mau = await countMauFromAnalyticsEngine(config, start, end);
+  } else {
+    const aeStart = new Date(cutoverTs * 1000)
       .toISOString()
       .replace("T", " ")
       .slice(0, 19);
-    const aeUsers = await queryAnalyticsEngine({
-      accountId: config.analyticsEngineAccountId,
-      token: config.analyticsEngineApiToken,
-      dataset: config.dataset,
-      sql: `
-        SELECT index1 AS ip_hash
-        FROM ${config.dataset}
-        WHERE
-          blob1 IN ('download', 'version_request')
-          AND timestamp >= toDateTime('${aeStart}')
-          AND timestamp <= toDateTime('${end}')
-        GROUP BY index1
-      `,
-    });
-    for (const row of aeUsers) users.add(row.ip_hash);
+    mau = await countCutoverMauInBuckets(
+      config,
+      startTs,
+      Math.min(cutoverTs, endTs + 1),
+      aeStart,
+      end,
+    );
   }
 
-  let mau = users.size;
   if (mau <= 0) {
     mau = await legacyD1Mau(config, date, startTs, endTs);
   }
