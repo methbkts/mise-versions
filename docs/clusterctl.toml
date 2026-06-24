@@ -251,3 +251,6 @@
 "1.11.11" = { created_at = 2026-05-13T12:56:18.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.11.11" }
 "1.12.8" = { created_at = 2026-05-13T13:08:15.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.12.8" }
 "1.13.2" = { created_at = 2026-05-13T13:08:24.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.13.2" }
+"1.12.9" = { created_at = 2026-06-23T16:46:55.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.12.9" }
+"1.13.3" = { created_at = 2026-06-23T17:03:40.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.13.3" }
+"1.14.0-alpha.0" = { created_at = 2026-06-23T17:03:31.000Z, release_url = "https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.14.0-alpha.0", prerelease = true }
