@@ -807,3 +807,4 @@
 "1.222.0-rc.5" = { created_at = 2026-06-19T17:39:00.000Z, release_url = "https://github.com/cloudposse/atmos/releases/tag/v1.222.0-rc.5", prerelease = true }
 "1.222.0-rc.6" = { created_at = 2026-06-21T21:38:14.000Z, release_url = "https://github.com/cloudposse/atmos/releases/tag/v1.222.0-rc.6", prerelease = true }
 "1.222.0-rc.7" = { created_at = 2026-06-22T20:22:00.000Z, release_url = "https://github.com/cloudposse/atmos/releases/tag/v1.222.0-rc.7", prerelease = true }
+"1.222.0-rc.8" = { created_at = 2026-06-24T00:59:11.000Z, release_url = "https://github.com/cloudposse/atmos/releases/tag/v1.222.0-rc.8", prerelease = true }
