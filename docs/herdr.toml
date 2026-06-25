@@ -62,3 +62,4 @@
 "preview-2026-06-15-517ca8163f7c" = { created_at = 2026-06-15T17:59:52.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/preview-2026-06-15-517ca8163f7c", prerelease = true }
 "0.7.0" = { created_at = 2026-06-15T16:13:47.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.7.0" }
 "preview-2026-06-22-24c7377de01c" = { created_at = 2026-06-22T12:02:34.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/preview-2026-06-22-24c7377de01c", prerelease = true }
+"0.7.1" = { created_at = 2026-06-24T13:41:13.000Z, release_url = "https://github.com/ogulcancelik/herdr/releases/tag/v0.7.1" }
