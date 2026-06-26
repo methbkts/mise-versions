@@ -491,5 +491,6 @@
 "0.19.0" = { created_at = 2026-06-23T03:26:58.848Z }
 "0.19.1-nightly.20260624.a234860a4" = { created_at = 2026-06-24T00:51:46.590Z, prerelease = true }
 "0.19.1" = { created_at = 2026-06-23T09:22:00.652Z }
+"0.19.2-nightly.20260625.b2f11b735" = { created_at = 2026-06-25T00:59:36.892Z, prerelease = true }
 "0.19.2-preview.0" = { created_at = 2026-06-24T12:55:07.807Z, prerelease = true }
 "0.19.2" = { created_at = 2026-06-24T13:54:46.722Z }
