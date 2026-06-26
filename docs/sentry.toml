@@ -457,3 +457,4 @@
 "3.5.2-snapshot.20260623.7da59d6" = { created_at = 2026-06-23T11:49:03.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.5.2-snapshot.20260623.7da59d6", prerelease = true }
 "3.5.2-snapshot.20260623.c96e571" = { created_at = 2026-06-23T17:52:31.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.5.2-snapshot.20260623.c96e571", prerelease = true }
 "3.5.2-snapshot.20260623.fddec6f" = { created_at = 2026-06-23T05:57:02.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.5.2-snapshot.20260623.fddec6f", prerelease = true }
+"3.5.2-snapshot.20260625.134b728" = { created_at = 2026-06-25T12:44:31.000Z, release_url = "https://github.com/getsentry/sentry-cli/releases/tag/3.5.2-snapshot.20260625.134b728", prerelease = true }
