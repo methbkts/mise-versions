@@ -49,3 +49,4 @@
 "1.1.10" = { created_at = 2026-04-30T11:12:42.000Z, release_url = "https://github.com/mercari/tfnotify/releases/tag/v1.1.10" }
 "1.1.11" = { created_at = 2026-06-18T08:37:32.000Z, release_url = "https://github.com/mercari/tfnotify/releases/tag/v1.1.11" }
 "1.1.11-alpha" = { created_at = 2026-06-19T02:29:42.000Z, release_url = "https://github.com/mercari/tfnotify/releases/tag/v1.1.11-alpha", prerelease = true }
+"1.1.12" = { created_at = 2026-06-26T06:50:59.000Z, release_url = "https://github.com/mercari/tfnotify/releases/tag/v1.1.12" }
