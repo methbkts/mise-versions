@@ -496,3 +496,4 @@
 "0.19.2-nightly.20260628.714513df2" = { created_at = 2026-06-28T00:51:08.857Z, prerelease = true }
 "0.19.2-preview.0" = { created_at = 2026-06-24T12:55:07.807Z, prerelease = true }
 "0.19.2" = { created_at = 2026-06-24T13:54:46.722Z }
+"0.19.3" = { created_at = 2026-06-28T06:12:23.182Z }
