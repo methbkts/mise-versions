@@ -141,6 +141,60 @@ test_pipe_to_generate_toml
 echo ""
 
 # ============================================
+# Test: update skip list
+# ============================================
+echo "--- Skip List Tests ---"
+
+skip_list_contains() {
+	local tool="$1"
+	local skipped_tools
+	skipped_tools=$(awk '
+		/^fetch\(\) \{/ { in_fetch = 1; next }
+		in_fetch && /case "\$tool" in/ { getline; print; exit }
+	' scripts/update.sh |
+		tr '|' '\n' |
+		sed -E 's/^[[:space:]]+|[[:space:]]+$//g; s/\)$//' |
+		grep -v '^$')
+
+	grep -Fxq "$tool" <<<"$skipped_tools"
+}
+
+assert_skip_list_membership() {
+	local tool="$1"
+	local expected="$2"
+	local description="$3"
+	local actual="false"
+	if skip_list_contains "$tool"; then
+		actual="true"
+	fi
+
+	assert_equals "$expected" "$actual" "$description"
+}
+
+test_phase_2_unskips_stable_tools() {
+	local tool
+	for tool in awscli-local jfrog-cli minio teleport-ent flyctl flyway checkov snyk rebar dasel cockroach; do
+		assert_skip_list_membership "$tool" "false" "$tool is no longer hard-skipped"
+	done
+}
+test_phase_2_unskips_stable_tools
+
+test_phase_2_keeps_unresolved_tools_skipped() {
+	local tool
+	for tool in tiny vim aws aws-cli awscli chromedriver sui; do
+		assert_skip_list_membership "$tool" "true" "$tool remains hard-skipped"
+	done
+}
+test_phase_2_keeps_unresolved_tools_skipped
+
+test_skip_list_parser_ignores_other_case_blocks() {
+	assert_skip_list_membership "cargo-binstall" "false" "cargo-binstall post-processing is not treated as hard-skipped"
+}
+test_skip_list_parser_ignores_other_case_blocks
+
+echo ""
+
+# ============================================
 # Test: Statistics helpers (isolated)
 # ============================================
 echo "--- Statistics Helper Tests ---"
