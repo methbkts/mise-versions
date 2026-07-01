@@ -43,6 +43,51 @@ const UNSTABLE_TOOLS = existsSync(UNSTABLE_TOOLS_PATH)
     )
   : new Set();
 
+const IGNORED_VERSIONS_PATH =
+  process.env.MISE_VERSIONS_IGNORED_VERSIONS_PATH ||
+  new URL("./ignored-versions.toml", import.meta.url).pathname;
+
+function loadIgnoredVersionPatterns(path) {
+  if (!existsSync(path)) return new Map();
+
+  let config;
+  try {
+    config = parse(readFileSync(path, "utf-8"));
+  } catch (e) {
+    console.error(
+      `Warning: Failed to read ignored versions config ${path}: ${e.message}`,
+    );
+    return new Map();
+  }
+
+  const patterns = new Map();
+  for (const [toolName, toolConfig] of Object.entries(config)) {
+    const deny = Array.isArray(toolConfig?.deny) ? toolConfig.deny : [];
+    const compiled = [];
+    for (const pattern of deny) {
+      if (typeof pattern !== "string") {
+        console.error(
+          `Warning: Invalid ignored version pattern for ${toolName}: expected string, got ${typeof pattern}`,
+        );
+        continue;
+      }
+      try {
+        compiled.push(new RegExp(pattern));
+      } catch (e) {
+        console.error(
+          `Warning: Invalid ignored version pattern for ${toolName}: ${pattern}: ${e.message}`,
+        );
+      }
+    }
+    patterns.set(toolName, compiled);
+  }
+  return patterns;
+}
+
+const IGNORED_VERSION_PATTERNS = loadIgnoredVersionPatterns(
+  IGNORED_VERSIONS_PATH,
+);
+
 if (!tool) {
   console.error(
     "Usage: cat versions.ndjson | node generate-toml.js <tool> [existing_toml_path]",
@@ -122,7 +167,10 @@ if (existingTomlPath && existsSync(existingTomlPath)) {
 }
 
 // Parse new version data (preserves order from mise ls-remote)
-const newVersions = parseNdjson(stdinData);
+const ignoredVersionPatterns = IGNORED_VERSION_PATTERNS.get(tool) || [];
+const newVersions = parseNdjson(stdinData).filter(
+  (v) => !ignoredVersionPatterns.some((pattern) => pattern.test(v.version)),
+);
 
 // For "unstable" tools, sort by semver ascending so the output is
 // deterministic regardless of which fetch path produced the input. Versions
