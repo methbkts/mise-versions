@@ -1009,3 +1009,4 @@
 "2.10.1" = { created_at = 2026-06-29T20:41:41.566Z }
 "2.10.2-canary.1" = { created_at = 2026-06-30T15:40:15.034Z, prerelease = true }
 "2.10.2" = { created_at = 2026-06-30T16:23:32.521Z }
+"2.10.3-canary.1" = { created_at = 2026-06-30T17:02:18.766Z, prerelease = true }
