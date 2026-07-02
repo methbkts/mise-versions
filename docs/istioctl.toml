@@ -441,3 +441,4 @@
 "1.28.9" = { created_at = 2026-06-24T16:52:57.000Z, release_url = "https://github.com/istio/istio/releases/tag/1.28.9" }
 "1.29.5" = { created_at = 2026-06-24T16:49:01.000Z, release_url = "https://github.com/istio/istio/releases/tag/1.29.5" }
 "1.30.2" = { created_at = 2026-06-24T16:49:46.000Z, release_url = "https://github.com/istio/istio/releases/tag/1.30.2" }
+"1.28.10" = { created_at = 2026-07-01T10:27:01.000Z, release_url = "https://github.com/istio/istio/releases/tag/1.28.10" }
